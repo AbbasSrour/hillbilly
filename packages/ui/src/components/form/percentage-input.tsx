@@ -1,0 +1,54 @@
+import { Input } from "@hillbilly/ui/core/input";
+import { cn } from "@hillbilly/ui/lib/utils";
+import { Percent } from "lucide-react";
+import type { ComponentProps } from "react";
+import * as React from "react";
+import { useNumberFormatter } from "react-aria";
+
+export interface PercentageInputProps extends Omit<ComponentProps<typeof Input>, "type"> {
+  formatOptions?: Intl.NumberFormatOptions;
+}
+
+const PercentageInput = React.forwardRef<HTMLInputElement, PercentageInputProps>(
+  ({ className, formatOptions = {}, onChange, onFocus, ...props }, ref) => {
+    const _formatter = useNumberFormatter({
+      style: "percent",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      minimumIntegerDigits: 1,
+      ...formatOptions,
+    });
+
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      const target = e.currentTarget;
+      target.setSelectionRange(target.value.length, target.value.length);
+
+      onFocus?.(e);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange?.(e);
+    };
+
+    return (
+      <Input
+        {...props}
+        ref={ref}
+        type="number"
+        min={0}
+        max={100}
+        className={cn(
+          "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+          className,
+        )}
+        icon={Percent}
+        onFocus={handleFocus}
+        onChange={handleChange}
+      />
+    );
+  },
+);
+
+PercentageInput.displayName = "PercentageInput";
+
+export { PercentageInput };

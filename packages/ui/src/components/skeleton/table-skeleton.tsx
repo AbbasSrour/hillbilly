@@ -1,0 +1,56 @@
+import { Skeleton } from "@hillbilly/ui/core/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@hillbilly/ui/core/table";
+import { cn } from "@hillbilly/ui/lib/utils";
+import type { ComponentProps } from "react";
+
+interface TableSkeletonProps extends ComponentProps<"div"> {
+  columns?: number;
+  rows?: number;
+  rowClassName?: string;
+}
+
+export function TableSkeleton({
+  columns = 6,
+  rows = 8,
+  rowClassName,
+  className,
+  ...props
+}: TableSkeletonProps) {
+  const rowKeys = Array.from({ length: rows }, (_, index) => `row-${index}`);
+
+  return (
+    <div className={cn("rounded-md border", className)} {...props}>
+      <Table>
+        <TableHeader className="sticky top-0 z-10 bg-background">
+          <TableRow>
+            {Array.from({ length: columns }).map((_, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton layout
+              <TableHead key={`head-${index}`}>
+                <Skeleton className="h-4 w-24" />
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rowKeys.map((rowKey, rowIndex) => (
+            <TableRow key={rowKey} className={rowClassName}>
+              {Array.from({ length: columns }).map((_, colIndex) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton layout
+                <TableCell key={`cell-${rowIndex}-${colIndex}`}>
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}

@@ -1,0 +1,69 @@
+import { useNavigation } from "@hillbilly/ui/context/navigation";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@hillbilly/ui/core/breadcrumb";
+import { HomeIcon } from "lucide-react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { Fragment } from "react";
+
+export const PageBreadcrumbs = () => {
+  const { main } = useNavigation();
+  const { pathname } = useLocation();
+
+  const breadcrumbs = main
+    .map((item) => {
+      if (pathname.startsWith(item.url)) {
+        const crumbs = [{ title: item.title, url: item.url }];
+        if (item.items) {
+          const matchingSubItems = item.items
+            .filter((sub) => pathname.startsWith(sub.url))
+            .sort((a, b) => b.url.length - a.url.length);
+
+          if (matchingSubItems.length > 0) {
+            crumbs.push({
+              title: matchingSubItems[0]?.title || "",
+              url: matchingSubItems[0]?.url || "",
+            });
+          }
+        }
+        return crumbs;
+      }
+      return null;
+    })
+    .filter((item) => item !== null)
+    .flat();
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link to="/">
+              <HomeIcon className="h-4 w-4" />
+            </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+
+        {breadcrumbs.map((crumb) => (
+          <Fragment key={crumb.title}>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {pathname === crumb.url ? (
+                <BreadcrumbPage>{crumb.title}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link to={crumb.url}>{crumb.title}</Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          </Fragment>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+};

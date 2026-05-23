@@ -1,0 +1,56 @@
+import { Badge, badgeVariants } from "@hillbilly/ui/core/badge";
+import { cn } from "@hillbilly/ui/lib/utils";
+import type { VariantProps } from "class-variance-authority";
+import type { ComponentType, ReactNode } from "react";
+
+type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
+
+export interface BadgeOption {
+  value: string;
+  label?: string;
+  className?: string;
+  variant?: BadgeVariant;
+  icon?: ComponentType<{ size?: number; className?: string }>;
+}
+
+interface DataTableBadgeCellProps {
+  /** The value to display */
+  value: string | undefined | null;
+  /** Array of badge options to match against the value */
+  options?: readonly BadgeOption[];
+  /** Default variant if no option matches */
+  variant?: BadgeVariant;
+  /** Additional class name for the badge */
+  className?: string;
+  /** Whether to capitalize the label */
+  capitalize?: boolean;
+  /** Fallback content when value is empty */
+  fallback?: ReactNode;
+}
+
+export function DataTableBadgeCell({
+  value,
+  options = [],
+  variant = "default",
+  className,
+  capitalize = true,
+  fallback = "-",
+}: DataTableBadgeCellProps) {
+  if (!value) {
+    return <span className="text-muted-foreground">{fallback}</span>;
+  }
+
+  const option = options.find((opt) => opt.value === value);
+  const Icon = option?.icon;
+  const label = option?.label ?? value.toLowerCase().replace(/_/g, " ");
+
+  return (
+    <Badge
+      variant={option?.variant ?? variant}
+      className={cn(capitalize && "capitalize", option?.className, className)}
+    >
+      {Icon && <Icon size={12} className="mr-1" />}
+      {label}
+    </Badge>
+  );
+}
