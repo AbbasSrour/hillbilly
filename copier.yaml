@@ -51,5 +51,5 @@ _message_after_copy: |
 
   Next steps:
     cd [[ _copier_conf.dst_path ]]
-    bun install
+    vp install
     vp check

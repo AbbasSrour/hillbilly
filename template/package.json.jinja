@@ -9,12 +9,14 @@
   ],
   "type": "module",
   "scripts": {
+    "prepare": "vp config",
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run",
     "check": "vp check",
     "check:fix": "vp check --fix",
     "build": "vp run -r build",
     "commit": "cz",
+    "knip": "knip",
     "release": "release-it"
   },
   "config": {
@@ -34,6 +36,7 @@
     "@release-it/conventional-changelog": "^10.0.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
+    "knip": "^5.50.0",
     "lint-staged": "^15.5.2",
     "release-it": "^19.0.2",
     "vite-plus": "latest"
