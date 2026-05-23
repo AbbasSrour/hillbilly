@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/lintstagedrc.schema.json",
+  "*.{ts,tsx,js,jsx,mjs,cjs}": ["vp fmt --write", "vp lint"],
+  "*.{json,md,css,yaml,yml}": ["vp fmt --write"]
+}

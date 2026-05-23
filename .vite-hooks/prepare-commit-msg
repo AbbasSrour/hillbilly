@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# $1 = path to commit message file
+# $2 = source: empty (interactive), message (-m/-F), template, merge, squash, commit
+# Only trigger commitizen for interactive commits (no -m/-F)
+if [ -z "$2" ]; then
+  exec < /dev/tty && npx cz --hook || true
+fi

@@ -1,0 +1,44 @@
+{
+  "name": "hillbilly",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "build": "vp run -r build",
+    "commit": "cz",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "lint-staged": "^15.5.2",
+    "release-it": "^19.0.2",
+    "vite-plus": "catalog:"
+  },
+  "overrides": {
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "bun@1.3.14",
+  "catalog": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@latest",
+    "vite-plus": "latest"
+  }
+}

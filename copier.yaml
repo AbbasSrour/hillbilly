@@ -1,0 +1,55 @@
+# Hillbilly template configuration
+# See: https://copier.readthedocs.io/en/stable/configuring/
+
+_subdirectory: template
+
+# Use [[ ]] to avoid collision with GitHub Actions ${{ }}
+_envops:
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  block_start_string: "[%"
+  block_end_string: "%]"
+  comment_start_string: "[#"
+  comment_end_string: "#]"
+
+# Questions asked during project creation
+project_name:
+  type: str
+  help: What is the project name? (kebab-case)
+
+project_description:
+  type: str
+  help: Short description of the project
+  default: ""
+
+gcp_project_id:
+  type: str
+  help: Google Cloud Project ID for deployments
+
+package_manager:
+  type: str
+  help: Which package manager?
+  choices:
+    - bun@1.3.14
+    - pnpm@10.0.0
+  default: bun@1.3.14
+
+node_version:
+  type: str
+  help: Minimum Node.js version
+  default: ">=22.12.0"
+
+# Files to exclude from the generated project
+_exclude:
+  - "**/node_modules"
+  - "**/.turbo"
+  - "**/dist"
+
+# Post-scaffold instructions
+_message_after_copy: |
+  Project [[ project_name ]] created!
+
+  Next steps:
+    cd [[ _copier_conf.dst_path ]]
+    bun install
+    vp check

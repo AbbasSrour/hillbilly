@@ -1,0 +1,45 @@
+{
+  "name": "[[ project_name ]]",
+  "version": "0.0.0",
+  "description": "[[ project_description ]]",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "ready": "vp check && vp run -r test && vp run -r build",
+    "dev": "vp run",
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "build": "vp run -r build",
+    "commit": "cz",
+    "release": "release-it"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@hillbilly/nest": "*",
+    "@hillbilly/rbac": "*",
+    "@hillbilly/ui": "*",
+    "@hillbilly/sdk": "*"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "lint-staged": "^15.5.2",
+    "release-it": "^19.0.2",
+    "vite-plus": "latest"
+  },
+  "engines": {
+    "node": "[[ node_version ]]"
+  },
+  "packageManager": "[[ package_manager ]]"
+}

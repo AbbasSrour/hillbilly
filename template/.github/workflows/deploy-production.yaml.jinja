@@ -1,0 +1,67 @@
+name: Deploy Production Environment
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: [[ gcp_project_id ]]
+  REGION: europe-west1
+  PORT: 8080
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    strategy:
+      matrix:
+        include:
+          - service: [[ project_name ]]-web-prod
+            dockerfile: apps/web/Dockerfile
+            build_arg: "NEXT_PUBLIC_API_URL=none"
+          - service: [[ project_name ]]-backend-prod
+            dockerfile: apps/backend/Dockerfile
+            build_arg: ""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GCP_SECRET }}"
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+
+      - name: Short Commit Hash
+        run: echo "SHORT_COMMIT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Resource Name
+        run: echo "RESOURCE_NAME=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ matrix.service }}/${{ matrix.service }}:${{ env.SHORT_COMMIT }}" >> $GITHUB_ENV
+
+      - name: Build and Push Container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          build-args: ${{ matrix.build_arg }}
+          push: true
+          tags: ${{ env.RESOURCE_NAME }}
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ matrix.service }}
+          region: ${{ env.REGION }}
+          image: ${{ env.RESOURCE_NAME }}
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
