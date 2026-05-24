@@ -1,0 +1,173 @@
+{
+  "name": "@hillbilly/nest",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./abstract": {
+      "types": "./dist/abstract/index.d.mts",
+      "import": "./dist/abstract/index.mjs",
+      "default": "./dist/abstract/index.mjs"
+    },
+    "./constant": {
+      "types": "./dist/constant/index.d.mts",
+      "import": "./dist/constant/index.mjs",
+      "default": "./dist/constant/index.mjs"
+    },
+    "./decorator": {
+      "types": "./dist/decorator/index.d.mts",
+      "import": "./dist/decorator/index.mjs",
+      "default": "./dist/decorator/index.mjs"
+    },
+    "./exception": {
+      "types": "./dist/exception/index.d.mts",
+      "import": "./dist/exception/index.mjs",
+      "default": "./dist/exception/index.mjs"
+    },
+    "./filter": {
+      "types": "./dist/filter/index.d.mts",
+      "import": "./dist/filter/index.mjs",
+      "default": "./dist/filter/index.mjs"
+    },
+    "./guard": {
+      "types": "./dist/guard/index.d.mts",
+      "import": "./dist/guard/index.mjs",
+      "default": "./dist/guard/index.mjs"
+    },
+    "./interceptor": {
+      "types": "./dist/interceptor/index.d.mts",
+      "import": "./dist/interceptor/index.mjs",
+      "default": "./dist/interceptor/index.mjs"
+    },
+    "./interface": {
+      "types": "./dist/interface/index.d.mts",
+      "import": "./dist/interface/index.mjs",
+      "default": "./dist/interface/index.mjs"
+    },
+    "./middleware": {
+      "types": "./dist/middleware/index.d.mts",
+      "import": "./dist/middleware/index.mjs",
+      "default": "./dist/middleware/index.mjs"
+    },
+    "./package/crypto": {
+      "types": "./dist/package/crypto/index.d.mts",
+      "import": "./dist/package/crypto/index.mjs",
+      "default": "./dist/package/crypto/index.mjs"
+    },
+    "./package/pulse": {
+      "types": "./dist/package/pulse/index.d.mts",
+      "import": "./dist/package/pulse/index.mjs",
+      "default": "./dist/package/pulse/index.mjs"
+    },
+    "./package/translation": {
+      "types": "./dist/package/translation/index.d.mts",
+      "import": "./dist/package/translation/index.mjs",
+      "default": "./dist/package/translation/index.mjs"
+    },
+    "./package/twilio": {
+      "types": "./dist/package/twilio/index.d.mts",
+      "import": "./dist/package/twilio/index.mjs",
+      "default": "./dist/package/twilio/index.mjs"
+    },
+    "./package/validation": {
+      "types": "./dist/package/validation/index.d.mts",
+      "import": "./dist/package/validation/index.mjs",
+      "default": "./dist/package/validation/index.mjs"
+    },
+    "./pipe": {
+      "types": "./dist/pipe/index.d.mts",
+      "import": "./dist/pipe/index.mjs",
+      "default": "./dist/pipe/index.mjs"
+    },
+    "./provider": {
+      "types": "./dist/provider/index.d.mts",
+      "import": "./dist/provider/index.mjs",
+      "default": "./dist/provider/index.mjs"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.mts",
+      "import": "./dist/types/index.mjs",
+      "default": "./dist/types/index.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.mts",
+      "import": "./dist/utils/index.mjs",
+      "default": "./dist/utils/index.mjs"
+    },
+    "./utils/boilerplate.polyfill": {
+      "types": "./dist/utils/boilerplate.polyfill.d.mts",
+      "import": "./dist/utils/boilerplate.polyfill.mjs",
+      "default": "./dist/utils/boilerplate.polyfill.mjs"
+    }
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:unit": "vitest --include='test/**/*.spec.ts' --run",
+    "test:integration": "vitest --include='test/**/*.integration-spec.ts' --run",
+    "lint": "vp lint packages/nest",
+    "fmt": "vp fmt packages/nest --write",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hillbilly/rbac": "*",
+    "@mikro-orm/migrations": "^7.1.1",
+    "@mikro-orm/nestjs": "^7.0.2",
+    "@mikro-orm/reflection": "^7.1.1",
+    "@nestjs/terminus": "^11.1.1",
+    "@nestjs/throttler": "^6.5.0",
+    "@thallesp/nestjs-better-auth": "^2.6.0",
+    "@nestjs/platform-express": "^11.1.7",
+    "@nestjs/swagger": "^11.1.5",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "libphonenumber-js": "^1.12.7",
+    "lodash": "^4.17.21",
+    "nestjs-i18n": "^10.8.4",
+    "parse-duration": "^2.1.6",
+    "source-map-support": "^0.5.21",
+    "tslib": "^2.8.1",
+    "twilio": "^6.0.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@mikro-orm/core": "^7.1.0",
+    "@mikro-orm/decorators": "^7.1.0",
+    "@mikro-orm/sql": "^7.1.0",
+    "@nestjs/common": "^11.1.7",
+    "@nestjs/core": "^11.1.7",
+    "@nestjs/microservices": "^11.1.7",
+    "@types/lodash": "^4.17.17",
+    "@types/node": "^22.10.2",
+    "@types/source-map-support": "^0.5.10",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "vite-tsconfig-paths": "^6.0.3",
+    "vitest": "^2.1.8"
+  },
+  "peerDependencies": {
+    "@mikro-orm/core": ">=7.0.0",
+    "@mikro-orm/decorators": ">=7.0.0",
+    "@mikro-orm/sql": ">=7.0.0",
+    "@nestjs/common": ">=11.0.0",
+    "@nestjs/core": ">=11.0.0",
+    "@nestjs/microservices": ">=11.0.0",
+    "@nestjs/platform-express": ">=11.0.0",
+    "@nestjs/swagger": ">=11.0.0",
+    "class-transformer": ">=0.5.0",
+    "class-validator": ">=0.14.0",
+    "reflect-metadata": ">=0.2.0",
+    "rxjs": ">=7.0.0",
+    "typescript": "latest"
+  }
+}
