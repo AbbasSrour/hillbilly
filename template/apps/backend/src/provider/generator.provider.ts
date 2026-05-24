@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import * as bcrypt from "bcrypt";
 import { v1 as uuid } from "uuid";
 

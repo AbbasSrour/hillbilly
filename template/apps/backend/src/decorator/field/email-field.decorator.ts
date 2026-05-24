@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { applyDecorators } from "@nestjs/common";
 import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
 import { IsEmail, NotEquals } from "class-validator";

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 export interface IFile {
   encoding: string;
   buffer: Buffer;

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { ClsServiceManager } from 'nestjs-cls';
 
 import type { LanguageCode } from '@/constant/language-code.constant';

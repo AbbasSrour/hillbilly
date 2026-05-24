@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import type { EnhancedSessionUser } from "@hillbilly/rbac";
 
 /**

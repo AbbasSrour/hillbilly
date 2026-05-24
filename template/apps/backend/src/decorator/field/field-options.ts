@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { IFilterFieldOptions } from "@/decorator/field/filter-field.decorator";
 
 export interface IFieldOptions {

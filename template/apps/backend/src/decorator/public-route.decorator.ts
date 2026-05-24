@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { CustomDecorator, SetMetadata } from "@nestjs/common";
 
 export const PUBLIC_ROUTE_KEY = "public_route";

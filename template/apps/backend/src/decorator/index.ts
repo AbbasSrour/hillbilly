@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 // Top-level decorators
 export { ApiPageOkResponse } from "./api-page-ok-response.decorator";
 export { PublicRoute, PUBLIC_ROUTE_KEY } from "./public-route.decorator";

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Reflector } from "@nestjs/core";
 
 export const PERMISSIONS_KEY = "permissions";

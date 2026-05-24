@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Controller, Get } from "@nestjs/common";
 import type { HealthCheckResult } from "@nestjs/terminus";
 import { HealthCheck, HealthCheckService, MikroOrmHealthIndicator } from "@nestjs/terminus";

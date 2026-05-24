@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { supportedLanguageCount } from '@/constant/language-code.constant';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';

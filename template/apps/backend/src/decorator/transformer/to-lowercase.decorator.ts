@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Transform } from "class-transformer";
 
 export function ToLowerCase(): PropertyDecorator {

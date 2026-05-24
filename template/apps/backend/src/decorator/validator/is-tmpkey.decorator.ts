@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import type { ValidationOptions } from "class-validator";
 import { registerDecorator } from "class-validator";
 import _ from "lodash";

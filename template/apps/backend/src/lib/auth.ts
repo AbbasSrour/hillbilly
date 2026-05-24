@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { AccountEntity } from '@module/auth/entity/account.entity';
 import { PermissionEntity } from '@module/auth/entity/permission.entity';
 import { RoleEntity } from '@module/auth/entity/role.entity';

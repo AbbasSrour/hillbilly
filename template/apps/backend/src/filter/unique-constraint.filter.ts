@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { STATUS_CODES } from "node:http";
 
 import { UniqueConstraintViolationException } from "@mikro-orm/core";

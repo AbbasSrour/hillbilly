@@ -126,18 +126,25 @@ A single monorepo that:
 - Local generated-project verification currently requires patching `@hillbilly/rbac` from `"*"` to a local `link:` dependency until the package is published.
 - Nest 12 alpha is intentionally kept; remove the Swagger postinstall patch once `@nestjs/swagger` publishes a Nest 12-compatible release.
 
+### Done
+
+- **`hillbilly sync` CLI** (Bun executable at `cli/`):
+  - `sync push` — interactive OpenTUI React TUI (lazygit-style): file list, diff view, hunk-level staging (Space to stage, Enter to push)
+  - `sync pull` — wraps `copier update`
+  - **Scanner** (`scan.ts`): finds `/* @hillbilly-sync */` markers, diffs against template, parses hunks for line-level staging
+  - **Push engine** (`push.ts`): applies staged hunks via `applyStagedHunks()`, writes files to template
+  - **Marker system**: `/* @hillbilly-sync */` first-line comment on all template-owned files (125+ files annotated, `module/` excluded)
+  - **Tested E2E** against test-nest: scan detects changes, TUI renders in virtual terminal, keyboard simulation stages hunks, push writes to template
+
 ### In Progress
 
-- **`packages/cli/` — `hillbilly sync push` & `hillbilly sync pull`**
-  - New package `@hillbilly/cli` with OpenTUI interactive interface
-  - Marker system: `/* @hillbilly-sync */` comment on template-owned files
-  - `pull`: wraps `copier update`
-  - `push`: scans markers, diffs vs template, interactive lazygit-style TUI to stage/push changes
+- (none)
 
 ### Next
 
 1. Reserve `@hillbilly` npm scope
-2. Scaffold `packages/sdk/`
+2. Build `hillbilly` as standalone binary (`bun build --compile`) and add to template
+3. Scaffold `packages/sdk/`
 3. De-brand hardcoded strings (cookie prefix, etc.)
 4. Migrate auth email from Handlebars to React Email
 5. Wire example `apps/frontend` in template

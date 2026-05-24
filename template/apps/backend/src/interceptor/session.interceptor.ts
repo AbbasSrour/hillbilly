@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { SessionEntity } from '@/module/auth/entity/session.entity';
 import {
   CallHandler,

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { envValidationSchema } from '../schema/env.schema';
 
 export const validateSchema = (config: Record<string, unknown>) => {

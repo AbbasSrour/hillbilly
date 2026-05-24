@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { GeneratorProvider } from "@/provider/generator.provider";
 import { Transform, TransformationType } from "class-transformer";
 

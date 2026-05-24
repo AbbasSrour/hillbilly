@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { FilterField, FilterOperationType } from "@/decorator/field/filter-field.decorator";
 import { applyDecorators } from "@nestjs/common";
 import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";

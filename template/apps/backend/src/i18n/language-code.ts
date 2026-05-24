@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { LanguageCode } from "@/constant";
 
 export const languageCodes = [LanguageCode.en_US, LanguageCode.ar_LB] as const;

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import type { AuthSession } from "@/types/auth";
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
 import type { Request } from "express";

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Enum } from '@mikro-orm/decorators/legacy';
 
 import { LanguageCode } from '@/constant/language-code.constant';

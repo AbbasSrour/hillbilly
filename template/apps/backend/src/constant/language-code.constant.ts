@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 export enum LanguageCode {
   en_US = 'en_US',
   ar_LB = 'ar_LB',

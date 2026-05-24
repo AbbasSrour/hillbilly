@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Global, Module } from "@nestjs/common";
 
 import { TranslationService } from "./service/translation.service";

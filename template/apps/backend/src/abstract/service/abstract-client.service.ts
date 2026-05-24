@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import type { ClientProxy } from "@nestjs/microservices";
 import { plainToInstance } from "class-transformer";
 import { firstValueFrom } from "rxjs";

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { ApiProperty } from "@nestjs/swagger";
 
 import { ClassField } from "@/decorator/field/class-field.decorator";

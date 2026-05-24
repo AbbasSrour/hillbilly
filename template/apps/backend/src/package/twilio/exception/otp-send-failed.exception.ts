@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { InternalServerErrorException } from "@nestjs/common";
 
 export class OtpSendFailedException extends InternalServerErrorException {

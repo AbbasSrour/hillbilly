@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import * as crypto from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { ApiConfigService } from '@config/service/api-config.service';

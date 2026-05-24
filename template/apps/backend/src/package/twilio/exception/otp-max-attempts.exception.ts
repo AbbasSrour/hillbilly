@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class OtpMaxAttemptsException extends HttpException {

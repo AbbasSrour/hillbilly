@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { UnprocessableEntityException } from "@nestjs/common";
 
 export class InvalidOtpException extends UnprocessableEntityException {

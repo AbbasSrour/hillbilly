@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { Collection, Opt } from "@mikro-orm/core";
 import { PrimaryKey, Property } from "@mikro-orm/decorators/legacy";

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { BadRequestException } from "@nestjs/common";
 
 export class PageTypeException extends BadRequestException {

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { CanActivate, UseGuards, UseInterceptors, applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { AllowAnonymous } from "@thallesp/nestjs-better-auth";

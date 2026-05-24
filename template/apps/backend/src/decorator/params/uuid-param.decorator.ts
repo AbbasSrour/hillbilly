@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { PathParam } from "@/decorator/params/path-param.decorator";
 import { ParseUUIDPipe, type PipeTransform } from "@nestjs/common";
 import { Type } from "@nestjs/common/interfaces";

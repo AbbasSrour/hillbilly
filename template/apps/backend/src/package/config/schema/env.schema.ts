@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { z } from 'zod';
 
 const baseSchema = z.object({

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import {
   type ArgumentsHost,
   Catch,

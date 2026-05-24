@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { applyDecorators, type HttpException, type Type } from "@nestjs/common";
 import { ApiExtraModels, ApiProperty, getSchemaPath } from "@nestjs/swagger";
 

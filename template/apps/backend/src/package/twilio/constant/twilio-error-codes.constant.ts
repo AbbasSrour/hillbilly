@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 export enum TwilioErrorCode {
   VERIFICATION_NOT_FOUND = 60200,
   MAX_SEND_ATTEMPTS_REACHED = 60203,

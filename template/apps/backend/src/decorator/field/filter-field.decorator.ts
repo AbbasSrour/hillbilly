@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 export enum FilterOperationType {
   EQUALS = "equals",
   NOT_EQUALS = "notEquals",

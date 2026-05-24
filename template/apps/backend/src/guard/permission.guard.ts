@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Permissions } from '@/decorator/permission.decorator';
 import { CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';

@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Transform } from "class-transformer";
 import _ from "lodash";
 const { isArray, map, trim } = _;

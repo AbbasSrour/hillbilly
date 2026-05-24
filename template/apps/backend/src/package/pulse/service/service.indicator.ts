@@ -1,3 +1,4 @@
+/* @hillbilly-sync */
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
 import { HealthCheckError, HealthIndicator, type HealthIndicatorResult } from "@nestjs/terminus";
