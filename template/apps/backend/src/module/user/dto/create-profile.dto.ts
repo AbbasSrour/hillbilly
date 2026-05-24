@@ -2,7 +2,7 @@ import {
   DateFieldOptional,
   StringField,
   StringFieldOptional,
-} from '@hillbilly/nest/decorator';
+} from '@/decorator';
 
 export class CreateProfileDto {
   @StringField()

@@ -1,5 +1,5 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
-import { DateFieldOptional, StringField, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { AbstractDto } from '@/abstract';
+import { DateFieldOptional, StringField, StringFieldOptional } from '@/decorator';
 import type { AccountEntity } from '../entity/account.entity';
 
 export type AccountDtoOptions = object;

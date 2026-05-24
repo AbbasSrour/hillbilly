@@ -18,16 +18,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { PageDto } from '@hillbilly/nest/abstract';
+import { PageDto } from '@/abstract';
 import { RoleType } from '@constant/role-type.constant';
-import { ApiPageOkResponse } from '@hillbilly/nest/decorator';
-import { AuthUser } from '@hillbilly/nest/decorator';
-import { Auth } from '@hillbilly/nest/decorator';
-import { UUIDParam } from '@hillbilly/nest/decorator';
-import { UseLanguageInterceptor } from '@hillbilly/nest/interceptor';
+import { ApiPageOkResponse } from '@/decorator';
+import { AuthUser } from '@/decorator';
+import { Auth } from '@/decorator';
+import { UUIDParam } from '@/decorator';
+import { UseLanguageInterceptor } from '@/interceptor';
 import { UserPermissions } from '../constant/user-permissions.constant';
 import { UserFiltersDto } from '../dto/user-filters.dto';
-import { TranslationService } from '@hillbilly/nest/package/translation';
+import { TranslationService } from '@/package/translation';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateCurrentUserDto } from '../dto/update-current-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';

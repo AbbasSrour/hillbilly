@@ -4,9 +4,9 @@
 
 A single monorepo that:
 
-1. **Publishes shared code packages** to `@hillbilly/*` on npm (`ui`, `nest`, `rbac`, `sdk`)
-2. **Scaffolds new projects** via Copier with backend/frontend pre-wired with plugins
-3. **Syncs config changes** via `copier update` to existing projects
+1. **Scaffolds new projects** via Copier with backend/frontend boilerplate pre-wired
+2. **Publishes truly reusable shared packages** to `@hillbilly/*` on npm (`ui`, `rbac`, future `sdk`)
+3. **Syncs boilerplate changes** via Copier/template update flows, with a planned reverse-sync helper for promoting generated-project changes back into `template/`
 
 ## Key Decisions
 
@@ -16,18 +16,18 @@ A single monorepo that:
 - **Template structure**: Separate `template/` subdirectory via `_subdirectory: template` in `copier.yaml`. Root is hillbilly's own tooling — no leakage into consumer projects.
 - **Vite+ role**: One-time template source — initial scaffold committed into `template/` as static files. Copier handles copy + update. **No `vp create` during Copier runs**.
 - **tsconfig**: Template-only via Copier (NOT a published npm package)
-- **Package publishing**: release-it per package. Each `packages/*/` has its own `.release-it.json`. Independent versions, per-package changelog.
+- **Package publishing**: release-it per package for reusable libraries only. Each retained `packages/*/` has its own `.release-it.json`. Independent versions, per-package changelog.
 - **Format/Lint**: Vite+ (`vp check` via lint-staged), no biome
 - **VCS hooks**: `.vite-hooks/` (commit-msg, pre-commit, prepare-commit-msg) using `npx` (Vite+ dispatcher sets PATH to `node_modules/.bin`)
 - **Template drift**: Root configs and template configs are intentionally separate. Root = hillbilly dev tooling. Template = minimal consumer scaffold.
-- **Nest config ownership**: App environment schemas and monolithic API config services live in the generated backend template, not `@hillbilly/nest`. Shared Nest packages accept narrow module options/tokens instead of depending on a central app config service.
+- **Nest boilerplate ownership**: Nest helper/boilerplate code lives directly in the generated backend template, not in a published `@hillbilly/nest` package. The package boundary caused ESM/Rspack/MikroORM/tsdown helper friction; template-owned source keeps runtime and metadata discovery simple.
+- **Two-way boilerplate DX**: Use Copier for template → project updates. Add a Hillbilly reverse-sync helper later for project → template promotion, scoped to template-owned paths only.
 
 ## Packages (published to npm)
 
 | Package           | Status        | Publishing             |
 | ----------------- | ------------- | ---------------------- |
 | `@hillbilly/ui`   | ✅ scaffolded | release-it per package |
-| `@hillbilly/nest` | ✅ scaffolded | release-it per package |
 | `@hillbilly/rbac` | ✅ scaffolded | release-it per package |
 | `@hillbilly/sdk`  | ⬜ planned    | release-it per package |
 
@@ -40,7 +40,7 @@ A single monorepo that:
 - `.release-it.json` — project-level release (not package publishing)
 - `.vite-hooks/`
 - `tsconfig/` — base, nestjs, nextjs, react-library, start presets
-- `package.json` — depends on `@hillbilly/*` from npm (NOT workspace protocol)
+- `package.json` — depends on reusable `@hillbilly/*` packages from npm (NOT workspace protocol); Nest boilerplate is copied as source into the generated backend.
 
 ## Scaffolded Project Structure
 
@@ -49,10 +49,10 @@ A single monorepo that:
 ├── packages/
 │   └── tsconfig/    # Copier-managed tsconfig presets (workspace package)
 ├── apps/
-│   ├── backend/     # NestJS, wired with @hillbilly/nest + @hillbilly/rbac
+│   ├── backend/     # NestJS, local boilerplate source + @hillbilly/rbac
 │   └── web/         # Frontend, wired with @hillbilly/ui
 ├── .github/workflows/
-├── package.json     # depends on @hillbilly/* packages
+├── package.json     # depends on reusable @hillbilly/* packages
 └── tsconfig.json    # extends ./packages/tsconfig/base.json
 ```
 
@@ -76,16 +76,17 @@ A single monorepo that:
 - [x] Added `template/vite.config.ts`, `template/.gitignore`
 - [x] Fixed `apps/frontend` → `apps/web` naming consistency
 - [x] Decided `@hillbilly/nest` should not own app-specific `ApiConfigService`; move backend config to template and wire shared services through package-level options.
+- [x] Decided to drop the `@hillbilly/nest` package boundary entirely for backend boilerplate. Move helpers back into `template/apps/backend/src/` and rely on Copier plus a future reverse-sync helper for DX across generated repos.
 
 ### Recent (Session: 2026-05-24)
 
-- Added barrel exports to `@hillbilly/nest` for all directories (abstract, types, interceptor, decorator, guard, pipe, filter, middleware, interface, utils, package/crypto, package/twilio, package/pdf, package/pulse, package/translation, package/validation).
+- Moved Nest helper code back into the backend template as local source directories (`abstract`, `decorator`, `filter`, `guard`, `interceptor`, `middleware`, `pipe`, `provider`, `types`, `utils`, `exception`, `interface`, `constant`, and package modules). Removed the `@hillbilly/nest` package boundary from the template direction.
 - Fixed nest-cli.json — removed email asset entry (React Email .tsx is compiled, not copied by NestJS).
 - Rewrote Dockerfile for bun workspaces (no turbo, monorepo root build context).
 - Fixed docker-compose.yml and docker-compose_mysql.yml build context: `context: ../..`, `dockerfile: apps/backend/Dockerfile`.
 - Merged pins `app.module.ts` into template: all infrastructure modules wired with `forRootAsync` via `ApiConfigService`.
 - Fixed `ApiConfigService.twilioConfig` — gates on `TWILIO_ENABLED` (mirrors `smtpConfig` pattern).
-- Copied auth module from pins (19 files): entities, DTOs, services, controller, `lib/auth.ts`, constants, provider. All imports refactored from pins aliases to `@hillbilly/nest` or relative paths. OTP exceptions skipped (already in `@hillbilly/nest/package/twilio`).
+- Copied auth module from pins (19 files): entities, DTOs, services, controller, `lib/auth.ts`, constants, provider. Imports now target local backend helpers (`@/abstract`, `@/decorator`, etc.) or relative paths.
 - Copied `MaintenanceMiddleware` to template `src/middleware/`.
 - AuthModule wired in `app.module.ts`.
 - Migrated generated backend template for MikroORM v7:
@@ -104,18 +105,14 @@ A single monorepo that:
   - Template Nest tsconfig preset enables `jsx: "react-jsx"` so `.tsx` email templates typecheck.
   - `ApiConfigService` gained `appName`, derived from `DOMAIN`.
   - RBAC runtime import uses `@hillbilly/rbac/server`; shared types remain from `@hillbilly/rbac`.
-  - Language-code module augmentation targets exported subpath `@hillbilly/nest/constant`.
+  - Language-code module augmentation targets local `@/constant`.
 - Fixed Better Auth access-control merge for newer Better Auth versions:
   - Pins resolved `better-auth@1.4.17`, where `adminAc.statements` used mutable arrays.
   - The generated template currently resolves newer Better Auth (`1.6.x`), where `adminAc.statements` uses readonly tuple types.
   - `mergeStatementsWithBase` now accepts `Record<string, readonly string[]>` and returns the actual mutable merged `Record<string, string[]>` shape without call-site casts.
-- Moved `@hillbilly/nest` Vite+ `pack` config out of root `vite.config.ts` into `packages/nest/vite.config.ts`, matching the Vite+ monorepo reference:
-  - Root config owns shared `staged`, `fmt`, `lint`, `run` settings.
-  - Package config owns the nest package multi-entry `vp pack` build.
-  - Verified `cd packages/nest && vp pack` succeeds with the local package config.
-- Generated test project verification workflow uses the template's npm-style `"*"` dependencies, then locally patches only the disposable generated project for workspace testing:
+- Generated test project verification workflow uses the template's npm-style `"*"` reusable package dependencies, then locally patches only the disposable generated project for workspace testing where needed:
   ```bash
-  rm -rf /home/ares/Projects/projects/test-nest && copier copy /home/ares/Projects/hillbilly/. /home/ares/Projects/projects/test-nest --defaults --data-file /tmp/copier-data.json 2>&1 | tail -1 && sed -i 's|"@hillbilly/nest": "\*"|"@hillbilly/nest": "link:@hillbilly/nest"|' /home/ares/Projects/projects/test-nest/apps/backend/package.json && sed -i 's|"@hillbilly/rbac": "\*"|"@hillbilly/rbac": "link:@hillbilly/rbac"|' /home/ares/Projects/projects/test-nest/apps/backend/package.json
+  rm -rf /home/ares/Projects/projects/test-nest && copier copy /home/ares/Projects/hillbilly/. /home/ares/Projects/projects/test-nest --defaults --data-file /tmp/copier-data.json 2>&1 | tail -1 && sed -i 's|"@hillbilly/rbac": "\*"|"@hillbilly/rbac": "link:@hillbilly/rbac"|' /home/ares/Projects/projects/test-nest/apps/backend/package.json
   ```
 - Added generated-project `postinstall` patch infrastructure under `template/patches/`:
   - `patches/patch-nest-swagger.cjs` patches `@nestjs/swagger/dist/swagger-explorer.js` from `@nestjs/common/interfaces` to `@nestjs/common`.
@@ -126,8 +123,16 @@ A single monorepo that:
 
 - `cookiePrefix: 'class-digital-pins'` in `better-auth-config.service.ts` — needs de-branding.
 - Auth module uses Handlebars template adapter for email — needs migration to React Email.
-- Local generated-project verification currently requires patching `@hillbilly/nest` and `@hillbilly/rbac` from `"*"` to local `link:` dependencies until the packages are published.
+- Local generated-project verification currently requires patching `@hillbilly/rbac` from `"*"` to a local `link:` dependency until the package is published.
 - Nest 12 alpha is intentionally kept; remove the Swagger postinstall patch once `@nestjs/swagger` publishes a Nest 12-compatible release.
+
+### In Progress
+
+- **`packages/cli/` — `hillbilly sync push` & `hillbilly sync pull`**
+  - New package `@hillbilly/cli` with OpenTUI interactive interface
+  - Marker system: `/* @hillbilly-sync */` comment on template-owned files
+  - `pull`: wraps `copier update`
+  - `push`: scans markers, diffs vs template, interactive lazygit-style TUI to stage/push changes
 
 ### Next
 
@@ -137,7 +142,7 @@ A single monorepo that:
 4. Migrate auth email from Handlebars to React Email
 5. Wire example `apps/frontend` in template
 6. Set up release-it per package
-7. Publish packages to npm (then update `"*"` to real semver ranges)
+7. Publish reusable packages to npm (then update `"*"` to real semver ranges)
 
 ## Deferred
 

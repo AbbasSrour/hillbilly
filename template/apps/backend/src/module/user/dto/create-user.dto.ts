@@ -4,7 +4,7 @@ import {
   PasswordFieldOptional,
   PhoneFieldOptional,
   UUIDField,
-} from '@hillbilly/nest/decorator';
+} from '@/decorator';
 import { Type } from 'class-transformer';
 import { ValidateIf, ValidateNested } from 'class-validator';
 import { CreateProfileDto } from './create-profile.dto';

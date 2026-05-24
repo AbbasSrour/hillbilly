@@ -1,4 +1,4 @@
-import { ExtendedEntityRepository } from '@hillbilly/nest/abstract';
+import { ExtendedEntityRepository } from '@/abstract';
 import { EntityGenerator } from '@mikro-orm/entity-generator';
 import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';

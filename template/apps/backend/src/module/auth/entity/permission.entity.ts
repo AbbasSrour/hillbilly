@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@hillbilly/nest/abstract';
-import { UseDto } from '@hillbilly/nest/decorator';
+import { AbstractEntity } from '@/abstract';
+import { UseDto } from '@/decorator';
 import { Collection } from '@mikro-orm/core';
 import { Entity, ManyToMany, Property } from '@mikro-orm/decorators/legacy';
 import {

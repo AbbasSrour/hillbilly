@@ -1,4 +1,4 @@
-import { DateFieldOptional, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { DateFieldOptional, StringFieldOptional } from '@/decorator';
 
 export class UpdateProfileDto {
   @StringFieldOptional()

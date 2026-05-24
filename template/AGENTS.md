@@ -58,6 +58,6 @@ Bun with isolated linker (`bunfig.toml`). **Never use npm or pnpm.**
 - **Email**: React Email templates in `packages/templates/`, compiled at build time.
 - **TypeScript**: Uses native path rewriting via TS7 — no `tsconfig-paths` or `tsc-alias`.
 - **Path aliases**: `@/*`, `@module/*`, `@config/*`, `@lib/*`, `@constant/*` map to `./src/*` variants.
-- **Shared modules**: Imports from `@hillbilly/nest` (middleware, guards, decorators, abstract classes, package modules).
+- **Backend boilerplate**: Nest helpers live as local source under `apps/backend/src` (middleware, guards, decorators, abstract classes, package modules). Do not depend on `@hillbilly/nest`.
 - **Auth**: Better Auth with MikroORM adapter, imported from `@hillbilly/rbac` for permissions.
 - **DB**: MikroORM with PostgreSQL driver.

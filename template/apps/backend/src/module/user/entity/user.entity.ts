@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@hillbilly/nest/abstract';
-import { UseDto } from '@hillbilly/nest/decorator';
+import { AbstractEntity } from '@/abstract';
+import { UseDto } from '@/decorator';
 import {
   Cascade,
   type Opt,

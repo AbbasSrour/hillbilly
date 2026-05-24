@@ -1,5 +1,5 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
-import { DateField, StringField, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { AbstractDto } from '@/abstract';
+import { DateField, StringField, StringFieldOptional } from '@/decorator';
 import type { SessionEntity } from '../entity/session.entity';
 
 export type SessionDtoOptions = object;

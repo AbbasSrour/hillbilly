@@ -1,7 +1,7 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
+import { AbstractDto } from '@/abstract';
 import type { PermissionKeys } from '@constant/permissions.constant';
 import { permissionKeys } from '@constant/permissions.constant';
-import { StringField, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { StringField, StringFieldOptional } from '@/decorator';
 import { PermissionEntity } from '../entity/permission.entity';
 
 export type PermissionDtoOptions = object;

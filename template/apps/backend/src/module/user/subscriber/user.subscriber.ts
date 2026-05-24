@@ -3,7 +3,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import type { EventSubscriber } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { GeneratorProvider } from '@hillbilly/nest/provider';
+import { GeneratorProvider } from '@/provider';
 import { UserEntity } from '../entity/user.entity';
 
 @Injectable()

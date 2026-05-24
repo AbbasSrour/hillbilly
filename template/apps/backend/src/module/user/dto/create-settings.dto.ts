@@ -1,9 +1,9 @@
-import { type LanguageCode, getLanguageCodeEnum } from '@hillbilly/nest/constant';
-import { EnumFieldOptional, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { LanguageCode } from '@/constant/language-code.constant';
+import { EnumFieldOptional, StringFieldOptional } from '@/decorator';
 import { Theme } from '../constant/theme.constant';
 
 export class CreateSettingsDto {
-  @EnumFieldOptional(() => getLanguageCodeEnum())
+  @EnumFieldOptional(() => LanguageCode)
   public readonly locale?: LanguageCode;
 
   @EnumFieldOptional(() => Theme)

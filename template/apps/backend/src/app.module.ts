@@ -1,5 +1,4 @@
-import '@hillbilly/nest/utils/boilerplate.polyfill';
-import './i18n/language-code';
+import '@/utils/boilerplate.polyfill';
 
 import * as path from 'node:path';
 
@@ -16,7 +15,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { MaintenanceMiddleware } from '@hillbilly/nest/middleware';
+import { MaintenanceMiddleware } from '@/middleware';
 
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AuthModule } from '@module/auth/auth.module';
@@ -25,12 +24,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule as AppConfigModule } from '@config/config.module';
 import { ApiConfigService } from '@config/service/api-config.service';
-import { CryptoModule } from '@hillbilly/nest/package/crypto';
-import { TranslationModule } from '@hillbilly/nest/package/translation';
-import { TwilioModule } from '@hillbilly/nest/package/twilio';
-import { ValidationModule } from '@hillbilly/nest/package/validation';
-import { PulseModule } from '@hillbilly/nest/package/pulse';
-import { GeneratorProvider } from '@hillbilly/nest/provider';
+import { CryptoModule } from '@/package/crypto';
+import { TranslationModule } from '@/package/translation';
+import { TwilioModule } from '@/package/twilio';
+import { ValidationModule } from '@/package/validation';
+import { PulseModule } from '@/package/pulse';
 
 @Module({
   imports: [
@@ -73,11 +71,7 @@ import { GeneratorProvider } from '@hillbilly/nest/provider';
       ],
     }),
     TranslationModule,
-    TwilioModule.forRootAsync({
-      imports: [AppConfigModule],
-      inject: [ApiConfigService],
-      useFactory: (configService: ApiConfigService) => configService.twilioConfig,
-    }),
+    TwilioModule,
     ValidationModule,
     PulseModule,
     ThrottlerModule.forRootAsync({
@@ -115,7 +109,6 @@ import { GeneratorProvider } from '@hillbilly/nest/provider';
     UserModule,
     AuthModule,
   ],
-  providers: [GeneratorProvider],
   controllers: [],
 })
 export class AppModule implements NestModule, OnModuleInit {

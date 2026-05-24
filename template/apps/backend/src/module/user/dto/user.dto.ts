@@ -1,11 +1,11 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
+import { AbstractDto } from '@/abstract';
 import {
   BooleanField,
   ClassField,
   EmailFieldOptional,
   PhoneFieldOptional,
   StringField,
-} from '@hillbilly/nest/decorator';
+} from '@/decorator';
 import type { Rel } from '@mikro-orm/core';
 import { UserSettingsDto } from './user-settings.dto';
 import type { UserEntity } from '../entity/user.entity';

@@ -1,4 +1,4 @@
-import { ExtendedEntityRepository } from '@hillbilly/nest/abstract';
+import { ExtendedEntityRepository } from '@/abstract';
 import { EntityGenerator } from '@mikro-orm/entity-generator';
 import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import { Options } from '@mikro-orm/postgresql';

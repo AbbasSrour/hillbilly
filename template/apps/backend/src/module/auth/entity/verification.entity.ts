@@ -1,6 +1,6 @@
-import { AbstractEntity } from '@hillbilly/nest/abstract';
-import { UseDto } from '@hillbilly/nest/decorator';
-// import { UseDto } from '@hillbilly/nest/decorator';
+import { AbstractEntity } from '@/abstract';
+import { UseDto } from '@/decorator';
+// import { UseDto } from '@/decorator';
 import { Entity, Index, Property } from '@mikro-orm/decorators/legacy';
 import { VerificationDto } from '../dto/verification.dto';
 

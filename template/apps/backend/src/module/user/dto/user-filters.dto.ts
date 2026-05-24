@@ -2,7 +2,7 @@ import {
   BooleanFieldOptional,
   FilterOperationType,
   UUIDFieldOptional,
-} from '@hillbilly/nest/decorator';
+} from '@/decorator';
 
 export class UserFiltersDto {
   @UUIDFieldOptional({

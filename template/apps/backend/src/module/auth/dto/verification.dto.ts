@@ -1,5 +1,5 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
-import { DateField, StringField } from '@hillbilly/nest/decorator';
+import { AbstractDto } from '@/abstract';
+import { DateField, StringField } from '@/decorator';
 import type { VerificationEntity } from '../entity/verification.entity';
 
 export type VerificationDtoOptions = object;

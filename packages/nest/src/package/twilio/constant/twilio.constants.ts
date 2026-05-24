@@ -1,1 +1,0 @@
-export const TWILIO_MODULE_OPTIONS = Symbol("TWILIO_MODULE_OPTIONS");

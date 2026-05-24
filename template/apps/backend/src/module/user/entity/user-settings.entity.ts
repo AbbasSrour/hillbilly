@@ -1,6 +1,6 @@
-import { AbstractEntity } from '@hillbilly/nest/abstract';
-import { type LanguageCode, getLanguageCodeEnum } from '@hillbilly/nest/constant';
-import { UseDto } from '@hillbilly/nest/decorator';
+import { AbstractEntity } from '@/abstract';
+import { LanguageCode } from '@/constant/language-code.constant';
+import { UseDto } from '@/decorator';
 import {
   OptionalProps,
   type Rel,
@@ -26,8 +26,8 @@ export class UserSettingsEntity extends AbstractEntity<
 > {
   [OptionalProps]: 'locale' | 'theme' | 'timezone';
 
-  @Enum({ items: () => getLanguageCodeEnum(), default: 'en_US' })
-  public locale: LanguageCode = 'en_US';
+  @Enum({ items: () => LanguageCode, default: LanguageCode.en_US })
+  public locale: LanguageCode = LanguageCode.en_US;
 
   @Enum({ items: () => Theme, default: Theme.SYSTEM })
   public theme: Theme = Theme.SYSTEM;

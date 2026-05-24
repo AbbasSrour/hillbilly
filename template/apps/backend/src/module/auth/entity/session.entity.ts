@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@hillbilly/nest/abstract';
-import { UseDto } from '@hillbilly/nest/decorator';
+import { AbstractEntity } from '@/abstract';
+import { UseDto } from '@/decorator';
 import { Entity, Index, ManyToOne, Property } from '@mikro-orm/decorators/legacy';
 import { SessionDto, SessionDtoOptions } from '../dto/session.dto';
 import { UserEntity } from '../../user/entity/user.entity';

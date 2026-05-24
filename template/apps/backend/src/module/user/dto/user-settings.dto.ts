@@ -1,13 +1,13 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
-import { type LanguageCode, getLanguageCodeEnum } from '@hillbilly/nest/constant';
-import { EnumField, StringField } from '@hillbilly/nest/decorator';
+import { AbstractDto } from '@/abstract';
+import { LanguageCode } from '@/constant/language-code.constant';
+import { EnumField, StringField } from '@/decorator';
 import { Theme } from '../constant/theme.constant';
 import { UserSettingsEntity } from '../entity/user-settings.entity';
 
 export type UserSettingsDtoOptions = Partial<{ isActive: boolean }>;
 
 export class UserSettingsDto extends AbstractDto {
-  @EnumField(() => getLanguageCodeEnum())
+  @EnumField(() => LanguageCode)
   locale: LanguageCode;
 
   @EnumField(() => Theme)

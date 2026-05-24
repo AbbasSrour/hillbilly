@@ -1,5 +1,5 @@
-import { PageOptionsDto } from '@hillbilly/nest/abstract';
-import { EnumFieldOptional } from '@hillbilly/nest/decorator';
+import { PageOptionsDto } from '@/abstract';
+import { EnumFieldOptional } from '@/decorator';
 
 export enum UserSort {
   ID = 'id',

@@ -1,5 +1,5 @@
-import { AbstractDto } from '@hillbilly/nest/abstract';
-import { ClassField, StringField, StringFieldOptional } from '@hillbilly/nest/decorator';
+import { AbstractDto } from '@/abstract';
+import { ClassField, StringField, StringFieldOptional } from '@/decorator';
 import { Rel } from '@mikro-orm/core';
 import { PermissionDto } from './permission.dto';
 import { RoleEntity } from '../entity/role.entity';
