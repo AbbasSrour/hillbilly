@@ -1,0 +1,151 @@
+#!/bin/bash
+
+# This script imports data from a SQL file into the PostgreSQL database.
+#
+# Usage:
+#   ./scripts/import-data.sh [-c <container_name>] <path/to/your-data.sql>
+
+set -euo pipefail
+
+# --- Default values --- #
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Determine project root (prefer Git repository root if available)
+if command -v git >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null || true)"
+fi
+
+# Fallback to one level up from script directory if Git root not found
+if [ -z "${PROJECT_ROOT:-}" ]; then
+  PROJECT_ROOT="$(cd "$(dirname "$0")"/.. && pwd)"
+fi
+
+# --- Load environment variables from .env file --- #
+ENV_FILE="${PROJECT_ROOT}/.env"
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$ENV_FILE"
+  set +a
+else
+  echo "Warning: .env file not found at ${ENV_FILE}" >&2
+fi
+
+# --- Configuration from environment --- #
+DB_NAME="${DB_DATABASE:-}"
+DB_USER="${DB_USERNAME:-}"
+DB_HOST="${DB_HOST:-}"
+DB_PORT="${DB_PORT:-}"
+PGPASSWORD="${DB_PASSWORD:-}"
+
+CONTAINER_NAME="${CONTAINER_NAME:-backend-postgres-1}"
+
+# --- Functions --- #
+usage() {
+  echo "Usage: $0 [-c <container_name>] <path/to/your-data.sql>"
+  echo "  -c <container_name>  Optional: The name of the docker container. Defaults to '${CONTAINER_NAME}'."
+  echo "  -h                   Display this help message."
+  exit 1
+}
+
+# --- Parse command-line options --- #
+while getopts "c:h" opt; do
+  case ${opt} in
+    c )
+      CONTAINER_NAME=$OPTARG
+      ;;
+    h )
+      usage
+      ;;
+    \? )
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# --- Script --- #
+
+echo "--- Database Import Script ---"
+echo ""
+
+# Check if SQL file argument is provided
+if [ -z "${1:-}" ]; then
+  echo "Error: No SQL file provided." >&2
+  usage
+fi
+
+SQL_FILE="$1"
+
+# Validate SQL file exists
+if [ ! -f "$SQL_FILE" ]; then
+    echo "Error: File not found at '${SQL_FILE}'" >&2
+    exit 1
+fi
+
+# Get absolute path and file size for better output
+SQL_FILE_ABS="$(cd "$(dirname "$SQL_FILE")" && pwd)/$(basename "$SQL_FILE")"
+SQL_FILE_SIZE=$(du -h "${SQL_FILE}" | cut -f1)
+
+echo "SQL file: ${SQL_FILE_ABS}"
+echo "File size: ${SQL_FILE_SIZE}"
+echo ""
+
+# --- Pre-import checks ---
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$PGPASSWORD" ]; then
+  echo "Error: One or more required database environment variables are not set." >&2
+  echo "Please ensure DB_DATABASE, DB_USERNAME, DB_HOST, DB_PORT, and DB_PASSWORD are set in your .env file." >&2
+  exit 1
+fi
+
+# Check if Docker is available
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed or not in PATH." >&2
+  exit 1
+fi
+
+# Check if container is running
+if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "Error: Container '${CONTAINER_NAME}' is not running." >&2
+  echo "Available running containers:" >&2
+  docker ps --format "  - {{.Names}}" >&2
+  exit 1
+fi
+
+echo "Target database configuration:"
+echo "  Container: ${CONTAINER_NAME}"
+echo "  Database:  ${DB_NAME}"
+echo "  User:      ${DB_USER}"
+echo "  Host:      ${DB_HOST}"
+echo "  Port:      ${DB_PORT}"
+echo ""
+
+# Confirmation prompt for safety
+read -p "⚠️  This will import data into the database. Continue? (y/N): " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Import cancelled."
+    exit 0
+fi
+
+echo "Starting database import..."
+
+# The '< "$SQL_FILE"' part is what pipes the file content into psql
+if docker exec -i \
+  -e PGPASSWORD="${PGPASSWORD}" \
+  "${CONTAINER_NAME}" psql \
+  --single-transaction \
+  --username="${DB_USER}" \
+  --host="${DB_HOST}" \
+  --port="${DB_PORT}" \
+  --dbname="${DB_NAME}" < "${SQL_FILE}"; then
+  
+  echo ""
+  echo "✓ Import completed successfully!"
+else
+  echo "" >&2
+  echo "✗ Import failed. Changes have been rolled back (--single-transaction)." >&2
+  exit 1
+fi
+
+echo "--- End of Script ---"

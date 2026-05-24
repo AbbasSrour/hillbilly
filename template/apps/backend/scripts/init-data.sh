@@ -1,0 +1,168 @@
+#!/bin/bash
+
+# This script initializes a PostgreSQL database by creating the database and granting privileges.
+#
+# Usage:
+#   ./scripts/init-data.sh [-c <container_name>] [-d <database_name>]
+
+set -euo pipefail
+
+# --- Default values --- #
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Determine project root (prefer Git repository root if available)
+if command -v git >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null || true)"
+fi
+
+# Fallback to one level up from script directory if Git root not found
+if [ -z "${PROJECT_ROOT:-}" ]; then
+  PROJECT_ROOT="$(cd "$(dirname "$0")"/.. && pwd)"
+fi
+
+# --- Load environment variables from .env file --- #
+ENV_FILE="${PROJECT_ROOT}/.env"
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$ENV_FILE"
+  set +a
+else
+  echo "Warning: .env file not found at ${ENV_FILE}" >&2
+fi
+
+# --- Configuration from environment --- #
+DB_NAME="${DB_DATABASE:-}"
+DB_USER="${DB_USERNAME:-}"
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-5432}"
+PGPASSWORD="${DB_PASSWORD:-}"
+
+CONTAINER_NAME="${CONTAINER_NAME:-backend-postgres-1}"
+
+# --- Functions --- #
+usage() {
+  echo "Usage: $0 [-c <container_name>] [-d <database_name>]"
+  echo ""
+  echo "Initialize PostgreSQL database by creating it and granting privileges."
+  echo ""
+  echo "Options:"
+  echo "  -c <container_name>  Optional: The name of the docker container. Defaults to '${CONTAINER_NAME}'."
+  echo "  -d <database_name>   Optional: Override the database name from .env file."
+  echo "  -h, --help           Display this help message."
+  echo ""
+  echo "Examples:"
+  echo "  $0"
+  echo "  $0 -c my-postgres-container"
+  echo "  $0 -d my_database"
+  exit 0
+}
+
+# --- Parse command-line options --- #
+while getopts "c:d:h-:" opt; do
+  case ${opt} in
+    c )
+      CONTAINER_NAME=$OPTARG
+      ;;
+    d )
+      DB_NAME=$OPTARG
+      ;;
+    h )
+      usage
+      ;;
+    - )
+      case "${OPTARG}" in
+        help)
+          usage
+          ;;
+        *)
+          echo "Error: Unknown option --${OPTARG}" >&2
+          usage
+          ;;
+      esac
+      ;;
+    \? )
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# --- Script --- #
+
+echo "--- Database Initialization Script ---"
+echo ""
+
+# --- Pre-initialization checks ---
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$PGPASSWORD" ]; then
+  echo "Error: One or more required database environment variables are not set." >&2
+  echo "Please ensure DB_DATABASE, DB_USERNAME, and DB_PASSWORD are set in your .env file." >&2
+  exit 1
+fi
+
+# Check if Docker is available
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed or not in PATH." >&2
+  exit 1
+fi
+
+# Check if container is running
+if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "Error: Container '${CONTAINER_NAME}' is not running." >&2
+  echo "Available running containers:" >&2
+  docker ps --format "  - {{.Names}}" >&2
+  exit 1
+fi
+
+echo "Database configuration:"
+echo "  Container: ${CONTAINER_NAME}"
+echo "  Database:  ${DB_NAME}"
+echo "  User:      ${DB_USER}"
+echo "  Host:      ${DB_HOST}"
+echo "  Port:      ${DB_PORT}"
+echo ""
+
+# Confirmation prompt for safety
+read -p "⚠️  This will create database '${DB_NAME}' if it doesn't exist. Continue? (y/N): " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Initialization cancelled."
+    exit 0
+fi
+
+echo "Initializing database..."
+echo ""
+
+# Execute database initialization inside the container
+if docker exec -i \
+  -e PGPASSWORD="${PGPASSWORD}" \
+  "${CONTAINER_NAME}" psql \
+  -v ON_ERROR_STOP=1 \
+  --username="${DB_USER}" \
+  --host="${DB_HOST}" \
+  --port="${DB_PORT}" \
+  --dbname="postgres" \
+  <<-EOSQL
+	-- Check if database exists
+	SELECT 'Database already exists' AS message WHERE EXISTS (SELECT FROM pg_database WHERE datname = '${DB_NAME}');
+	
+	-- Create database if it doesn't exist
+	CREATE DATABASE ${DB_NAME};
+	
+	-- Grant privileges
+	GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USER};
+EOSQL
+then
+  echo ""
+  echo "✓ Database initialization completed successfully!"
+  echo ""
+  echo "Next steps:"
+  echo "  - Run migrations: bun migration:update"
+  echo "  - Run seeds: bun seed"
+else
+  echo "" >&2
+  echo "✗ Database initialization failed." >&2
+  exit 1
+fi
+
+echo "--- End of Script ---"

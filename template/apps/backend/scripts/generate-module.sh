@@ -1,0 +1,146 @@
+
+#!/bin/bash
+
+# This script generates a NestJS module with controller and service.
+#
+# Usage:
+#   ./scripts/generate-module.sh <module-name>
+
+set -euo pipefail
+
+# --- Default values --- #
+
+# Use the current working directory (where the script is invoked from)
+PROJECT_ROOT="$(pwd)"
+
+# --- Functions --- #
+usage() {
+  echo "Usage: $0 <module-name>"
+  echo ""
+  echo "Generate a NestJS module with controller and service."
+  echo ""
+  echo "Arguments:"
+  echo "  <module-name>  Name of the module to generate (kebab-case recommended)"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help     Display this help message"
+  echo ""
+  echo "Examples:"
+  echo "  $0 user"
+  echo "  $0 product-category"
+  exit 0
+}
+
+# --- Parse command-line options --- #
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  usage
+fi
+
+# --- Validation --- #
+
+# Check if module name is provided
+if [ -z "${1:-}" ]; then
+  echo "Error: Please provide a module name." >&2
+  echo "" >&2
+  usage
+fi
+
+MODULE_NAME="$1"
+
+# Validate module name format (alphanumeric, hyphens, underscores)
+if ! [[ "$MODULE_NAME" =~ ^[a-z0-9_-]+$ ]]; then
+  echo "Error: Invalid module name '${MODULE_NAME}'." >&2
+  echo "Module name should only contain lowercase letters, numbers, hyphens, and underscores." >&2
+  exit 1
+fi
+
+# --- Pre-generation checks --- #
+
+# Check if nest-cli is available
+if ! command -v nest >/dev/null 2>&1; then
+  echo "Error: NestJS CLI is not installed or not in PATH." >&2
+  echo "" >&2
+  echo "Install it with:" >&2
+  echo "  bun add -g @nestjs/cli" >&2
+  echo "  or" >&2
+  echo "  bun add -g @nestjs/cli" >&2
+  exit 1
+fi
+
+# Check if we're in a NestJS project
+if [ ! -f "${PROJECT_ROOT}/nest-cli.json" ]; then
+  echo "Error: nest-cli.json not found. Are you in a NestJS project?" >&2
+  echo "Project root: ${PROJECT_ROOT}" >&2
+  exit 1
+fi
+
+# Check if module already exists
+MODULE_PATH="${PROJECT_ROOT}/src/${MODULE_NAME}"
+if [ -d "${MODULE_PATH}" ]; then
+  echo "Warning: Module directory already exists at ${MODULE_PATH}" >&2
+  read -p "⚠️  Continue anyway? This may overwrite existing files. (y/N): " -n 1 -r
+  echo ""
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Module generation cancelled."
+    exit 0
+  fi
+fi
+
+# --- Generation --- #
+
+echo "--- NestJS Module Generator ---"
+echo ""
+echo "Module name: ${MODULE_NAME}"
+echo "Project root: ${PROJECT_ROOT}"
+echo ""
+echo "This will generate:"
+echo "  ✓ Module"
+echo "  ✓ Controller"
+echo "  ✓ Service"
+echo ""
+
+# Change to project root to ensure nest commands work correctly
+cd "${PROJECT_ROOT}"
+
+# Generate module
+echo "Creating module: ${MODULE_NAME}..."
+if nest g module "${MODULE_NAME}" --no-spec; then
+  echo "✓ Module created successfully"
+else
+  echo "✗ Failed to create module" >&2
+  exit 1
+fi
+
+echo ""
+
+# Generate controller
+echo "Creating controller for module: ${MODULE_NAME}..."
+if nest g controller "${MODULE_NAME}" --no-spec; then
+  echo "✓ Controller created successfully"
+else
+  echo "✗ Failed to create controller" >&2
+  exit 1
+fi
+
+echo ""
+
+# Generate service
+echo "Creating service for module: ${MODULE_NAME}..."
+if nest g service "${MODULE_NAME}" --no-spec; then
+  echo "✓ Service created successfully"
+else
+  echo "✗ Failed to create service" >&2
+  exit 1
+fi
+
+echo ""
+echo "✓ Module, controller, and service for '${MODULE_NAME}' created successfully!"
+echo ""
+echo "Generated files:"
+if [ -d "${MODULE_PATH}" ]; then
+  find "${MODULE_PATH}" -type f | sed 's|^|  - |'
+else
+  echo "  (Check src/${MODULE_NAME}/)"
+fi
+echo ""
+echo "--- End of Script ---"

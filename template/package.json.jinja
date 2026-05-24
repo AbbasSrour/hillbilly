@@ -9,7 +9,7 @@
   ],
   "type": "module",
   "scripts": {
-    "prepare": "vp config",
+    "prepare": "test -d .git && vp config || true",
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run",
     "check": "vp check",
@@ -24,12 +24,7 @@
       "path": "cz-conventional-changelog"
     }
   },
-  "dependencies": {
-    "@hillbilly/nest": "*",
-    "@hillbilly/rbac": "*",
-    "@hillbilly/ui": "*",
-    "@hillbilly/sdk": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",

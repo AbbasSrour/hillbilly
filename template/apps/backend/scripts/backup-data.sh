@@ -1,0 +1,140 @@
+#!/bin/bash
+
+# This script creates a backup of the PostgreSQL database from a Docker container.
+
+set -euo pipefail
+
+# --- Default values --- #
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Determine project root (prefer Git repository root if available)
+if command -v git >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null || true)"
+fi
+
+# Fallback to one level up from script directory if Git root not found
+if [ -z "${PROJECT_ROOT:-}" ]; then
+  PROJECT_ROOT="$(cd "$(dirname "$0")"/.. && pwd)"
+fi
+
+DATE=$(date +"%Y_%m_%d_%H_%M_%S")
+
+# --- Load environment variables from .env file --- #
+ENV_FILE="${PROJECT_ROOT}/.env"
+BACKEND_ENV_FILE="${PROJECT_ROOT}/apps/backend/.env"
+
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$ENV_FILE"
+  set +a
+elif [ -f "$BACKEND_ENV_FILE" ]; then
+  echo "Warning: .env file not found at ${ENV_FILE}, using ${BACKEND_ENV_FILE} instead" >&2
+  set -a
+  # shellcheck disable=SC1090
+  . "$BACKEND_ENV_FILE"
+  set +a
+else
+  echo "Warning: .env file not found at ${ENV_FILE}" >&2
+fi
+
+# --- Configuration from environment --- #
+DB_NAME="${DB_DATABASE:-}"
+DB_USER="${DB_USERNAME:-}"
+DB_HOST="${DB_HOST:-}"
+DB_PORT="${DB_PORT:-}"
+PGPASSWORD="${DB_PASSWORD:-}"
+
+CONTAINER_NAME="${CONTAINER_NAME:-backend-postgres-1}"
+
+# Ensure backups directory exists
+BACKUP_DIR="${PROJECT_ROOT}/backups"
+mkdir -p "${BACKUP_DIR}"
+
+BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_cloudsql-${DATE}-dump.sql"
+
+# --- Functions --- #
+usage() {
+  echo "Usage: $0 [-c <container_name>] [-f <backup_file>]"
+  echo "  -c <container_name>  Optional: The name of the docker container. Defaults to '${CONTAINER_NAME}'."
+  echo "  -f <backup_file>     Optional: The path for the backup file. Defaults to '${BACKUP_FILE}'."
+  echo "  -h                   Display this help message."
+  exit 1
+}
+
+# --- Parse command-line options --- #
+while getopts "c:f:h" opt; do
+  case ${opt} in
+    c )
+      CONTAINER_NAME=$OPTARG
+      ;;
+    f )
+      BACKUP_FILE=$OPTARG
+      ;;
+    h )
+      usage
+      ;;
+    \? )
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# --- Pre-backup checks --- #
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$PGPASSWORD" ]; then
+  echo "Error: One or more required database environment variables are not set." >&2
+  echo "Please ensure DB_DATABASE, DB_USERNAME, DB_HOST, DB_PORT, and DB_PASSWORD are set in your .env file." >&2
+  exit 1
+fi
+
+# Check if Docker is available
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed or not in PATH." >&2
+  exit 1
+fi
+
+# Check if container is running
+if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "Error: Container '${CONTAINER_NAME}' is not running." >&2
+  echo "Available running containers:" >&2
+  docker ps --format "  - {{.Names}}" >&2
+  exit 1
+fi
+
+# --- Command --- #
+echo "Starting database backup..."
+echo "Container: ${CONTAINER_NAME}"
+echo "Database: ${DB_NAME}"
+echo "Host: ${DB_HOST}"
+echo "Port: ${DB_PORT}"
+echo "User: ${DB_USER}"
+echo "Backup file: ${BACKUP_FILE}"
+echo ""
+
+if /usr/bin/docker exec -i \
+    -e PGPASSWORD="${PGPASSWORD}" \
+    "${CONTAINER_NAME}" /usr/bin/pg_dump \
+    --dbname="${DB_NAME}" \
+    --column-inserts \
+    --username="${DB_USER}" \
+    --host="${DB_HOST}" \
+    --port="${DB_PORT}" > "${BACKUP_FILE}"; then
+    
+    # Verify backup file was created and is not empty
+    if [ -s "${BACKUP_FILE}" ]; then
+        BACKUP_SIZE=$(du -h "${BACKUP_FILE}" | cut -f1)
+        echo "✓ Backup completed successfully!"
+        echo "  File: ${BACKUP_FILE}"
+        echo "  Size: ${BACKUP_SIZE}"
+    else
+        echo "Error: Backup file was created but is empty." >&2
+        rm -f "${BACKUP_FILE}"
+        exit 1
+    fi
+else
+    echo "✗ Backup failed." >&2
+    # Remove incomplete backup file if it exists
+    rm -f "${BACKUP_FILE}" || true
+    exit 1
+fi

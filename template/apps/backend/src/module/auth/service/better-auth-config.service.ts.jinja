@@ -1,0 +1,247 @@
+import { permissions } from '@constant/permissions.constant';
+import { RoleType } from '@constant/role-type.constant';
+import { MikroORM, RequestContext } from '@mikro-orm/core';
+import { PermissionEntity } from '../entity/permission.entity';
+import { RoleEntity } from '../entity/role.entity';
+import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ApiConfigService } from '@config/service/api-config.service';
+import { TwilioService } from '@hillbilly/nest/package/twilio';
+import { PermissionWithRoles } from '@hillbilly/rbac';
+import { rbac } from '@hillbilly/rbac/server';
+import { GeneratorProvider } from '@hillbilly/nest/provider';
+import { authConfig as baseAuthConfig } from '@lib/auth';
+import { openAPI, phoneNumber } from 'better-auth/plugins';
+import { createAccessControl } from 'better-auth/plugins/access';
+import { admin } from 'better-auth/plugins/admin';
+import { adminAc, defaultStatements } from 'better-auth/plugins/admin/access';
+import { mikroOrmAdapter } from 'better-auth-mikro-orm';
+import {
+  generateEmailVerificationEmail,
+  generatePasswordResetEmail,
+} from '@[[ project_name ]]/templates/email';
+
+@Injectable()
+export class BetterAuthConfigService {
+  private readonly permissionConfigs: PermissionWithRoles[][] =
+    Object.values(permissions);
+
+  constructor(
+    private readonly orm: MikroORM,
+    private readonly configService: ApiConfigService,
+    private readonly twilioService: TwilioService,
+    private readonly mailerService: MailerService,
+  ) {}
+
+  getAuthMiddleware() {
+    return (_: unknown, __: unknown, next: () => void) =>
+      RequestContext.create(this.orm.em, next);
+  }
+
+  createAuthConfig() {
+    const allPermissions = this.permissionConfigs.flat();
+    const accessControl = this.buildAccessControl(allPermissions);
+
+    return {
+      ...baseAuthConfig,
+      basePath: '/api/auth',
+      secret: this.configService.betterAuthConfig.secret,
+      trustedOrigins: this.configService.trustedOrigins,
+      database: mikroOrmAdapter(this.orm, {
+        debugLogs: !this.configService.isDevelopment,
+      }),
+      emailAndPassword: {
+        enabled: true,
+        disableSignUp: true,
+        requireEmailVerification: true,
+        autoSignIn: false,
+        revokeSessionsOnPasswordReset: true,
+        password: {
+          hash: async (password: string) =>
+            GeneratorProvider.generateHash(password),
+          verify: async ({ password, hash }) =>
+            GeneratorProvider.validateHash(password, hash),
+        },
+        sendResetPassword: async ({ user, url }) => {
+          const appName = this.configService.appName;
+          const { subject, html, text } = await generatePasswordResetEmail({
+            appName,
+            name: user.name,
+            resetUrl: url,
+          });
+
+          await this.mailerService.sendMail({
+            to: user.email,
+            subject,
+            html,
+            text,
+          });
+        },
+      },
+      emailVerification: {
+        sendVerificationEmail: async ({ user, url }) => {
+          const appName = this.configService.appName;
+          const { subject, html, text } = await generateEmailVerificationEmail({
+            appName,
+            name: user.name,
+            verificationUrl: url,
+          });
+
+          await this.mailerService.sendMail({
+            to: user.email,
+            subject,
+            html,
+            text,
+          });
+        },
+      },
+      session: {
+        ...baseAuthConfig.session,
+        expiresIn: 60 * 60 * 24 * 7,
+        updateAge: 60 * 60 * 24,
+      },
+      advanced: {
+        ...baseAuthConfig.advanced,
+        cookiePrefix: 'app',
+        useSecureCookies: this.configService.isProduction,
+      },
+      plugins: [
+        admin({
+          ac: accessControl.ac,
+          roles: accessControl.roles,
+          defaultRole: RoleType.USER,
+        }),
+        rbac({
+          sync: true,
+          orm: this.orm,
+          permissions: this.buildSystemPermissions(allPermissions),
+          schema: {
+            role: {
+              modelName: RoleEntity.name,
+            },
+            permission: {
+              modelName: PermissionEntity.name,
+            },
+          },
+        }),
+        openAPI({
+          path: '/api/auth',
+          disableDefaultReference: true,
+        }),
+        phoneNumber({
+          sendOTP: async ({ phoneNumber }) => {
+            await this.twilioService.sendOtp(phoneNumber);
+          },
+          verifyOTP: async ({ phoneNumber, code }) => {
+            return await this.twilioService.verifyOtp(phoneNumber, code);
+          },
+          signUpOnVerification: {
+            getTempEmail: (phone) => `${phone.replace(/\+/g, '')}@phone.local`,
+          },
+        }),
+      ],
+    };
+  }
+
+  private buildAccessControl(allPermissions: PermissionWithRoles[]) {
+    const customStatement = this.buildAccessControlStatement(allPermissions);
+
+    const statement = {
+      ...defaultStatements,
+      ...customStatement,
+      user: [
+        ...(defaultStatements.user || []),
+        ...(customStatement.user || []),
+      ].filter((v, i, a) => a.indexOf(v) === i),
+    } as const;
+
+    const ac = createAccessControl(statement);
+    const roles: Record<string, ReturnType<typeof ac.newRole>> = {};
+
+    for (const roleType of Object.values(RoleType)) {
+      const rolePermissions = this.buildRoleAccessControlStatement(
+        allPermissions,
+        roleType,
+      );
+
+      if (roleType === RoleType.ADMIN) {
+        const mergedStatements = this.mergeStatementsWithBase(
+          adminAc.statements,
+          rolePermissions,
+        );
+
+        roles[roleType] = ac.newRole(mergedStatements);
+      } else {
+        roles[roleType] = ac.newRole({
+          user: [],
+          session: [],
+          ...rolePermissions,
+        });
+      }
+    }
+
+    return { ac, roles };
+  }
+
+  private buildAccessControlStatement(
+    permissions: PermissionWithRoles[],
+  ): Record<string, string[]> {
+    const statement: Record<string, string[]> = {};
+    for (const permission of permissions) {
+      const [resource, ...actionParts] = permission.code.split('.');
+      if (!resource) continue;
+      const action = actionParts.join('.');
+      if (!action) continue;
+      if (!statement[resource]) statement[resource] = [];
+      if (!statement[resource].includes(action))
+        statement[resource].push(action);
+    }
+    return statement;
+  }
+
+  private buildRoleAccessControlStatement(
+    permissions: PermissionWithRoles[],
+    role: string,
+  ): Record<string, string[]> {
+    const rolePerms: Record<string, string[]> = {};
+    for (const permission of permissions) {
+      if (permission.users?.includes(role)) {
+        const [resource, ...actionParts] = permission.code.split('.');
+        if (!resource) continue;
+        const action = actionParts.join('.');
+        if (!action) continue;
+        if (!rolePerms[resource]) rolePerms[resource] = [];
+        if (!rolePerms[resource].includes(action))
+          rolePerms[resource].push(action);
+      }
+    }
+
+    return rolePerms;
+  }
+
+  private mergeStatementsWithBase(
+    base: Record<string, readonly string[]>,
+    ...statements: Record<string, readonly string[]>[]
+  ): Record<string, string[]> {
+    const merged: Record<string, string[]> = {};
+
+    for (const statement of [base, ...statements]) {
+      for (const [resource, actions] of Object.entries(statement)) {
+        merged[resource] = [
+          ...(merged[resource] ?? []),
+          ...actions,
+        ].filter((value, index, arr) => arr.indexOf(value) === index);
+      }
+    }
+
+    return merged;
+  }
+
+  private buildSystemPermissions(permissions: PermissionWithRoles[]) {
+    return permissions.map((p) => ({
+      code: p.code,
+      name: p.name,
+      description: p.description,
+    }));
+  }
+}
