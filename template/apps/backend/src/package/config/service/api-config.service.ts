@@ -8,7 +8,9 @@ import { SeedManager } from '@mikro-orm/seeder';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
-import { isNil } from 'lodash';
+import _ from 'lodash';
+
+const { isNil } = _;
 import parse from 'parse-duration';
 
 import type { EnvironmentVariables } from '../schema/env.schema';
@@ -92,6 +94,7 @@ export class ApiConfigService {
 
       // Entity configuration
       entityRepository: ExtendedEntityRepository,
+      autoLoadEntities: true,
       entities: [
         './dist/module/**/*.entity.js',
         './dist/module/**/entity/*.entity.js',

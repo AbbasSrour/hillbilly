@@ -16,8 +16,8 @@ import {
   FilterMetadata,
   FilterOperationType,
 } from "@/decorator/field/filter-field.decorator";
-import { isArray, isNil } from "lodash";
-import { compact, map } from "lodash";
+import _ from "lodash";
+const { compact, isArray, isNil, map } = _;
 
 // ------------------------------------------------ Global -----------------------------------------------------------//
 declare global {

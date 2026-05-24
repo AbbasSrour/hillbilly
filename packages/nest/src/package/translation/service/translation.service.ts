@@ -4,7 +4,8 @@ import { I18nService, TranslateOptions } from "nestjs-i18n";
 import { AbstractDto } from "@/abstract/dto/abstract.dto";
 import { STATIC_TRANSLATION_DECORATOR_KEY } from "@/decorator/translate.decorator";
 import type { ITranslationDecoratorInterface } from "@/interface/ITranslationDecoratorInterface";
-import { isArray, isString, map } from "lodash";
+import _ from "lodash";
+const { isArray, isString, map } = _;
 import { ContextProvider } from "@/provider/context.provider";
 
 @Injectable()

@@ -1,7 +1,8 @@
 import { Param, PipeTransform, Type } from "@nestjs/common";
 import { ApiParamOptions } from "@nestjs/swagger";
 import { DECORATORS } from "@/constant/swagger.constants";
-import { isString, omit } from "lodash";
+import _ from "lodash";
+const { isString, omit } = _;
 
 type SwaggerEnumType = object | (string | number)[];
 

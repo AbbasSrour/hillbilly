@@ -1,5 +1,6 @@
 import { Transform } from "class-transformer";
-import { isArray, map, trim } from "lodash";
+import _ from "lodash";
+const { isArray, map, trim } = _;
 
 const cleanString = (str: string) => {
   return trim(

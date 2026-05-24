@@ -20,15 +20,16 @@ A single monorepo that:
 - **Format/Lint**: Vite+ (`vp check` via lint-staged), no biome
 - **VCS hooks**: `.vite-hooks/` (commit-msg, pre-commit, prepare-commit-msg) using `npx` (Vite+ dispatcher sets PATH to `node_modules/.bin`)
 - **Template drift**: Root configs and template configs are intentionally separate. Root = hillbilly dev tooling. Template = minimal consumer scaffold.
+- **Nest config ownership**: App environment schemas and monolithic API config services live in the generated backend template, not `@hillbilly/nest`. Shared Nest packages accept narrow module options/tokens instead of depending on a central app config service.
 
 ## Packages (published to npm)
 
-| Package           | Status     | Publishing             |
-| ----------------- | ---------- | ---------------------- |
-| `@hillbilly/ui`   | ⬜ planned | release-it per package |
-| `@hillbilly/nest` | ⬜ planned | release-it per package |
-| `@hillbilly/rbac` | ⬜ planned | release-it per package |
-| `@hillbilly/sdk`  | ⬜ planned | release-it per package |
+| Package           | Status        | Publishing             |
+| ----------------- | ------------- | ---------------------- |
+| `@hillbilly/ui`   | ✅ scaffolded | release-it per package |
+| `@hillbilly/nest` | ✅ scaffolded | release-it per package |
+| `@hillbilly/rbac` | ✅ scaffolded | release-it per package |
+| `@hillbilly/sdk`  | ⬜ planned    | release-it per package |
 
 ## Template (Copier) — flat config files
 
@@ -74,14 +75,69 @@ A single monorepo that:
 - [x] Created `template/package.json.jinja` with `@hillbilly/*` deps, `packageManager` from Copier choice
 - [x] Added `template/vite.config.ts`, `template/.gitignore`
 - [x] Fixed `apps/frontend` → `apps/web` naming consistency
+- [x] Decided `@hillbilly/nest` should not own app-specific `ApiConfigService`; move backend config to template and wire shared services through package-level options.
+
+### Recent (Session: 2026-05-24)
+
+- Added barrel exports to `@hillbilly/nest` for all directories (abstract, types, interceptor, decorator, guard, pipe, filter, middleware, interface, utils, package/crypto, package/twilio, package/pdf, package/pulse, package/translation, package/validation).
+- Fixed nest-cli.json — removed email asset entry (React Email .tsx is compiled, not copied by NestJS).
+- Rewrote Dockerfile for bun workspaces (no turbo, monorepo root build context).
+- Fixed docker-compose.yml and docker-compose_mysql.yml build context: `context: ../..`, `dockerfile: apps/backend/Dockerfile`.
+- Merged pins `app.module.ts` into template: all infrastructure modules wired with `forRootAsync` via `ApiConfigService`.
+- Fixed `ApiConfigService.twilioConfig` — gates on `TWILIO_ENABLED` (mirrors `smtpConfig` pattern).
+- Copied auth module from pins (19 files): entities, DTOs, services, controller, `lib/auth.ts`, constants, provider. All imports refactored from pins aliases to `@hillbilly/nest` or relative paths. OTP exceptions skipped (already in `@hillbilly/nest/package/twilio`).
+- Copied `MaintenanceMiddleware` to template `src/middleware/`.
+- AuthModule wired in `app.module.ts`.
+- Migrated generated backend template for MikroORM v7:
+  - Entity decorators now import from `@mikro-orm/decorators/legacy` because the template uses `experimentalDecorators: true`.
+  - Non-decorator runtime types remain imported from `@mikro-orm/core`.
+  - Removed obsolete MikroORM config options (`alwaysAnalyseProperties`, `strict`, `validate`) that v7 enables/removes by default.
+  - Kept `EnsureRequestContext` from the legacy decorators package instead of changing behavior to `CreateRequestContext`.
+- Fixed stale pins query-builder assumptions in `UserService`:
+  - Removed invalid joins on scalar `role` and non-existent `profile`.
+  - Kept the valid `settings` relation join.
+  - Changed search fields from profile names to `user.name`.
+- Aligned user DTO/service fields with the entity and Better Auth schema by renaming `phone` to `phoneNumber`.
+- Fixed generated backend package/template wiring:
+  - `template/apps/backend/package.json.jinja` remains the source so Copier can process `[[ project_name ]]`.
+  - Generated backend depends on `@[[ project_name ]]/templates` for React Email templates.
+  - Template Nest tsconfig preset enables `jsx: "react-jsx"` so `.tsx` email templates typecheck.
+  - `ApiConfigService` gained `appName`, derived from `DOMAIN`.
+  - RBAC runtime import uses `@hillbilly/rbac/server`; shared types remain from `@hillbilly/rbac`.
+  - Language-code module augmentation targets exported subpath `@hillbilly/nest/constant`.
+- Fixed Better Auth access-control merge for newer Better Auth versions:
+  - Pins resolved `better-auth@1.4.17`, where `adminAc.statements` used mutable arrays.
+  - The generated template currently resolves newer Better Auth (`1.6.x`), where `adminAc.statements` uses readonly tuple types.
+  - `mergeStatementsWithBase` now accepts `Record<string, readonly string[]>` and returns the actual mutable merged `Record<string, string[]>` shape without call-site casts.
+- Moved `@hillbilly/nest` Vite+ `pack` config out of root `vite.config.ts` into `packages/nest/vite.config.ts`, matching the Vite+ monorepo reference:
+  - Root config owns shared `staged`, `fmt`, `lint`, `run` settings.
+  - Package config owns the nest package multi-entry `vp pack` build.
+  - Verified `cd packages/nest && vp pack` succeeds with the local package config.
+- Generated test project verification workflow uses the template's npm-style `"*"` dependencies, then locally patches only the disposable generated project for workspace testing:
+  ```bash
+  rm -rf /home/ares/Projects/projects/test-nest && copier copy /home/ares/Projects/hillbilly/. /home/ares/Projects/projects/test-nest --defaults --data-file /tmp/copier-data.json 2>&1 | tail -1 && sed -i 's|"@hillbilly/nest": "\*"|"@hillbilly/nest": "link:@hillbilly/nest"|' /home/ares/Projects/projects/test-nest/apps/backend/package.json && sed -i 's|"@hillbilly/rbac": "\*"|"@hillbilly/rbac": "link:@hillbilly/rbac"|' /home/ares/Projects/projects/test-nest/apps/backend/package.json
+  ```
+- Added generated-project `postinstall` patch infrastructure under `template/patches/`:
+  - `patches/patch-nest-swagger.cjs` patches `@nestjs/swagger/dist/swagger-explorer.js` from `@nestjs/common/interfaces` to `@nestjs/common`.
+  - This keeps Nest 12 alpha while working around the current `@nestjs/swagger@11.x` deep-import incompatibility.
+  - The script is idempotent and resolves Swagger from `apps/backend/package.json` so it works with Bun's isolated linker.
+
+### Known Gaps
+
+- `cookiePrefix: 'class-digital-pins'` in `better-auth-config.service.ts` — needs de-branding.
+- Auth module uses Handlebars template adapter for email — needs migration to React Email.
+- Local generated-project verification currently requires patching `@hillbilly/nest` and `@hillbilly/rbac` from `"*"` to local `link:` dependencies until the packages are published.
+- Nest 12 alpha is intentionally kept; remove the Swagger postinstall patch once `@nestjs/swagger` publishes a Nest 12-compatible release.
 
 ### Next
 
 1. Reserve `@hillbilly` npm scope
-2. Scaffold packages: `packages/ui/`, `packages/nest/`, `packages/rbac/`, `packages/sdk/`
-3. Wire example `apps/backend` + `apps/web` in template (with Dockerfiles)
-4. Set up release-it per package
-5. Publish packages to npm (then update `"*"` to real semver ranges)
+2. Scaffold `packages/sdk/`
+3. De-brand hardcoded strings (cookie prefix, etc.)
+4. Migrate auth email from Handlebars to React Email
+5. Wire example `apps/frontend` in template
+6. Set up release-it per package
+7. Publish packages to npm (then update `"*"` to real semver ranges)
 
 ## Deferred
 

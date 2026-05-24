@@ -1,4 +1,5 @@
 import '@hillbilly/nest/utils/boilerplate.polyfill';
+import './i18n/language-code';
 
 import * as path from 'node:path';
 
@@ -48,17 +49,6 @@ import { GeneratorProvider } from '@hillbilly/nest/provider';
     }),
     CqrsModule,
     CryptoModule,
-    TranslationModule,
-    TwilioModule,
-    ValidationModule,
-    PulseModule,
-    ThrottlerModule.forRootAsync({
-      imports: [AppConfigModule],
-      inject: [ApiConfigService],
-      useFactory: (configService: ApiConfigService) => ({
-        throttlers: [configService.throttlerConfigs],
-      }),
-    }),
     I18nModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [ApiConfigService],
@@ -81,6 +71,21 @@ import { GeneratorProvider } from '@hillbilly/nest/provider';
         AcceptLanguageResolver,
         new HeaderResolver(['x-lang']),
       ],
+    }),
+    TranslationModule,
+    TwilioModule.forRootAsync({
+      imports: [AppConfigModule],
+      inject: [ApiConfigService],
+      useFactory: (configService: ApiConfigService) => configService.twilioConfig,
+    }),
+    ValidationModule,
+    PulseModule,
+    ThrottlerModule.forRootAsync({
+      imports: [AppConfigModule],
+      inject: [ApiConfigService],
+      useFactory: (configService: ApiConfigService) => ({
+        throttlers: [configService.throttlerConfigs],
+      }),
     }),
     MulterModule.registerAsync({
       imports: [AppConfigModule],

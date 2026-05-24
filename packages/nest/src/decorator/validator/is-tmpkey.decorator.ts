@@ -1,6 +1,7 @@
 import type { ValidationOptions } from "class-validator";
 import { registerDecorator } from "class-validator";
-import { isString } from "lodash";
+import _ from "lodash";
+const { isString } = _;
 
 export function IsTmpKey(validationOptions?: ValidationOptions): PropertyDecorator {
   return (object, propertyName) => {

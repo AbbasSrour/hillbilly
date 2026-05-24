@@ -4,7 +4,8 @@ import { CanActivate, type ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { hasPermissions, userHasAllPermissions } from "@hillbilly/rbac";
 import type { Request } from "express";
-import { isEmpty } from "lodash";
+import _ from "lodash";
+const { isEmpty } = _;
 
 @Injectable()
 export class PermissionGuard implements CanActivate {

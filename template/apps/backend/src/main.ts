@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "./i18n/language-code";
 
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";

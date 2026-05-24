@@ -8,8 +8,10 @@
     "apps/*"
   ],
   "type": "module",
+  "//": "TODO: Remove the postinstall Swagger patch when @nestjs/swagger publishes v12 with official Nest 12 support.",
   "scripts": {
     "prepare": "test -d .git && vp config || true",
+    "postinstall": "node patches/patch-nest-swagger.cjs",
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run",
     "check": "vp check",
@@ -25,6 +27,13 @@
     }
   },
   "dependencies": {},
+  "overrides": {
+    "@nestjs/common": "^12.0.0-alpha.4",
+    "@nestjs/core": "^12.0.0-alpha.4",
+    "@nestjs/microservices": "^12.0.0-alpha.4",
+    "@nestjs/platform-express": "^12.0.0-alpha.4",
+    "@nestjs/testing": "^12.0.0-alpha.4"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",

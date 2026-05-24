@@ -5,7 +5,8 @@ import type { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
 import { Catch, HttpStatus } from "@nestjs/common";
 import type { Reflector } from "@nestjs/core";
 import type { Response } from "express";
-import { camelCase } from "lodash";
+import _ from "lodash";
+const { camelCase } = _;
 
 @Catch(UniqueConstraintViolationException)
 export class UniqueConstraintViolationFilter implements ExceptionFilter<UniqueConstraintViolationException> {

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Twilio } from "twilio";
+import twilio from "twilio";
+import type { Twilio } from "twilio";
 
 import { TwilioErrorCode } from "@/package/twilio/constant/twilio-error-codes.constant";
 import { OtpVerificationFailedException } from "@/package/twilio/exception/otp-verification-failed.exception";
@@ -17,7 +18,7 @@ export class TwilioService {
   private readonly verifyServiceSid: string;
 
   constructor(@Inject(TWILIO_MODULE_OPTIONS) options: TwilioModuleOptions) {
-    this.client = new Twilio(options.accountSid, options.authToken);
+    this.client = new twilio(options.accountSid, options.authToken);
     this.verifyServiceSid = options.verifyServiceSid;
   }
 

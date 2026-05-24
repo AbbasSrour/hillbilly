@@ -44,7 +44,9 @@ export function getLanguageCodes(): readonly string[] {
 }
 
 export function getLanguageCodeEnum(): Record<string, string> {
-  return Object.fromEntries(getLanguageCodes().map((code) => [code, code]));
+  return languageCodes.length > 0
+    ? Object.fromEntries(languageCodes.map((code) => [code, code]))
+    : {};
 }
 
 export function getSupportedLanguageCount(): number {

@@ -1,17 +1,87 @@
-import "../i18n/language-code";
+import { ExtendedEntityRepository } from '@hillbilly/nest/abstract';
+import { EntityGenerator } from '@mikro-orm/entity-generator';
+import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
+import { Options } from '@mikro-orm/postgresql';
+import { PopulateHint, PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import { SeedManager } from '@mikro-orm/seeder';
+import dotenv from 'dotenv';
 
-import { applyLanguageCodeEnumMetadata } from "@hillbilly/nest/constant";
-import { defineConfig } from "@mikro-orm/postgresql";
-import { ExampleTranslationEntity } from "../module/example/entity/example-translation.entity";
+dotenv.config();
 
-export default defineConfig({
-  entities: [ExampleTranslationEntity],
-  dbName: process.env.DATABASE_NAME ?? "app",
-  host: process.env.DATABASE_HOST ?? "localhost",
-  port: Number(process.env.DATABASE_PORT ?? 5432),
-  user: process.env.DATABASE_USER ?? "postgres",
-  password: process.env.DATABASE_PASSWORD ?? "postgres",
-  discovery: {
-    onMetadata: applyLanguageCodeEnumMetadata,
+const isTest = process.env.NODE_ENV === 'test';
+const connectionType = process.env.DB_CONNECTION_TYPE as 'socket' | 'tcp';
+
+const connection =
+  connectionType === 'tcp'
+    ? {
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        dbName: process.env.DB_DATABASE,
+      }
+    : {
+        dbName: process.env.DB_DATABASE,
+        driverOptions: {
+          connection: {
+            connectionString: `socket://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_SOCKET}?db=${process.env.DB_DATABASE}`,
+          },
+        },
+      };
+
+const config: Options = {
+  // Connection details
+  name: 'default',
+  driver: PostgreSqlDriver,
+  driverOptions: {
+    ...connection.driverOptions,
   },
-});
+  ...connection,
+
+  // Entity configuration
+  entityRepository: ExtendedEntityRepository,
+  entities: [
+    './dist/module/**/*.entity.js',
+    './dist/module/**/entity/*.entity.js',
+  ],
+  entitiesTs: [
+    './src/module/**/*.entity.ts',
+    './src/module/**/entity/*.entity.ts',
+  ],
+  metadataProvider: TsMorphMetadataProvider,
+
+  // Extensions and tools
+  extensions: [Migrator, EntityGenerator, SeedManager],
+  seeder: {
+    path: './dist/database/seed',
+    pathTs: './src/database/seed',
+    defaultSeeder: 'DatabaseSeeder',
+  },
+  migrations: {
+    transactional: true,
+    path: './dist/database/migrations',
+    pathTs: './src/database/migrations',
+    glob: '!(*.d).{js,ts}',
+    dropTables: isTest,
+    generator: TSMigrationGenerator,
+    allOrNothing: true,
+    safe: true,
+    emit: 'ts',
+  },
+  discovery: {
+    warnWhenNoEntities: true,
+    checkDuplicateTableNames: true,
+    checkDuplicateFieldNames: true,
+  },
+
+  // Behavior settings
+  autoJoinOneToOneOwner: false,
+  autoJoinRefsForFilters: false,
+  debug: true,
+  forceUndefined: true,
+  ignoreUndefinedInQuery: true,
+  populateWhere: PopulateHint.INFER, // revert to v4 behaviour
+};
+
+export default config;

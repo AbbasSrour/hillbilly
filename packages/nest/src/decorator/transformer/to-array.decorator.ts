@@ -1,5 +1,6 @@
 import { Transform } from "class-transformer";
-import { castArray, isNil } from "lodash";
+import _ from "lodash";
+const { castArray, isNil } = _;
 
 /**
  * @description transforms to array, specially for query params

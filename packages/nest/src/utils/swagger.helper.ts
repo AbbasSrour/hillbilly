@@ -1,5 +1,6 @@
 import { ApiPropertyOptions } from "@nestjs/swagger";
-import { omit } from "lodash";
+import _ from "lodash";
+const { omit } = _;
 
 const NON_SWAGGER_PROPERTIES = [
   "swagger",

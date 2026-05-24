@@ -27,7 +27,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0",
     "paths": {

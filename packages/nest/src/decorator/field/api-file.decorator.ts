@@ -5,7 +5,9 @@ import { ApiBody, ApiConsumes, ApiExtraModels, getSchemaPath } from "@nestjs/swa
 import type { ReferenceObject, SchemaObject } from "@/constant/swagger.constants";
 
 import { IApiFile } from "@/interface/IApiFile";
-import { castArray, Many, mapValues } from "lodash";
+import _ from "lodash";
+import type { Many } from "lodash";
+const { castArray, mapValues } = _;
 
 const PARAMTYPES_METADATA = "design:paramtypes";
 
