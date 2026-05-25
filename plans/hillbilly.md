@@ -277,7 +277,23 @@ cd apps/backend && vp run build
 
 ### In Progress
 
-- **Package upgrade pass**: ~~All stable packages upgraded.~~ → **DONE**. See upgrade summary below.
+- (none)
+
+### Recently Completed (Session: 2026-05-25)
+
+- **Sync markers added to all template TS/JS files** (416 files, up from 197):
+  - Previously excluded `module/` directories (auth, user) now included
+  - RBAC source + tests, UI components, templates, root configs, patches all annotated
+  - OpenAPI-generated SDK files excluded (auto-generated)
+  - Scanner updated to handle shebang files (checks line 2 if line 1 is `#!`)
+  - Root lint-staged config: template files skip `vp lint` (no `node_modules`)
+- **TUI theme support**: 33 opencode themes bundled as static palette data
+  - `t` key cycles through themes, preserved across refreshes
+  - Configurable via `themeName` in State
+  - All hardcoded color constants replaced with dynamic palette lookups
+- **TUI refresh keybinding**: `r` re-scans the project and refreshes the diff view
+  - Clears staged hunks to prevent staging stale diffs
+  - Shows status message with refreshed file count
 
 ### Upgrade Summary (2026-05-25)
 
