@@ -1,10 +1,10 @@
 /// <reference types="bun" />
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
-import { existsSync } from "node:fs";
+import { readFile, readdir } from "node:fs/promises";
+import { resolve, relative, join, sep } from "node:path";
+import { existsSync, statSync } from "node:fs";
 import { createPatch } from "diff";
 import { parse as parseYaml } from "yaml";
-import { resolveTemplateRoot } from "./config.js";
+import { resolveProjectRoot, resolveTemplateRoot } from "./config.js";
 import { readSyncManifest, SYNC_MANIFEST_NAME, trackedSyncPaths } from "./manifest.js";
 
 // ---------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export interface SyncFile {
   /** Full path to the corresponding file in the hillbilly template */
   templatePath: string;
   /** Status of this file relative to the template */
-  status: "modified" | "added";
+  status: "modified" | "added" | "deleted";
   /** Parsed hunks (for modified files) — each hunk is independently stageable */
   hunks?: DiffHunk[];
   /** Full unified diff */
@@ -43,6 +43,67 @@ export interface ScanResult {
   /** All syncable files found */
   files: SyncFile[];
 }
+
+// ---------------------------------------------------------------------------
+// Template walker
+// ---------------------------------------------------------------------------
+
+const EXCLUDED_DIRS = new Set([
+  "node_modules",
+  "dist",
+  ".git",
+  "coverage",
+  ".turbo",
+  ".vite",
+  "i18n/generated",
+  "paraglide",
+]);
+
+const EXCLUDED_PATTERNS = [
+  /\.log$/,
+  /\.env(\.example)?$/, // .env and .env.* — but we keep .env.example? No, exclude all .env
+  /\.gitkeep$/,
+  /\.DS_Store$/,
+  /\.copier-answers\.yml$/, // only exists in project, not template
+];
+
+function shouldExclude(filePath: string): boolean {
+  const parts = filePath.split(sep);
+  for (const part of parts) {
+    if (EXCLUDED_DIRS.has(part)) return true;
+  }
+  for (const pattern of EXCLUDED_PATTERNS) {
+    if (pattern.test(filePath)) return true;
+  }
+  return false;
+}
+
+async function walkTemplate(templateRoot: string): Promise<string[]> {
+  const results: string[] = [];
+
+  async function walk(dir: string): Promise<void> {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      const relativePath = relative(templateRoot, fullPath).replaceAll("\\", "/");
+
+      if (shouldExclude(relativePath)) continue;
+
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile()) {
+        results.push(relativePath);
+      }
+    }
+  }
+
+  await walk(templateRoot);
+  return results;
+}
+
+// ---------------------------------------------------------------------------
+// Copier rendering
+// ---------------------------------------------------------------------------
 
 async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
   const answersPath = resolve(projectRoot, ".copier-answers.yml");
@@ -70,6 +131,11 @@ function renderTemplateForComparison(
   return renderSimpleCopierVariables(templateContent, answers);
 }
 
+function toProjectPath(templateRelativePath: string): string {
+  // Strip .jinja suffix — tsconfig.json.jinja → tsconfig.json
+  return templateRelativePath.replace(/\.jinja$/, "");
+}
+
 function resolveTemplateFilePath(templateRoot: string, relativePath: string): string {
   const templatePath = resolve(templateRoot, relativePath);
   if (existsSync(templatePath)) return templatePath;
@@ -95,7 +161,7 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
   let newLines = 0;
 
   // Regex: @@ -oldStart,oldLines +newStart,newLines @@
-  const hunkHeader = /^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s+@@/;
+  const hunkHeader = /^@@\s+-(\d+)(?:(\d+))?\s+\+(\d+)(?:(\d+))?\s+@@/;
 
   for (const line of lines) {
     const match = hunkHeader.exec(line);
@@ -138,24 +204,61 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
 // Main scanner
 // ---------------------------------------------------------------------------
 
-export async function scan(projectRoot: string, options: { template?: string } = {}): Promise<ScanResult> {
-  const { templateRoot } = await resolveTemplateRoot(projectRoot, options);
-  const copierAnswers = await readCopierAnswers(projectRoot);
-  const manifest = await readSyncManifest(projectRoot);
+export async function scan(
+  projectRoot: string,
+  options: { template?: string } = {},
+): Promise<ScanResult> {
+  const resolvedProjectRoot = resolveProjectRoot(projectRoot);
+  const { templateRoot } = await resolveTemplateRoot(resolvedProjectRoot, options);
+  const copierAnswers = await readCopierAnswers(resolvedProjectRoot);
+  const manifest = await readSyncManifest(resolvedProjectRoot);
+
+  const untrackedPaths = new Set(
+    manifest.files.filter((f) => f.state === "untracked").map((f) => f.path),
+  );
 
   const files: SyncFile[] = [];
+  const seenPaths = new Set<string>();
 
   async function addSyncFile(relativePath: string): Promise<void> {
-    const filePath = resolve(projectRoot, relativePath);
-    if (!existsSync(filePath)) return;
+    if (seenPaths.has(relativePath)) return;
+    seenPaths.add(relativePath);
+
+    if (untrackedPaths.has(relativePath)) return;
+
+    const filePath = resolve(resolvedProjectRoot, relativePath);
     const templatePath = resolveTemplateFilePath(templateRoot, relativePath);
+
+    if (!existsSync(filePath)) {
+      if (existsSync(templatePath)) {
+        const rawTemplateContent = await readFile(templatePath, "utf-8");
+        const templateContent = renderTemplateForComparison(
+          templatePath,
+          rawTemplateContent,
+          copierAnswers,
+        );
+        const diff = createPatch(relativePath, templateContent, "");
+        files.push({
+          projectPath: relativePath,
+          templatePath,
+          status: "deleted",
+          diff,
+          hunks: parseHunks(diff),
+        });
+      }
+      return;
+    }
 
     if (existsSync(templatePath)) {
       const [projectContent, rawTemplateContent] = await Promise.all([
         readFile(filePath, "utf-8"),
         readFile(templatePath, "utf-8"),
       ]);
-      const templateContent = renderTemplateForComparison(templatePath, rawTemplateContent, copierAnswers);
+      const templateContent = renderTemplateForComparison(
+        templatePath,
+        rawTemplateContent,
+        copierAnswers,
+      );
 
       if (projectContent === templateContent) return;
 
@@ -173,9 +276,22 @@ export async function scan(projectRoot: string, options: { template?: string } =
     }
   }
 
-  for (const relativePath of new Set([SYNC_MANIFEST_NAME, ...trackedSyncPaths(manifest)])) {
-    await addSyncFile(relativePath);
+  // 1. Walk the template directory and auto-discover all files
+  const templateFiles = await walkTemplate(templateRoot);
+  for (const templateRelativePath of templateFiles) {
+    const projectPath = toProjectPath(templateRelativePath);
+    await addSyncFile(projectPath);
   }
+
+  // 2. Also check manifest-tracked files (project-added files not in template)
+  for (const relativePath of trackedSyncPaths(manifest)) {
+    if (!seenPaths.has(relativePath)) {
+      await addSyncFile(relativePath);
+    }
+  }
+
+  // 3. Always include the manifest itself
+  await addSyncFile(SYNC_MANIFEST_NAME);
 
   return { templateRoot, files };
 }

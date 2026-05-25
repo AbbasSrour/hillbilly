@@ -76,9 +76,9 @@ function stagedCountForFile(staged: Map<string, Set<number>>, file: SyncFile): s
 }
 
 function diffLineColors(line: string, p: Palette): { fg: string; bg?: string } {
-  if (line.startsWith("+")) return { fg: p.GREEN, bg: p.DIFF_ADDED_BG };
-  if (line.startsWith("-")) return { fg: p.RED, bg: p.DIFF_REMOVED_BG };
-  if (line.startsWith("@@")) return { fg: p.YELLOW };
+  if (line.startsWith("+")) return { fg: p.DIFF_ADDED, bg: p.DIFF_ADDED_BG };
+  if (line.startsWith("-")) return { fg: p.DIFF_REMOVED, bg: p.DIFF_REMOVED_BG };
+  if (line.startsWith("@@")) return { fg: p.DIFF_HUNK_HEADER };
   return { fg: p.TEXT };
 }
 
@@ -348,10 +348,10 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             const isSelected = i === state.selectedFileIndex;
             const statusColor =
               file.status === "added"
-                ? palette.GREEN
+                ? palette.SUCCESS
                 : file.status === "deleted"
-                  ? palette.RED
-                  : palette.YELLOW;
+                  ? palette.ERROR
+                  : palette.WARNING;
             const count = stagedCountForFile(state.stagedHunks, file);
             return (
               <box
@@ -367,7 +367,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                   {file.status === "added" ? "A" : file.status === "deleted" ? "D" : "M"}
                 </text>
                 <text fg={palette.TEXT}> {truncatePath(file.projectPath, 22)}</text>
-                {count !== "" && <text fg={palette.GREEN}> {count}</text>}
+                {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
               </box>
             );
           })}
@@ -383,7 +383,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
           {selectedFile?.status === "added" && (
             <box paddingY={0} paddingX={1} flexDirection="column">
-              <text fg={palette.GREEN}>New file (added)</text>
+              <text fg={palette.SUCCESS}>New file (added)</text>
               <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
               <text fg={palette.TEXT}>
                 {selectedFile.projectContent?.split("\n").slice(0, 30).join("\n")}
@@ -393,7 +393,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
           {selectedFile?.status === "deleted" && (
             <box paddingY={0} paddingX={1} flexDirection="column">
-              <text fg={palette.RED}>Deleted file</text>
+              <text fg={palette.ERROR}>Deleted file</text>
               <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
               <text fg={palette.TEXT}>Stage this file to delete it from the template.</text>
             </box>
@@ -437,7 +437,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           {selectedFile?.status === "modified" &&
             (!selectedFile.hunks || selectedFile.hunks.length === 0) && (
               <box paddingY={0} paddingX={1}>
-                <text fg={palette.YELLOW}>No hunks parsed from diff.</text>
+                <text fg={palette.WARNING}>No hunks parsed from diff.</text>
               </box>
             )}
         </box>
@@ -460,11 +460,11 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             {state.statusMessage ? ` | ${state.statusMessage}` : ""}
           </text>
         )}
-        {state.pushStatus === "pushing" && <text fg={palette.YELLOW}>Pushing changes...</text>}
+        {state.pushStatus === "pushing" && <text fg={palette.WARNING}>Pushing changes...</text>}
         {state.pushStatus === "done" && (
-          <text fg={palette.GREEN}>{state.pushMessage} [q] quit</text>
+          <text fg={palette.SUCCESS}>{state.pushMessage} [q] quit</text>
         )}
-        {state.pushStatus === "error" && <text fg={palette.RED}>{state.pushMessage} [q] quit</text>}
+        {state.pushStatus === "error" && <text fg={palette.ERROR}>{state.pushMessage} [q] quit</text>}
       </box>
     </box>
   );
