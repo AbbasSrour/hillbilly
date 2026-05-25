@@ -6,21 +6,7 @@ import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult } from "./scan.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
-
-// ---------------------------------------------------------------------------
-// Colors (Tokyo Night)
-// ---------------------------------------------------------------------------
-
-const BG = "#1a1b26";
-const TEXT = "#c0caf5";
-const SELECTED_BG = "#283457";
-const GREEN = "#9ece6a";
-const YELLOW = "#e0af68";
-const RED = "#f7768e";
-const BORDER = "#3b4261";
-const HEADER_FG = "#24283b";
-const DIFF_ADDED_BG = "#1a3a2a";
-const DIFF_REMOVED_BG = "#3a1a1a";
+import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 
 // ---------------------------------------------------------------------------
 // State
@@ -33,6 +19,8 @@ interface State {
   stagedHunks: Map<string, Set<number>>;
   pushStatus: "idle" | "pushing" | "done" | "error";
   pushMessage: string;
+  statusMessage: string;
+  themeName: string;
 }
 
 function makeInitialState(): State {
@@ -43,6 +31,8 @@ function makeInitialState(): State {
     stagedHunks: new Map(),
     pushStatus: "idle",
     pushMessage: "",
+    statusMessage: "",
+    themeName: DEFAULT_THEME,
   };
 }
 
@@ -54,6 +44,7 @@ let setStateRef: React.Dispatch<React.SetStateAction<State>> | null = null;
 let quitResolver: (() => void) | null = null;
 let currentFiles: SyncFile[] = [];
 let _renderer: CliRenderer | null = null;
+let refreshScanRef: (() => Promise<ScanResult>) | null = null;
 
 /** For testing — set the renderer before mounting SyncTui directly */
 export function setTestRenderer(r: CliRenderer) {
@@ -73,35 +64,25 @@ function truncatePath(path: string, maxLen: number): string {
   return "\u2026" + path.slice(slash);
 }
 
-function isHunkStaged(
-  staged: Map<string, Set<number>>,
-  projectPath: string,
-  idx: number,
-): boolean {
+function isHunkStaged(staged: Map<string, Set<number>>, projectPath: string, idx: number): boolean {
   return staged.get(projectPath)?.has(idx) ?? false;
 }
 
-function stagedCountForFile(
-  staged: Map<string, Set<number>>,
-  file: SyncFile,
-): string {
+function stagedCountForFile(staged: Map<string, Set<number>>, file: SyncFile): string {
   const set = staged.get(file.projectPath);
   if (!set || set.size === 0) return "";
   const total = file.hunks?.length ?? 1;
   return set.size === total ? "\u2713" : `${set.size}/${total}`;
 }
 
-function diffLineColors(line: string): { fg: string; bg?: string } {
-  if (line.startsWith("+")) return { fg: GREEN, bg: DIFF_ADDED_BG };
-  if (line.startsWith("-")) return { fg: RED, bg: DIFF_REMOVED_BG };
-  if (line.startsWith("@@")) return { fg: YELLOW };
-  return { fg: TEXT };
+function diffLineColors(line: string, p: Palette): { fg: string; bg?: string } {
+  if (line.startsWith("+")) return { fg: p.GREEN, bg: p.DIFF_ADDED_BG };
+  if (line.startsWith("-")) return { fg: p.RED, bg: p.DIFF_REMOVED_BG };
+  if (line.startsWith("@@")) return { fg: p.YELLOW };
+  return { fg: p.TEXT };
 }
 
-function toggleStagedHunks(
-  state: State,
-  file: SyncFile | undefined,
-): State {
+function toggleStagedHunks(state: State, file: SyncFile | undefined): State {
   if (!file) return state;
   const hunkCount = file.hunks?.length ?? 0;
   if (hunkCount === 0 && file.status === "added") {
@@ -159,9 +140,7 @@ async function doPush(
   }
 
   // Capture staged set before async work
-  const staged = new Map(
-    [...state.stagedHunks].map(([k, v]) => [k, new Set(v)]),
-  );
+  const staged = new Map([...state.stagedHunks].map(([k, v]) => [k, new Set(v)]));
 
   setState((p) => ({ ...p, pushStatus: "pushing", pushMessage: "" }));
 
@@ -178,7 +157,7 @@ async function doPush(
       setState((p) => ({
         ...p,
         pushStatus: "done",
-        pushMessage: `Pushed ${result.written.length} file(s) successfully.`,
+        pushMessage: `Pushed ${result.written.length} file(s), deleted ${result.deleted.length} file(s) successfully.`,
       }));
     }
   } catch (err: unknown) {
@@ -190,12 +169,44 @@ async function doPush(
   }
 }
 
+async function doRefresh(
+  setResult: React.Dispatch<React.SetStateAction<ScanResult>>,
+  setState: React.Dispatch<React.SetStateAction<State>>,
+): Promise<void> {
+  if (!refreshScanRef) return;
+
+  setState((p) => ({
+    ...p,
+    pushStatus: "idle",
+    pushMessage: "",
+    statusMessage: "Refreshing...",
+  }));
+
+  try {
+    const next = await refreshScanRef();
+    setResult(next);
+    setState((prev) => ({
+      ...makeInitialState(),
+      themeName: prev.themeName,
+      statusMessage: `Refreshed ${next.files.length} file${next.files.length === 1 ? "" : "s"}.`,
+    }));
+  } catch (err: unknown) {
+    setState((p) => ({
+      ...p,
+      pushStatus: "error",
+      pushMessage: err instanceof Error ? err.message : String(err),
+      statusMessage: "",
+    }));
+  }
+}
+
 // ---------------------------------------------------------------------------
 // SyncTui Component
 // ---------------------------------------------------------------------------
 
 export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   const [state, setState] = useState<State>(makeInitialState);
+  const [result, setResult] = useState(scanResult);
 
   // Expose setState to the external key handler
   useEffect(() => {
@@ -271,6 +282,16 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           case " ":
             return toggleStagedHunks(prev, file);
 
+          case "r":
+            void doRefresh(setResult, setState);
+            return prev;
+
+          case "t": {
+            const idx = THEME_NAMES.indexOf(prev.themeName);
+            const nextTheme = THEME_NAMES[(idx + 1) % THEME_NAMES.length]!;
+            return { ...prev, themeName: nextTheme, statusMessage: `Theme: ${nextTheme}` };
+          }
+
           case "enter":
           case "return":
             void doPush(prev, setStateRef!);
@@ -289,9 +310,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   }, []);
 
   // Keep module-level files ref in sync for the key handler
-  currentFiles = scanResult.files;
+  currentFiles = result.files;
 
-  const selectedFile = scanResult.files[state.selectedFileIndex] ?? null;
+  const selectedFile = result.files[state.selectedFileIndex] ?? null;
   const hunkCount = selectedFile?.hunks?.length ?? 0;
   const clampedHunkIdx = Math.min(state.selectedHunkIndex, Math.max(hunkCount - 1, 0));
 
@@ -299,126 +320,114 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   let totalStaged = 0;
   for (const s of state.stagedHunks.values()) totalStaged += s.size;
 
+  const palette = THEMES[state.themeName] ?? THEMES[DEFAULT_THEME]!;
+
   return (
-    <box
-      flexDirection="column"
-      width="100%"
-      height="100%"
-      backgroundColor={BG}
-    >
+    <box flexDirection="column" width="100%" height="100%" backgroundColor={palette.BG}>
       {/* Header */}
       <box
         flexDirection="row"
         alignItems="center"
         border={["bottom"]}
-        borderColor={BORDER}
+        borderColor={palette.BORDER}
         paddingY={0}
         paddingX={1}
-        backgroundColor={HEADER_FG}
+        backgroundColor={palette.HEADER_FG}
       >
-        <text fg={TEXT}>
-          Hillbilly Sync | {scanResult.files.length} file{scanResult.files.length !== 1 ? "s" : ""} changed
-          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""}
-          {" "}| j/k nav q quit
+        <text fg={palette.TEXT}>
+          Hillbilly Sync | {result.files.length} file{result.files.length !== 1 ? "s" : ""} changed
+          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | j/k nav q quit t theme
         </text>
       </box>
 
       {/* Main content area */}
       <box flexDirection="row" flexGrow={1}>
         {/* File list panel */}
-        <box
-          width="30%"
-          border={["right"]}
-          borderColor={BORDER}
-          flexDirection="column"
-        >
-          {scanResult.files.map((file, i) => {
+        <box width="30%" border={["right"]} borderColor={palette.BORDER} flexDirection="column">
+          {result.files.map((file, i) => {
             const isSelected = i === state.selectedFileIndex;
-            const statusColor = file.status === "added" ? GREEN : YELLOW;
+            const statusColor =
+              file.status === "added"
+                ? palette.GREEN
+                : file.status === "deleted"
+                  ? palette.RED
+                  : palette.YELLOW;
             const count = stagedCountForFile(state.stagedHunks, file);
             return (
               <box
                 key={file.projectPath}
                 flexDirection="row"
                 alignItems="center"
-                backgroundColor={isSelected ? SELECTED_BG : undefined}
+                backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
                 paddingY={0}
                 paddingX={1}
               >
-                <text fg={TEXT}>{isSelected ? "> " : "  "}</text>
+                <text fg={palette.TEXT}>{isSelected ? "> " : "  "}</text>
                 <text fg={statusColor}>
-                  {file.status === "added" ? "A" : "M"}
+                  {file.status === "added" ? "A" : file.status === "deleted" ? "D" : "M"}
                 </text>
-                <text fg={TEXT}> {truncatePath(file.projectPath, 22)}</text>
-                {count !== "" && (
-                  <text fg={GREEN}> {count}</text>
-                )}
+                <text fg={palette.TEXT}> {truncatePath(file.projectPath, 22)}</text>
+                {count !== "" && <text fg={palette.GREEN}> {count}</text>}
               </box>
             );
           })}
         </box>
 
         {/* Diff view panel */}
-        <box
-          flexGrow={1}
-          flexDirection="column"
-        >
+        <box flexGrow={1} flexDirection="column">
           {!selectedFile && (
             <box paddingY={0} paddingX={1}>
-              <text fg={TEXT}>No files to display.</text>
+              <text fg={palette.TEXT}>No files to display.</text>
             </box>
           )}
 
           {selectedFile?.status === "added" && (
             <box paddingY={0} paddingX={1} flexDirection="column">
-              <text fg={GREEN}>New file (added)</text>
-              <text fg={TEXT}> {selectedFile.projectPath}</text>
-              <text fg={TEXT}>
-                {selectedFile.projectContent
-                  ?.split("\n")
-                  .slice(0, 30)
-                  .join("\n")}
+              <text fg={palette.GREEN}>New file (added)</text>
+              <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
+              <text fg={palette.TEXT}>
+                {selectedFile.projectContent?.split("\n").slice(0, 30).join("\n")}
               </text>
+            </box>
+          )}
+
+          {selectedFile?.status === "deleted" && (
+            <box paddingY={0} paddingX={1} flexDirection="column">
+              <text fg={palette.RED}>Deleted file</text>
+              <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
+              <text fg={palette.TEXT}>Stage this file to delete it from the template.</text>
             </box>
           )}
 
           {selectedFile?.status === "modified" && selectedFile.hunks && (
             <box paddingY={0} paddingX={1} flexDirection="column">
-              <text fg={TEXT} truncate>
+              <text fg={palette.TEXT} truncate>
                 {selectedFile.projectPath}
               </text>
               {selectedFile.hunks.map((hunk, hi) => {
-                const staged = isHunkStaged(
-                  state.stagedHunks,
-                  selectedFile.projectPath,
-                  hi,
-                );
-                const isHunkSelected =
-                  hi === clampedHunkIdx && state.focus === "diff";
+                const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
+                const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
                 return (
                   <box
                     key={hi}
-                    backgroundColor={isHunkSelected ? SELECTED_BG : undefined}
+                    backgroundColor={isHunkSelected ? palette.SELECTED_BG : undefined}
                     marginBottom={1}
                   >
-                    <text fg={TEXT}>
-                      [{staged ? "\u2713" : " "}] @@ -
-                      {hunk.oldStart + 1},{hunk.oldLines} +
+                    <text fg={palette.TEXT}>
+                      [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
                       {hunk.newStart + 1},{hunk.newLines} @@
                     </text>
-                    {hunk.text.split("\n").slice(1).map((line, lineIndex) => {
-                      const colors = diffLineColors(line);
-                      return (
-                        <text
-                          key={`${hi}-${lineIndex}`}
-                          fg={colors.fg}
-                          bg={colors.bg}
-                          truncate
-                        >
-                          {line}
-                        </text>
-                      );
-                    })}
+                    {hunk.text
+                      .split("\n")
+                      .slice(1)
+                      .map((line, lineIndex) => {
+                        const colors = diffLineColors(line, palette);
+                        return (
+                          <text key={`${hi}-${lineIndex}`} fg={colors.fg} bg={colors.bg} truncate>
+                            {line}
+                          </text>
+                        );
+                      })}
                   </box>
                 );
               })}
@@ -428,7 +437,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           {selectedFile?.status === "modified" &&
             (!selectedFile.hunks || selectedFile.hunks.length === 0) && (
               <box paddingY={0} paddingX={1}>
-                <text fg={YELLOW}>No hunks parsed from diff.</text>
+                <text fg={palette.YELLOW}>No hunks parsed from diff.</text>
               </box>
             )}
         </box>
@@ -439,25 +448,23 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         flexDirection="row"
         alignItems="center"
         border={["top"]}
-        borderColor={BORDER}
+        borderColor={palette.BORDER}
         paddingY={0}
         paddingX={1}
-        backgroundColor={HEADER_FG}
+        backgroundColor={palette.HEADER_FG}
       >
         {state.pushStatus === "idle" && (
-          <text fg={TEXT}>
-            [Space] stage/unstage [Tab] switch panel [Enter] push staged [q] quit
+          <text fg={palette.TEXT}>
+            [Space] stage/unstage [Tab] switch panel [r] refresh [t] theme [Enter] push staged [q]
+            quit
+            {state.statusMessage ? ` | ${state.statusMessage}` : ""}
           </text>
         )}
-        {state.pushStatus === "pushing" && (
-          <text fg={YELLOW}>Pushing changes...</text>
-        )}
+        {state.pushStatus === "pushing" && <text fg={palette.YELLOW}>Pushing changes...</text>}
         {state.pushStatus === "done" && (
-          <text fg={GREEN}>{state.pushMessage} [q] quit</text>
+          <text fg={palette.GREEN}>{state.pushMessage} [q] quit</text>
         )}
-        {state.pushStatus === "error" && (
-          <text fg={RED}>{state.pushMessage} [q] quit</text>
-        )}
+        {state.pushStatus === "error" && <text fg={palette.RED}>{state.pushMessage} [q] quit</text>}
       </box>
     </box>
   );
@@ -468,13 +475,14 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 // ---------------------------------------------------------------------------
 
 export async function launchTui(result: ScanResult): Promise<void> {
+  const defaultPalette = THEMES[DEFAULT_THEME]!;
   const renderer = await createCliRenderer({
     exitOnCtrlC: false,
     screenMode: "alternate-screen",
     useMouse: false,
     enableMouseMovement: false,
     consoleMode: "disabled",
-    backgroundColor: BG,
+    backgroundColor: defaultPalette.BG,
   });
   _renderer = renderer;
 
