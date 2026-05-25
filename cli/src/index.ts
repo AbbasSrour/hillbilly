@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
 import { existsSync } from "node:fs";
-import { chmod, copyFile, mkdir } from "node:fs/promises";
+import { chmod, mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
@@ -213,8 +213,13 @@ program
     const destBinary = join(destDir, "hillbilly");
 
     await mkdir(destDir, { recursive: true });
-    await copyFile(sourceBinary, destBinary);
-    await chmod(destBinary, 0o755);
+
+    // Write to a temp file then atomically rename — handles the case
+    // where the destination binary is currently executing (ETXTBSY on copyFile).
+    const tmpBinary = `${destBinary}.tmp`;
+    await writeFile(tmpBinary, await readFile(sourceBinary));
+    await chmod(tmpBinary, 0o755);
+    await rename(tmpBinary, destBinary);
 
     console.log(`Upgraded hillbilly binary from ${sourceBinary}`);
     console.log(`  → ${destBinary}`);
