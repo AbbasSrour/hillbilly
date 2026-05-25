@@ -2,12 +2,12 @@
   "name": "hillbilly-cli",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "bin": {
     "hillbilly": "src/index.ts"
   },
+  "type": "module",
   "scripts": {
-    "build": "bun build --compile src/index.ts --outfile dist/hillbilly",
+    "build": "bun build --compile src/index.ts --outfile ../template/bin",
     "dev": "bun run src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
