@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { ExtendedEntityRepository } from '@/abstract';
 import { EntityGenerator } from '@mikro-orm/entity-generator';
 import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';

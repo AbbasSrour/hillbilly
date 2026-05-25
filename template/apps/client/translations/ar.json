@@ -1,0 +1,16 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"language_label": "اللغة",
+	"current_locale": "اللغة الحالية: {locale}",
+	"auth_login_button": "تسجيل الدخول",
+	"auth_login_email_label": "البريد الإلكتروني",
+	"auth_login_email_placeholder": "m@example.com",
+	"auth_login_password_label": "كلمة المرور",
+	"auth_login_remember_me": "تذكرني",
+	"auth_login_brand_label": "Class Cellulars.",
+	"auth_login_welcome_title": "مرحبا بك في Digital Pins.",
+	"auth_login_panel_title": "إدارة مخزونك الرقمي",
+	"auth_login_panel_description": "سجل الدخول لإدارة القسائم والأرقام التسلسلية وعمليات المؤسسة.",
+	"auth_login_footer": "Class Cellulars. جميع الحقوق محفوظة.",
+	"auth_error_generic": "حدث خطأ غير متوقع!"
+}

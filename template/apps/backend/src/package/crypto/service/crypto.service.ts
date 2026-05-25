@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import * as crypto from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { ApiConfigService } from '@config/service/api-config.service';
@@ -23,6 +22,10 @@ export class CryptoService {
     const [iv, encrypted] = value
       .split(':')
       .map((part) => Buffer.from(part, 'hex'));
+
+    if (!iv || !encrypted) {
+      throw new Error('Invalid encrypted value');
+    }
 
     const key = this.getKey();
 

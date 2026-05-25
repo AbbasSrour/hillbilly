@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Transform } from "class-transformer";
 
 export function ToUpperCase(): PropertyDecorator {

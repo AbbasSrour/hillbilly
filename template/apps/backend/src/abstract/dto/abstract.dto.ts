@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { DateField } from "@/decorator/field/date-field.decorator";
 import { UUIDField } from "@/decorator/field/uuid-field.decorator";
 import { DYNAMIC_TRANSLATION_DECORATOR_KEY } from "@/decorator/translate.decorator";

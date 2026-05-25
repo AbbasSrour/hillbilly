@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { ITranslationDecoratorInterface } from "@/interface/ITranslationDecoratorInterface";
 
 export const STATIC_TRANSLATION_DECORATOR_KEY = "custom:static-translate";

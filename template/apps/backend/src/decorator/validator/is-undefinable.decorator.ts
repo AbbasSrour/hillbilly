@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { ValidateIf, ValidationOptions } from "class-validator";
 
 export function IsUndefinable(options?: ValidationOptions): PropertyDecorator {

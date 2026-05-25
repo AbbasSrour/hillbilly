@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Global, Module } from "@nestjs/common";
 
 import { ValidatorService } from "./service/validator.service";

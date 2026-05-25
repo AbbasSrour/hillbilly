@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 export { AbstractDto } from "./dto/abstract.dto";
 export { AbstractTranslationDto } from "./dto/abstract-translation.dto";
 export { CreateTranslationDto } from "./dto/create-translation.dto";

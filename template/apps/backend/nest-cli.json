@@ -4,14 +4,7 @@
   "language": "ts",
   "sourceRoot": "src",
   "compilerOptions": {
-    "builder": {
-      "type": "rspack",
-      "options": {
-        "configPath": "rspack.config.cjs"
-      }
-    },
     "tsConfigPath": "./tsconfig.build.json",
-    "typeCheck": false,
     "deleteOutDir": true,
     "plugins": ["@nestjs/swagger/plugin"],
     "assets": [
@@ -21,6 +14,10 @@
       },
       {
         "include": "lib/openapi-description.md",
+        "watchAssets": true
+      },
+      {
+        "include": "i18n/locale/**/*.json",
         "watchAssets": true
       }
     ]

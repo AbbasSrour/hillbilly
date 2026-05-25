@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Type } from "@nestjs/common";
 import { UseInterceptors, applyDecorators } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";

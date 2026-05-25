@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { IsPhoneNumber as isPhoneNumber, type ValidationOptions } from "class-validator";
 
 export function IsPhoneNumber(

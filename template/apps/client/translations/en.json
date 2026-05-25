@@ -1,0 +1,16 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"language_label": "Language",
+	"current_locale": "Current locale: {locale}",
+	"auth_login_button": "Login",
+	"auth_login_email_label": "Email",
+	"auth_login_email_placeholder": "m@example.com",
+	"auth_login_password_label": "Password",
+	"auth_login_remember_me": "Remember me",
+	"auth_login_brand_label": "Class Cellulars.",
+	"auth_login_welcome_title": "Welcome to Digital Pins.",
+	"auth_login_panel_title": "Manage your digital inventory",
+	"auth_login_panel_description": "Sign in to manage vouchers, serial numbers, and organization operations.",
+	"auth_login_footer": "Class Cellulars. All Rights Reserved.",
+	"auth_error_generic": "Something went wrong!"
+}

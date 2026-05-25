@@ -1,0 +1,29 @@
+{
+  "name": "@hillbilly/rbac",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./client": "./dist/client.js",
+    "./server": "./dist/server.js"
+  },
+  "scripts": {
+    "build": "tsgo -p tsconfig.json && tsc-alias -p tsconfig.json --resolve-full-paths --resolve-full-extension .js",
+    "check": "vp check",
+    "fmt": "vp fmt --write",
+    "lint": "vp lint",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.4.10",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@typescript/native-preview": "latest",
+    "tsc-alias": "^1.8.16",
+    "vitest": "^4.1.7"
+  }
+}

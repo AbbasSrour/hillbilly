@@ -1,0 +1,21 @@
+@import "@hillbilly/ui/globals.css";
+@import "@bprogress/core/css";
+
+:root {
+	--chart-1: #8b5cf6;
+	--chart-2: #38bdf8;
+	--chart-3: #34d399;
+	--chart-4: #fbbf24;
+	--chart-5: #f472b6;
+
+	--font-rubik: "Rubik", sans-serif;
+	--bprogress-color: hsl(var(--primary));
+	--bprogress-height: 3px;
+	--bprogress-spinner-size: 18px;
+	--bprogress-spinner-border-size: 2px;
+}
+
+@theme {
+	--font-sans: var(--font-rubik);
+	--font-mono: var(--font-rubik);
+}

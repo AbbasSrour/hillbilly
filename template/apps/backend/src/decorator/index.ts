@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 // Top-level decorators
 export { ApiPageOkResponse } from "./api-page-ok-response.decorator";
 export { PublicRoute, PUBLIC_ROUTE_KEY } from "./public-route.decorator";
@@ -41,7 +40,6 @@ export {
   FILTER_OPERATION_KEY,
   FilterField,
 } from "./field/filter-field.decorator";
-export type { FilterMetadata } from "./field/filter-field.decorator";
 export type { FilterMetadata, IFilterFieldOptions } from "./field/filter-field.decorator";
 export { PhoneField, PhoneFieldOptional } from "./field/phone-field.decorator";
 export { EmailField, EmailFieldOptional } from "./field/email-field.decorator";

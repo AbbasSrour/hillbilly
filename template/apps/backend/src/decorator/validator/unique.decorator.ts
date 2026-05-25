@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 // TODO: Fix this validator
 // import { InjectDataSource } from '@nestjs/typeorm';
 // import {

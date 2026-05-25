@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Order } from "@/constant/order.constant";
 import { EnumFieldOptional } from "@/decorator/field/enum-field.decorator";
 import { NumberFieldOptional } from "@/decorator/field/number-field.decorator";

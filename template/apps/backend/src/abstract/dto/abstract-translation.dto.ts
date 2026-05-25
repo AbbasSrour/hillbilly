@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import type { AbstractEntity } from "../entity/abstract.entity";
 import { AbstractDto } from "./abstract.dto";
 

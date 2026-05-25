@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 /**
  * Local re-exports of @nestjs/swagger internal constants and types
  * that aren't available through the public API.

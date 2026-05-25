@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { ExtendedEntityRepository } from '@/abstract';
 import { EntityGenerator } from '@mikro-orm/entity-generator';
 import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
@@ -95,7 +94,7 @@ export class ApiConfigService {
 
       // Entity configuration
       entityRepository: ExtendedEntityRepository,
-      autoLoadEntities: true,
+      autoLoadEntities: false,
       entities: [
         './dist/module/**/*.entity.js',
         './dist/module/**/entity/*.entity.js',

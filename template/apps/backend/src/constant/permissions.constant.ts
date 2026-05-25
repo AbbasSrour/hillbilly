@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { AuthPermissionConfig } from '@module/auth/constant/auth-permissions.constant';
 import { UserPermissionConfig } from '@module/user/constant/user-permissions.constant';
 

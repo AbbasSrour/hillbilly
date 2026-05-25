@@ -91,6 +91,13 @@ function stagedCountForFile(
   return set.size === total ? "\u2713" : `${set.size}/${total}`;
 }
 
+function diffLineColors(line: string): { fg: string; bg?: string } {
+  if (line.startsWith("+")) return { fg: GREEN, bg: DIFF_ADDED_BG };
+  if (line.startsWith("-")) return { fg: RED, bg: DIFF_REMOVED_BG };
+  if (line.startsWith("@@")) return { fg: YELLOW };
+  return { fg: TEXT };
+}
+
 function toggleStagedHunks(
   state: State,
   file: SyncFile | undefined,
@@ -319,11 +326,11 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
       {/* Main content area */}
       <box flexDirection="row" flexGrow={1}>
         {/* File list panel */}
-        <scrollbox
+        <box
           width="30%"
           border={["right"]}
           borderColor={BORDER}
-          scrollY
+          flexDirection="column"
         >
           {scanResult.files.map((file, i) => {
             const isSelected = i === state.selectedFileIndex;
@@ -349,12 +356,12 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               </box>
             );
           })}
-        </scrollbox>
+        </box>
 
         {/* Diff view panel */}
-        <scrollbox
+        <box
           flexGrow={1}
-          scrollY
+          flexDirection="column"
         >
           {!selectedFile && (
             <box paddingY={0} paddingX={1}>
@@ -399,16 +406,19 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                       {hunk.oldStart + 1},{hunk.oldLines} +
                       {hunk.newStart + 1},{hunk.newLines} @@
                     </text>
-                    <diff
-                      diff={hunk.text}
-                      view="unified"
-                      showLineNumbers={false}
-                      fg={TEXT}
-                      addedBg={DIFF_ADDED_BG}
-                      removedBg={DIFF_REMOVED_BG}
-                      addedSignColor={GREEN}
-                      removedSignColor={RED}
-                    />
+                    {hunk.text.split("\n").slice(1).map((line, lineIndex) => {
+                      const colors = diffLineColors(line);
+                      return (
+                        <text
+                          key={`${hi}-${lineIndex}`}
+                          fg={colors.fg}
+                          bg={colors.bg}
+                          truncate
+                        >
+                          {line}
+                        </text>
+                      );
+                    })}
                   </box>
                 );
               })}
@@ -421,7 +431,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                 <text fg={YELLOW}>No hunks parsed from diff.</text>
               </box>
             )}
-        </scrollbox>
+        </box>
       </box>
 
       {/* Footer */}
@@ -458,7 +468,14 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 // ---------------------------------------------------------------------------
 
 export async function launchTui(result: ScanResult): Promise<void> {
-  const renderer = await createCliRenderer({ exitOnCtrlC: false });
+  const renderer = await createCliRenderer({
+    exitOnCtrlC: false,
+    screenMode: "alternate-screen",
+    useMouse: false,
+    enableMouseMovement: false,
+    consoleMode: "disabled",
+    backgroundColor: BG,
+  });
   _renderer = renderer;
 
   await new Promise<void>((resolve) => {

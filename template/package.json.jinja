@@ -11,13 +11,14 @@
   "//": "TODO: Remove the postinstall Swagger patch when @nestjs/swagger publishes v12 with official Nest 12 support.",
   "scripts": {
     "prepare": "test -d .git && vp config || true",
-    "postinstall": "node patches/patch-nest-swagger.cjs",
+    "postinstall": "node patches/patch-better-auth-mikro-orm.cjs && node patches/patch-nest-start.cjs",
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run",
     "check": "vp check",
     "check:fix": "vp check --fix",
     "build": "vp run -r build",
     "commit": "cz",
+    "hillbilly": "./bin/hillbilly",
     "knip": "knip",
     "release": "release-it"
   },
@@ -28,21 +29,24 @@
   },
   "dependencies": {},
   "overrides": {
-    "@nestjs/common": "^12.0.0-alpha.4",
-    "@nestjs/core": "^12.0.0-alpha.4",
-    "@nestjs/microservices": "^12.0.0-alpha.4",
-    "@nestjs/platform-express": "^12.0.0-alpha.4",
-    "@nestjs/testing": "^12.0.0-alpha.4"
+    "@nestjs/cli": "12.0.0-alpha.6",
+    "@nestjs/common": "12.0.0-alpha.5",
+    "@nestjs/core": "12.0.0-alpha.5",
+    "@nestjs/microservices": "12.0.0-alpha.5",
+    "@nestjs/platform-express": "12.0.0-alpha.5",
+    "@nestjs/schematics": "12.0.0-alpha.9",
+    "@nestjs/swagger": "12.0.0-alpha.2",
+    "@nestjs/testing": "12.0.0-alpha.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@release-it/conventional-changelog": "^10.0.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@release-it/conventional-changelog": "^11.0.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
-    "knip": "^5.50.0",
-    "lint-staged": "^15.5.2",
-    "release-it": "^19.0.2",
+    "knip": "^6.14.2",
+    "lint-staged": "^17.0.5",
+    "release-it": "^20.0.1",
     "vite-plus": "latest"
   },
   "engines": {

@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { PipeTransform, Type, UploadedFile } from "@nestjs/common";
 import { DECORATORS } from "@/constant/swagger.constants";
 

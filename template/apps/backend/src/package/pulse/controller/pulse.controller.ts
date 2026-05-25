@@ -1,9 +1,9 @@
-/* @hillbilly-sync */
 import { Controller, Get } from "@nestjs/common";
 import type { HealthCheckResult } from "@nestjs/terminus";
 import { HealthCheck, HealthCheckService, MikroOrmHealthIndicator } from "@nestjs/terminus";
 
 import { ApiTags } from "@nestjs/swagger";
+import { Auth } from "@/decorator/auth.decorator";
 import { ServiceHealthIndicator } from "../service/service.indicator";
 
 @ApiTags("Pulse")
@@ -16,6 +16,7 @@ export class PulseController {
   ) {}
 
   @Get()
+  @Auth({ public: true })
   @HealthCheck()
   async check(): Promise<HealthCheckResult> {
     return this.healthCheckService.check([

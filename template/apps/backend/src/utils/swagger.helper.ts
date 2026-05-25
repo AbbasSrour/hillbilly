@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { ApiPropertyOptions } from "@nestjs/swagger";
 import _ from "lodash";
 const { omit } = _;

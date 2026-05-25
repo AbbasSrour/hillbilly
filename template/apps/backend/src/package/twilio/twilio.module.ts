@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Global, Module } from '@nestjs/common';
 
 import { TwilioService } from './service/twilio.service';

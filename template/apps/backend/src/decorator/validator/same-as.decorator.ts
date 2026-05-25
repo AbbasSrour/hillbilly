@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { type ValidationOptions, registerDecorator } from "class-validator";
 
 export function SameAs(property: string, validationOptions?: ValidationOptions): PropertyDecorator {

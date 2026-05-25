@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';

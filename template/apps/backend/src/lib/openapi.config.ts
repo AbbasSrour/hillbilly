@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { OpenApiNestFactory } from '@abbas_srour/nest-openapi-tools';
@@ -46,10 +45,13 @@ export async function setupOpenapi(app: INestApplication) {
       ...mergeResult.output,
       openapi: '3.1.0',
     };
-    fs.writeFileSync(
-      path.resolve(import.meta.dirname, '../../../../packages/sdk/openapi.json'),
-      JSON.stringify(mergedSchema, null, 2),
+    const outputPath = path.resolve(
+      import.meta.dirname,
+      '../../../../packages/sdk/openapi.json',
     );
+
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, JSON.stringify(mergedSchema, null, 2));
   } else {
     console.error('❌ Failed to merge OpenAPI schemas:', mergeResult.message);
   }

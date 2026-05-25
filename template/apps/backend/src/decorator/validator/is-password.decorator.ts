@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { registerDecorator, type ValidationOptions } from "class-validator";
 
 export function IsPassword(validationOptions?: ValidationOptions): PropertyDecorator {

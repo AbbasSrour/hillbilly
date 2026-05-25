@@ -19,7 +19,7 @@ import { mikroOrmAdapter } from 'better-auth-mikro-orm';
 import {
   generateEmailVerificationEmail,
   generatePasswordResetEmail,
-} from '@[[ project_name ]]/templates/email';
+} from '@hillbilly/templates/email';
 
 @Injectable()
 export class BetterAuthConfigService {
@@ -102,7 +102,7 @@ export class BetterAuthConfigService {
       },
       advanced: {
         ...baseAuthConfig.advanced,
-        cookiePrefix: 'app',
+        cookiePrefix: '[[ project_name ]]',
         useSecureCookies: this.configService.isProduction,
       },
       plugins: [

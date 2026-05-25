@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import '@/utils/boilerplate.polyfill';
 
 import * as path from 'node:path';

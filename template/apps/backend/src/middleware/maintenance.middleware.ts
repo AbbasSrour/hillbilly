@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Injectable, NestMiddleware, ServiceUnavailableException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NextFunction, Request, Response } from "express";

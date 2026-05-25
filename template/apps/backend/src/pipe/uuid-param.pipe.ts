@@ -1,6 +1,4 @@
-/* @hillbilly-sync */
-import { Param, ParseUUIDPipe, type PipeTransform } from "@nestjs/common";
-import type { Type } from "@nestjs/common/interfaces";
+import { Param, ParseUUIDPipe, type PipeTransform, type Type } from "@nestjs/common";
 
 export function UUIDParam(
   property: string,

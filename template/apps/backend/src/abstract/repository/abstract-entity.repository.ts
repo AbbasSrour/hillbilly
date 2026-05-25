@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import type { AnyEntity, EntityManager, QueryBuilder } from "@mikro-orm/sql";
 import { EntityRepository } from "@mikro-orm/sql";
 

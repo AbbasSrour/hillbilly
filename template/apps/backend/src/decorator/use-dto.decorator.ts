@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Constructor } from "@/types/utils";
 
 export function UseDto(dtoClass: () => Constructor): ClassDecorator {

@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Injectable } from "@nestjs/common";
 import { I18nService, TranslateOptions } from "nestjs-i18n";
 

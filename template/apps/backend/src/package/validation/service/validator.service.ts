@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Injectable } from "@nestjs/common";
 
 @Injectable()

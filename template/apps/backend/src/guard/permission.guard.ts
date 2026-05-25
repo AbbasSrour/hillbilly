@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Permissions } from '@/decorator/permission.decorator';
 import { CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -8,7 +7,7 @@ import {
   userHasAllPermissions,
 } from '@hillbilly/rbac';
 import type { Request } from 'express';
-import { isEmpty } from 'lodash';
+import _ from 'lodash';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -20,7 +19,7 @@ export class PermissionGuard implements CanActivate {
       context.getHandler(),
     );
 
-    if (isEmpty(requiredPermissions)) {
+    if (_.isEmpty(requiredPermissions)) {
       return true;
     }
 

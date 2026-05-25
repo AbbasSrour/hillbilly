@@ -1,6 +1,5 @@
-/* @hillbilly-sync */
 import { Injectable } from '@nestjs/common';
-import { Twilio } from 'twilio';
+import twilio, { type Twilio } from 'twilio';
 
 import { InvalidOtpException } from '@/package/twilio/exception/invalid-otp.exception';
 import { OtpCanceledException } from '@/package/twilio/exception/otp-canceled.exception';
@@ -19,7 +18,11 @@ export class TwilioService {
   constructor(private readonly configService: ApiConfigService) {
     const config = this.configService.twilioConfig;
 
-    this.client = new Twilio(config.accountSid, config.authToken);
+    if (config.accountSid && config.authToken) {
+      this.client = twilio(config.accountSid, config.authToken);
+    } else {
+      this.client = null as unknown as Twilio;
+    }
     this.verifyServiceSid = config.verifyServiceSid;
   }
 

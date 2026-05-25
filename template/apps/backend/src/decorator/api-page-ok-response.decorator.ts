@@ -1,4 +1,3 @@
-/* @hillbilly-sync */
 import { Type, applyDecorators } from "@nestjs/common";
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from "@nestjs/swagger";
 

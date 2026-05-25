@@ -1,9 +1,11 @@
+/// <reference types="bun" />
 import { readFile } from "node:fs/promises";
-import { resolve, relative, dirname } from "node:path";
+import { resolve } from "node:path";
 import { existsSync } from "node:fs";
-import fastGlob from "fast-glob";
-import { parse as parseYaml } from "yaml";
 import { createPatch } from "diff";
+import { parse as parseYaml } from "yaml";
+import { resolveTemplateRoot } from "./config.js";
+import { readSyncManifest, SYNC_MANIFEST_NAME, trackedSyncPaths } from "./manifest.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -42,51 +44,40 @@ export interface ScanResult {
   files: SyncFile[];
 }
 
-// ---------------------------------------------------------------------------
-// Marker
-// ---------------------------------------------------------------------------
-
-const MARKER = "/* @hillbilly-sync */";
-
-async function hasMarker(filePath: string): Promise<boolean> {
-  try {
-    const file = Bun.file(filePath);
-    const stream = file.stream();
-    const reader = stream.getReader();
-    const chunk = await reader.read();
-    reader.releaseLock();
-    if (!chunk.value) return false;
-    const firstLine = new TextDecoder().decode(chunk.value).split("\n")[0] ?? "";
-    return firstLine.trim() === MARKER;
-  } catch {
-    return false;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Template root detection
-// ---------------------------------------------------------------------------
-
-async function findCopierAnswers(projectRoot: string): Promise<string | null> {
-  const path = resolve(projectRoot, ".copier-answers.yml");
-  if (!existsSync(path)) return null;
-  return path;
-}
-
-async function resolveTemplateRoot(projectRoot: string): Promise<string | null> {
-  const answersPath = await findCopierAnswers(projectRoot);
-  if (!answersPath) return null;
+async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
+  const answersPath = resolve(projectRoot, ".copier-answers.yml");
+  if (!existsSync(answersPath)) return {};
 
   const raw = await readFile(answersPath, "utf-8");
-  const parsed = parseYaml(raw) as Record<string, unknown>;
-  const srcPath = parsed._src_path;
-  if (typeof srcPath !== "string") return null;
+  return (parseYaml(raw) as Record<string, unknown> | null) ?? {};
+}
 
-  let templateRoot = resolve(dirname(answersPath), srcPath, "template");
-  if (!existsSync(templateRoot)) {
-    templateRoot = resolve(dirname(answersPath), srcPath);
-  }
-  return templateRoot;
+function renderSimpleCopierVariables(content: string, answers: Record<string, unknown>): string {
+  return content.replace(/\[\[\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\]\]/g, (match, key: string) => {
+    const value = answers[key];
+    return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+      ? String(value)
+      : match;
+  });
+}
+
+function renderTemplateForComparison(
+  templatePath: string,
+  templateContent: string,
+  answers: Record<string, unknown>,
+): string {
+  if (!templatePath.endsWith(".jinja")) return templateContent;
+  return renderSimpleCopierVariables(templateContent, answers);
+}
+
+function resolveTemplateFilePath(templateRoot: string, relativePath: string): string {
+  const templatePath = resolve(templateRoot, relativePath);
+  if (existsSync(templatePath)) return templatePath;
+
+  const jinjaTemplatePath = `${templatePath}.jinja`;
+  if (existsSync(jinjaTemplatePath)) return jinjaTemplatePath;
+
+  return templatePath;
 }
 
 // ---------------------------------------------------------------------------
@@ -147,39 +138,26 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
 // Main scanner
 // ---------------------------------------------------------------------------
 
-export async function scan(projectRoot: string): Promise<ScanResult> {
-  const templateRoot = await resolveTemplateRoot(projectRoot);
-  if (!templateRoot) {
-    throw new Error(
-      `No .copier-answers.yml found in ${projectRoot}. Is this a Hillbilly-generated project?`,
-    );
-  }
-
-  const allFiles = await fastGlob(["**/*", "!**/node_modules/**", "!**/dist/**", "!.git/**", "!**/.turbo/**"], {
-    cwd: projectRoot,
-    absolute: true,
-    onlyFiles: true,
-    dot: false,
-  });
+export async function scan(projectRoot: string, options: { template?: string } = {}): Promise<ScanResult> {
+  const { templateRoot } = await resolveTemplateRoot(projectRoot, options);
+  const copierAnswers = await readCopierAnswers(projectRoot);
+  const manifest = await readSyncManifest(projectRoot);
 
   const files: SyncFile[] = [];
 
-  for (const filePath of allFiles) {
-    if (filePath.endsWith(".png") || filePath.endsWith(".jpg") || filePath.endsWith(".ico")) continue;
-
-    const marked = await hasMarker(filePath);
-    if (!marked) continue;
-
-    const relativePath = relative(projectRoot, filePath);
-    const templatePath = resolve(templateRoot, relativePath);
+  async function addSyncFile(relativePath: string): Promise<void> {
+    const filePath = resolve(projectRoot, relativePath);
+    if (!existsSync(filePath)) return;
+    const templatePath = resolveTemplateFilePath(templateRoot, relativePath);
 
     if (existsSync(templatePath)) {
-      const [projectContent, templateContent] = await Promise.all([
+      const [projectContent, rawTemplateContent] = await Promise.all([
         readFile(filePath, "utf-8"),
         readFile(templatePath, "utf-8"),
       ]);
+      const templateContent = renderTemplateForComparison(templatePath, rawTemplateContent, copierAnswers);
 
-      if (projectContent === templateContent) continue;
+      if (projectContent === templateContent) return;
 
       const diff = createPatch(relativePath, templateContent, projectContent);
       files.push({
@@ -193,6 +171,10 @@ export async function scan(projectRoot: string): Promise<ScanResult> {
       const projectContent = await readFile(filePath, "utf-8");
       files.push({ projectPath: relativePath, templatePath, status: "added", projectContent });
     }
+  }
+
+  for (const relativePath of new Set([SYNC_MANIFEST_NAME, ...trackedSyncPaths(manifest)])) {
+    await addSyncFile(relativePath);
   }
 
   return { templateRoot, files };
@@ -218,7 +200,6 @@ export function applyStagedHunks(
     const hunkLines = hunk.text.split("\n");
     // Parse each hunk line to extract added/removed/context lines
     const newLines: string[] = [];
-    const oldRangeEnd = hunk.oldStart + hunk.oldLines;
     const hunkBody = hunkLines.slice(1); // skip @@ header
 
     for (const line of hunkBody) {
