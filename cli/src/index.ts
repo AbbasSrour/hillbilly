@@ -52,11 +52,6 @@ sync
   .action(async (options: { project: string; template?: string }) => {
     const result = await scan(options.project, { template: options.template });
 
-    if (result.files.length === 0) {
-      console.log("No template-owned changes found.");
-      return;
-    }
-
     await launchTui(result, () => scan(options.project, { template: options.template }));
   });
 

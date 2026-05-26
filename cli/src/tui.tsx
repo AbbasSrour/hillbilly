@@ -10,14 +10,15 @@ import {
 import type { CliRenderer, ThemeTokenStyle } from "@opentui/core";
 import { createRoot } from "@opentui/react";
 import { existsSync } from "node:fs";
-import { rm } from "node:fs/promises";
-import { basename, dirname, resolve } from "node:path";
+import { readdir, rm } from "node:fs/promises";
+import { basename, dirname, join, relative, resolve } from "node:path";
+import { spawn } from "node:child_process";
 import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
 import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
-import { removeSyncFiles, setSyncFileState } from "./manifest.js";
+import { readSyncManifest, removeSyncFiles, setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 
 const FILE_ICONS: Record<string, string> = {
@@ -136,6 +137,14 @@ interface State {
   diffSigns: boolean;
   showLineNumbers: boolean;
   pendingPrunePath: string | null;
+  pickerOpen: boolean;
+  pickerIndex: number;
+  pickerFilter: string;
+  markPickerOpen: boolean;
+  markPickerFiles: string[];
+  markPickerSelected: Set<string>;
+  markPickerIndex: number;
+  markPickerFilter: string;
 }
 
 function makeInitialState(): State {
@@ -153,6 +162,14 @@ function makeInitialState(): State {
     diffSigns: true,
     showLineNumbers: true,
     pendingPrunePath: null,
+    pickerOpen: false,
+    pickerIndex: 0,
+    pickerFilter: "",
+    markPickerOpen: false,
+    markPickerFiles: [],
+    markPickerSelected: new Set(),
+    markPickerIndex: 0,
+    markPickerFilter: "",
   };
 }
 
@@ -210,6 +227,139 @@ function paletteToSyntaxStyle(palette: Palette): SyntaxStyle {
   const style = SyntaxStyle.fromTheme(tokens);
   _syntaxStyleCache.set(cacheKey, style);
   return style;
+}
+
+// ---------------------------------------------------------------------------
+// Mark picker helpers
+// ---------------------------------------------------------------------------
+
+function shouldExcludeForMark(filePath: string): boolean {
+  const normalized = filePath.replaceAll("\\", "/");
+  const parts = normalized.split("/");
+
+  for (const part of parts) {
+    if (
+      part === "node_modules" ||
+      part === "dist" ||
+      part === ".git" ||
+      part === "coverage" ||
+      part === ".turbo" ||
+      part === ".vite" ||
+      part === "bin" ||
+      part === "paraglide"
+    ) {
+      return true;
+    }
+  }
+
+  if (parts.some((part, index) => part === "i18n" && parts[index + 1] === "generated")) {
+    return true;
+  }
+
+  if (normalized === "packages/sdk/openapi.json" || normalized.startsWith("packages/sdk/src/")) {
+    return true;
+  }
+
+  if (
+    (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
+    !normalized.endsWith("project.inlang/settings.json")
+  ) {
+    return true;
+  }
+
+  const base = parts[parts.length - 1] ?? "";
+  if (
+    base.endsWith(".log") ||
+    /^\.env(\.(local|development|production|staging|test))?$/.test(base) ||
+    base === ".gitkeep" ||
+    base === ".DS_Store" ||
+    base === ".hillbilly-sync.yml" ||
+    base === ".copier-answers.yml" ||
+    base === ".copier-answers.yml.jinja"
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+async function walkProjectForMark(projectRoot: string): Promise<string[]> {
+  const results: string[] = [];
+  async function walk(dir: string): Promise<void> {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      const relativePath = relative(projectRoot, fullPath).replaceAll("\\", "/");
+      if (shouldExcludeForMark(relativePath)) continue;
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile()) {
+        results.push(relativePath);
+      }
+    }
+  }
+  await walk(projectRoot);
+  return results;
+}
+
+async function getGitIgnoredSet(projectRoot: string, paths: string[]): Promise<Set<string>> {
+  if (paths.length === 0) return new Set();
+  return new Promise((resolve) => {
+    const proc = spawn("git", ["check-ignore", "--stdin", "-z"], {
+      cwd: projectRoot,
+      stdio: ["pipe", "pipe", "ignore"],
+    });
+    const chunks: Buffer[] = [];
+    proc.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
+    proc.stdout.on("end", () => {
+      const output = Buffer.concat(chunks).toString();
+      const ignored = new Set(output.split("\0").filter(Boolean));
+      resolve(ignored);
+    });
+    proc.on("error", () => resolve(new Set()));
+    proc.stdin.write(paths.join("\0") + "\0");
+    proc.stdin.end();
+  });
+}
+
+async function walkTemplateForMark(templateRoot: string): Promise<string[]> {
+  const results: string[] = [];
+  async function walk(dir: string): Promise<void> {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      const relativePath = relative(templateRoot, fullPath).replaceAll("\\", "/");
+      if (shouldExcludeForMark(relativePath)) continue;
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile()) {
+        const stripped = relativePath.endsWith(".jinja")
+          ? relativePath.slice(0, -".jinja".length)
+          : relativePath;
+        results.push(stripped);
+      }
+    }
+  }
+  await walk(templateRoot);
+  return results;
+}
+
+async function getMarkableFiles(
+  projectRoot: string,
+  templateRoot: string,
+  scanFiles: SyncFile[],
+): Promise<string[]> {
+  const [allProjectFiles, templateFiles, manifest] = await Promise.all([
+    walkProjectForMark(projectRoot),
+    walkTemplateForMark(templateRoot),
+    readSyncManifest(projectRoot),
+  ]);
+  const templateOwned = new Set([...templateFiles, ...scanFiles.map((f) => f.projectPath)]);
+  const managed = new Set(manifest.files.map((f) => f.path));
+  const gitIgnored = await getGitIgnoredSet(projectRoot, allProjectFiles);
+  return allProjectFiles
+    .filter((p) => !templateOwned.has(p) && !managed.has(p) && !gitIgnored.has(p))
+    .sort();
 }
 
 // Build a mini unified diff string for a single hunk
@@ -811,6 +961,157 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           return prev;
         }
 
+        // Theme picker mode — capture navigation and typing
+        if (prev.pickerOpen) {
+          const filtered = THEME_NAMES.filter((n) =>
+            n.toLowerCase().includes(prev.pickerFilter.toLowerCase()),
+          );
+          switch (event.name) {
+            case "j":
+            case "down":
+              return {
+                ...prev,
+                pickerIndex: Math.min(prev.pickerIndex + 1, Math.max(filtered.length - 1, 0)),
+              };
+            case "k":
+            case "up":
+              return { ...prev, pickerIndex: Math.max(prev.pickerIndex - 1, 0) };
+            case "enter":
+            case "return": {
+              const name = filtered[prev.pickerIndex];
+              if (name) {
+                void saveThemePreference(name);
+                return {
+                  ...prev,
+                  pickerOpen: false,
+                  themeName: name,
+                  pickerFilter: "",
+                  pickerIndex: 0,
+                  statusMessage: `Theme: ${name}`,
+                };
+              }
+              return { ...prev, pickerOpen: false, pickerFilter: "", pickerIndex: 0 };
+            }
+            case "escape":
+            case "q":
+              return { ...prev, pickerOpen: false, pickerFilter: "", pickerIndex: 0 };
+            case "backspace":
+              return {
+                ...prev,
+                pickerFilter: prev.pickerFilter.slice(0, -1),
+                pickerIndex: 0,
+              };
+            case "delete":
+              return { ...prev, pickerFilter: "", pickerIndex: 0 };
+            default:
+              if (event.name.length === 1 && !event.ctrl && !event.meta && !event.shift) {
+                return {
+                  ...prev,
+                  pickerFilter: prev.pickerFilter + event.name,
+                  pickerIndex: 0,
+                };
+              }
+              return prev;
+          }
+        }
+
+        // Mark picker mode — capture navigation and typing
+        if (prev.markPickerOpen) {
+          const filtered = prev.markPickerFiles.filter((n) =>
+            n.toLowerCase().includes(prev.markPickerFilter.toLowerCase()),
+          );
+          switch (event.name) {
+            case "j":
+            case "down":
+              return {
+                ...prev,
+                markPickerIndex: Math.min(
+                  prev.markPickerIndex + 1,
+                  Math.max(filtered.length - 1, 0),
+                ),
+              };
+            case "k":
+            case "up":
+              return { ...prev, markPickerIndex: Math.max(prev.markPickerIndex - 1, 0) };
+            case "space":
+            case " ": {
+              const name = filtered[prev.markPickerIndex];
+              if (!name) return prev;
+              const next = new Set(prev.markPickerSelected);
+              if (next.has(name)) next.delete(name);
+              else next.add(name);
+              return { ...prev, markPickerSelected: next };
+            }
+            case "a": {
+              const allVisible = new Set(filtered);
+              const currentlySelected = new Set(
+                filtered.filter((f) => prev.markPickerSelected.has(f)),
+              );
+              const next = new Set(prev.markPickerSelected);
+              if (currentlySelected.size === filtered.length) {
+                // Deselect all visible
+                for (const f of filtered) next.delete(f);
+              } else {
+                // Select all visible
+                for (const f of filtered) next.add(f);
+              }
+              return { ...prev, markPickerSelected: next };
+            }
+            case "enter":
+            case "return": {
+              if (prev.markPickerSelected.size === 0) return prev;
+              const selected = Array.from(prev.markPickerSelected);
+              void (async () => {
+                try {
+                  await setSyncFileState(currentScanResult.projectRoot, selected, "tracked");
+                  const nextResult = refreshScanRef ? await refreshScanRef() : currentScanResult;
+                  setResult(nextResult);
+                  setState((p) => ({
+                    ...p,
+                    markPickerOpen: false,
+                    markPickerSelected: new Set(),
+                    markPickerFilter: "",
+                    markPickerIndex: 0,
+                    statusMessage: `Marked ${selected.length} file(s)`,
+                  }));
+                } catch (err: unknown) {
+                  setState((p) => ({
+                    ...p,
+                    statusMessage: `Mark failed: ${err instanceof Error ? err.message : String(err)}`,
+                  }));
+                }
+              })();
+              return prev;
+            }
+            case "escape":
+            case "q":
+              return {
+                ...prev,
+                markPickerOpen: false,
+                markPickerFilter: "",
+                markPickerIndex: 0,
+                markPickerSelected: new Set(),
+              };
+            case "backspace":
+              return {
+                ...prev,
+                markPickerFilter: prev.markPickerFilter.slice(0, -1),
+                markPickerIndex: 0,
+              };
+            case "delete":
+              return { ...prev, markPickerFilter: "", markPickerIndex: 0 };
+            default:
+              if (event.name.length === 1 && !event.ctrl && !event.meta && !event.shift) {
+                return {
+                  ...prev,
+                  markPickerFilter: prev.markPickerFilter + event.name,
+                  markPickerIndex: 0,
+                };
+              }
+              return prev;
+          }
+        }
+
         switch (event.name) {
           case "q":
             r.keyInput.off("keypress", handler);
@@ -888,11 +1189,35 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               statusMessage: `Press d again to prune ${file.projectPath}`,
             };
 
-          case "t": {
-            const idx = THEME_NAMES.indexOf(prev.themeName);
-            const nextTheme = THEME_NAMES[(idx + 1) % THEME_NAMES.length]!;
-            void saveThemePreference(nextTheme);
-            return { ...prev, themeName: nextTheme, statusMessage: `Theme: ${nextTheme}` };
+          case "t":
+            return {
+              ...prev,
+              pickerOpen: true,
+              pickerIndex: THEME_NAMES.indexOf(prev.themeName),
+              pickerFilter: "",
+            };
+
+          case "m": {
+            void (async () => {
+              try {
+                const markable = await getMarkableFiles(
+                  currentScanResult.projectRoot,
+                  currentScanResult.templateRoot,
+                  currentScanResult.files,
+                );
+                setState((p) => ({
+                  ...p,
+                  markPickerOpen: true,
+                  markPickerFiles: markable,
+                  markPickerIndex: 0,
+                  markPickerFilter: "",
+                  markPickerSelected: new Set(),
+                }));
+              } catch {
+                setState((p) => ({ ...p, statusMessage: "Failed to list markable files" }));
+              }
+            })();
+            return prev;
           }
 
           case "s": {
@@ -932,6 +1257,14 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return next;
           }
 
+          case "?": {
+            return {
+              ...prev,
+              statusMessage:
+                "r=refresh m=mark files t=theme picker s=split/unified b=line colors g=+/- signs l=line numbers d=prune u=unmark",
+            };
+          }
+
           case "enter":
           case "return":
             void doPush(prev, setResult, setStateRef!);
@@ -964,7 +1297,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   const displayNames = uniqueDisplayNames(result.files.map((f) => f.projectPath));
 
   const palette = THEMES[state.themeName] ?? THEMES[DEFAULT_THEME]!;
-  const flistRows = Math.max(1, (_renderer?.height ?? 24) - 2);
+  const flistRows = Math.max(1, (_renderer?.height ?? 24) - 3);
   const fileWindowStart = Math.max(
     0,
     Math.min(
@@ -974,265 +1307,492 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   );
   const visibleFiles = result.files.slice(fileWindowStart, fileWindowStart + flistRows);
 
+  const filteredThemes = THEME_NAMES.filter((n) =>
+    n.toLowerCase().includes(state.pickerFilter.toLowerCase()),
+  );
+
+  const filteredMarkFiles = state.markPickerFiles.filter((n) =>
+    n.toLowerCase().includes(state.markPickerFilter.toLowerCase()),
+  );
+
   return (
     <box flexDirection="column" width="100%" height="100%" backgroundColor={palette.BG}>
-      {/* Header — fixed 1 row */}
-      <box
-        flexDirection="row"
-        alignItems="center"
-        height={1}
-        flexShrink={0}
-        paddingY={0}
-        paddingX={1}
-        backgroundColor={palette.HEADER_FG}
-      >
-        <text fg={palette.TEXT} width="100%" truncate>
-          Hillbilly Sync | {result.files.length} file{result.files.length !== 1 ? "s" : ""} changed
-          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav a all q
-          quit d prune u unmark t theme s split b colors g signs l lines
-        </text>
-      </box>
-
-      {/* Main content area — fills remaining space */}
-      <box flexDirection="row" flexGrow={1} minHeight={0}>
-        {/* File list panel */}
-        <box
-          width="25%"
-          flexDirection="column"
-          border={["right"]}
-          borderColor={state.focus === "files" ? palette.BORDER_ACTIVE : palette.BORDER}
-        >
+      {state.markPickerOpen ? (
+        <box flexDirection="column" flexGrow={1} paddingX={2} paddingY={1}>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.PRIMARY}>Mark Files for Sync</text>
+          </box>
+          <box height={1} flexShrink={0} flexDirection="row" alignItems="center">
+            <text fg={palette.TEXT_MUTED}>Search: </text>
+            <text fg={state.markPickerFilter ? palette.TEXT : palette.TEXT_MUTED}>
+              {state.markPickerFilter || "type to filter..."}
+            </text>
+            <text fg={palette.PRIMARY}>|</text>
+            <box flexGrow={1} />
+            <text fg={palette.SUCCESS}>{state.markPickerSelected.size} selected</text>
+          </box>
           <scrollbox
             flexGrow={1}
             minHeight={0}
+            scrollY
             verticalScrollbarOptions={{ visible: false }}
             horizontalScrollbarOptions={{ visible: false }}
-            scrollY
-            focused={state.focus === "files"}
           >
-            {visibleFiles.map((file, visibleIndex) => {
-              const index = fileWindowStart + visibleIndex;
-              const isSelected = index === state.selectedFileIndex;
-              const statusColor =
-                file.status === "added" || file.status === "moved" || file.status === "renamed"
-                  ? palette.SUCCESS
-                  : file.status === "deleted"
-                    ? palette.ERROR
-                    : file.status === "stale"
-                      ? palette.ERROR
-                      : file.formatOnly
-                        ? palette.INFO
-                        : palette.WARNING;
-              const count = stagedCountForFile(state.stagedHunks, file);
-              const icon = fileIcon(file.projectPath);
-              return (
-                <box
-                  key={file.projectPath}
-                  flexDirection="row"
-                  alignItems="center"
-                  height={1}
-                  flexShrink={0}
-                  backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
-                  paddingY={0}
-                  paddingX={1}
+            {filteredMarkFiles.map((name, i) => (
+              <box
+                key={name}
+                backgroundColor={i === state.markPickerIndex ? palette.SELECTED_BG : undefined}
+                height={1}
+                flexShrink={0}
+                flexDirection="row"
+                alignItems="center"
+              >
+                <text
+                  fg={state.markPickerSelected.has(name) ? palette.SUCCESS : palette.TEXT_MUTED}
                 >
-                  <text fg={palette.TEXT}>{isSelected ? ">" : " "}</text>
-                  <text fg={statusColor}>{statusLetter(file.status, file.formatOnly)}</text>
-                  <text fg={palette.TEXT}> </text>
-                  <text fg={palette.TEXT_MUTED}>{icon} </text>
-                  <box flexGrow={1} minWidth={0}>
-                    <text fg={palette.TEXT} wrapMode="none" truncate>
-                      {displayNames.get(file.projectPath) ?? file.projectPath}
-                    </text>
-                  </box>
-                  {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
-                </box>
-              );
-            })}
-          </scrollbox>
-        </box>
-
-        {/* Diff view panel */}
-        <box flexGrow={1} minHeight={0} flexDirection="column">
-          {/* File path header — fixed 1 row when a file is selected */}
-          {selectedFile && (
-            <box
-              height={1}
-              flexShrink={0}
-              paddingY={0}
-              paddingX={1}
-              backgroundColor={palette.HEADER_FG}
-            >
-              <text fg={palette.TEXT} width="100%" truncate>
-                {selectedFile.status === "moved" || selectedFile.status === "renamed"
-                  ? `${selectedFile.movedFrom} -> ${selectedFile.projectPath}`
-                  : selectedFile.projectPath}
+                  {state.markPickerSelected.has(name) ? "[x] " : "[ ] "}
+                </text>
+                <text fg={i === state.markPickerIndex ? palette.PRIMARY : palette.TEXT}>
+                  {name}
+                </text>
+              </box>
+            ))}
+            {filteredMarkFiles.length === 0 && (
+              <text fg={palette.TEXT_MUTED}>
+                {state.markPickerFiles.length === 0
+                  ? "No markable files found"
+                  : "No files match filter"}
               </text>
-            </box>
-          )}
-
+            )}
+          </scrollbox>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.TEXT_MUTED}>
+              j/k navigate Space toggle a toggle all Enter confirm Esc/q close
+            </text>
+          </box>
+        </box>
+      ) : state.pickerOpen ? (
+        <box flexDirection="column" flexGrow={1} paddingX={2} paddingY={1}>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.PRIMARY}>Select Theme</text>
+          </box>
+          <box height={1} flexShrink={0} flexDirection="row" alignItems="center">
+            <text fg={palette.TEXT_MUTED}>Filter: </text>
+            <text fg={palette.TEXT}>{state.pickerFilter}</text>
+            <text fg={palette.PRIMARY}>|</text>
+          </box>
           <scrollbox
             flexGrow={1}
             minHeight={0}
+            scrollY
             verticalScrollbarOptions={{ visible: false }}
             horizontalScrollbarOptions={{ visible: false }}
-            scrollY
-            focused={state.focus === "diff"}
           >
-            {!selectedFile && (
-              <box paddingY={0} paddingX={1}>
-                <text fg={palette.TEXT}>No files to display.</text>
-              </box>
-            )}
-
-            {selectedFile?.status === "added" && (
-              <box paddingY={0} paddingX={1} flexDirection="column">
-                <text fg={palette.SUCCESS}>New file (added)</text>
-                <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
-                <text fg={palette.TEXT}>{selectedFile.projectContent}</text>
-              </box>
-            )}
-
-            {(selectedFile?.status === "moved" || selectedFile?.status === "renamed") && (
-              <box paddingY={0} paddingX={1} flexDirection="column">
-                <text fg={palette.SUCCESS}>{pathChangeLabel(selectedFile)}</text>
-                <text fg={palette.TEXT}>
-                  {" "}
-                  {selectedFile.movedFrom} -&gt; {selectedFile.projectPath}
+            {filteredThemes.map((name, i) => (
+              <box
+                key={name}
+                backgroundColor={i === state.pickerIndex ? palette.SELECTED_BG : undefined}
+                height={1}
+                flexShrink={0}
+              >
+                <text fg={i === state.pickerIndex ? palette.PRIMARY : palette.TEXT}>
+                  {name === state.themeName ? "● " : "  "}
+                  {name}
                 </text>
-                <text fg={palette.TEXT}>Stage this file to update the template path.</text>
               </box>
+            ))}
+            {filteredThemes.length === 0 && <text fg={palette.TEXT_MUTED}>No themes match</text>}
+          </scrollbox>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.TEXT_MUTED}>j/k navigate Enter select Esc/q close</text>
+          </box>
+        </box>
+      ) : (
+        <box flexDirection="column" flexGrow={1} minHeight={0}>
+          {/* Header — fixed 1 row */}
+          <box
+            flexDirection="row"
+            alignItems="center"
+            height={1}
+            flexShrink={0}
+            paddingY={0}
+            paddingX={1}
+            backgroundColor={palette.HEADER_FG}
+          >
+            <text fg={palette.TEXT} flexShrink={0}>
+              Hillbilly Sync
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+              {result.files.length} file{result.files.length !== 1 ? "s" : ""}
+            </text>
+            {totalStaged > 0 && (
+              <text fg={palette.SUCCESS} flexShrink={0}>
+                {" | "}
+                {totalStaged} staged
+              </text>
             )}
+            <box flexGrow={1} />
+            <text fg={palette.TEXT} flexShrink={0}>
+              {state.diffView}
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+            </text>
+            <text fg={state.diffLineColors ? palette.TEXT : palette.TEXT_MUTED} flexShrink={0}>
+              color
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+            </text>
+            <text fg={state.diffSigns ? palette.TEXT : palette.TEXT_MUTED} flexShrink={0}>
+              +/-
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+            </text>
+            <text fg={state.showLineNumbers ? palette.TEXT : palette.TEXT_MUTED} flexShrink={0}>
+              lines
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              ? help
+            </text>
+          </box>
 
-            {selectedFile?.status === "deleted" && (
-              <box paddingY={0} paddingX={1} flexDirection="column">
-                <text fg={palette.ERROR}>Deleted file</text>
-                <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
-                <text fg={palette.TEXT}>Stage this file to delete it from the template.</text>
-              </box>
-            )}
-
-            {selectedFile?.status === "stale" && (
-              <box paddingY={0} paddingX={1} flexDirection="column">
-                <text fg={palette.ERROR}>Stale tracked file</text>
-                <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
-                <text fg={palette.TEXT}>
-                  This file is tracked but no longer exists in the template.
+          {/* Main content area — fills remaining space */}
+          <box flexDirection="row" flexGrow={1} minHeight={0}>
+            {/* File list panel */}
+            <box
+              width="25%"
+              flexDirection="column"
+              border={["right"]}
+              borderColor={state.focus === "files" ? palette.BORDER_ACTIVE : palette.BORDER}
+            >
+              <box
+                height={1}
+                flexShrink={0}
+                paddingY={0}
+                paddingX={1}
+                backgroundColor={palette.HEADER_FG}
+                flexDirection="row"
+                alignItems="center"
+              >
+                <text
+                  fg={state.focus === "files" ? palette.PRIMARY : palette.TEXT_MUTED}
+                  flexShrink={0}
+                >
+                  {state.focus === "files" ? "▸ " : "  "}Files
                 </text>
-                <text fg={palette.TEXT}>[d] delete from project and remove manifest entry</text>
-                <text fg={palette.WARNING}>Requires confirmation: press d twice.</text>
-                <text fg={palette.TEXT}>[u] keep project file but mark untracked</text>
-              </box>
-            )}
-
-            {selectedFile?.status === "modified" && selectedFile.hunks && (
-              <box paddingY={0} paddingX={1} flexDirection="column">
-                <text fg={palette.TEXT} truncate>
-                  {selectedFile.projectPath}
+                <box flexGrow={1} />
+                <text
+                  fg={state.focus === "files" ? palette.TEXT : palette.TEXT_MUTED}
+                  flexShrink={0}
+                >
+                  {result.files.length}
                 </text>
-                {selectedFile.formatOnly && (
-                  <text fg={palette.INFO}>
-                    Formatting/style-only difference. Raw content still differs and can be staged.
-                  </text>
-                )}
-                {selectedFile.hunks.map((hunk, hi) => {
-                  const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
-                  const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
-                  const filetype = pathToFiletype(selectedFile.projectPath);
-                  const syntaxStyle = paletteToSyntaxStyle(palette);
-                  const treeSitterClient = getSharedTreeSitterClient();
+              </box>
+              <scrollbox
+                flexGrow={1}
+                minHeight={0}
+                verticalScrollbarOptions={{ visible: false }}
+                horizontalScrollbarOptions={{ visible: false }}
+                scrollY
+                focused={state.focus === "files"}
+              >
+                {visibleFiles.map((file, visibleIndex) => {
+                  const index = fileWindowStart + visibleIndex;
+                  const isSelected = index === state.selectedFileIndex;
+                  const statusColor =
+                    file.status === "added" || file.status === "moved" || file.status === "renamed"
+                      ? palette.SUCCESS
+                      : file.status === "deleted"
+                        ? palette.ERROR
+                        : file.status === "stale"
+                          ? palette.ERROR
+                          : file.formatOnly
+                            ? palette.INFO
+                            : palette.WARNING;
+                  const count = stagedCountForFile(state.stagedHunks, file);
+                  const icon = fileIcon(file.projectPath);
                   return (
                     <box
-                      key={hi}
-                      backgroundColor={isHunkSelected ? palette.SELECTED_BG : undefined}
-                      marginBottom={1}
+                      key={file.projectPath}
+                      flexDirection="row"
+                      alignItems="center"
+                      height={1}
+                      flexShrink={0}
+                      backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
+                      paddingY={0}
+                      paddingX={1}
                     >
-                      <text fg={palette.TEXT}>
-                        [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
-                        {hunk.newStart + 1},{hunk.newLines} @@
-                      </text>
-                      <diff
-                        diff={hunkDiffForFile(selectedFile, hunk)}
-                        view={state.diffView}
-                        width="100%"
-                        height={hunkDiffHeight(hunk, state.diffView)}
-                        syntaxStyle={syntaxStyle}
-                        treeSitterClient={treeSitterClient ?? undefined}
-                        filetype={filetype}
-                        fg={palette.TEXT}
-                        addedBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
-                        removedBg={state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
-                        contextBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
-                        addedContentBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
-                        removedContentBg={
-                          state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
-                        }
-                        contextContentBg={
-                          state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
-                        }
-                        addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
-                        removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
-                        lineNumberFg={palette.TEXT_MUTED}
-                        lineNumberBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
-                        addedLineNumberBg={
-                          state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG
-                        }
-                        removedLineNumberBg={
-                          state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
-                        }
-                        wrapMode="none"
-                        showLineNumbers={state.showLineNumbers}
-                      />
+                      <text fg={palette.TEXT}>{isSelected ? ">" : " "}</text>
+                      <text fg={statusColor}>{statusLetter(file.status, file.formatOnly)}</text>
+                      <text fg={palette.TEXT}> </text>
+                      <text fg={palette.TEXT_MUTED}>{icon} </text>
+                      <box flexGrow={1} minWidth={0}>
+                        <text fg={palette.TEXT} wrapMode="none" truncate>
+                          {displayNames.get(file.projectPath) ?? file.projectPath}
+                        </text>
+                      </box>
+                      {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
                     </box>
                   );
                 })}
+              </scrollbox>
+            </box>
+
+            {/* Diff view panel */}
+            <box flexGrow={1} minHeight={0} flexDirection="column">
+              <box
+                height={1}
+                flexShrink={0}
+                paddingY={0}
+                paddingX={1}
+                backgroundColor={palette.HEADER_FG}
+                flexDirection="row"
+                alignItems="center"
+              >
+                <text
+                  fg={state.focus === "diff" ? palette.PRIMARY : palette.TEXT_MUTED}
+                  flexShrink={0}
+                >
+                  {state.focus === "diff" ? "▸ " : "  "}
+                </text>
+                <text
+                  fg={state.focus === "diff" ? palette.TEXT : palette.TEXT_MUTED}
+                  width="100%"
+                  truncate
+                >
+                  {selectedFile
+                    ? selectedFile.status === "moved" || selectedFile.status === "renamed"
+                      ? `${selectedFile.movedFrom} -> ${selectedFile.projectPath}`
+                      : selectedFile.projectPath
+                    : result.files.length === 0
+                      ? "No files to display"
+                      : "Select a file to view diff"}
+                </text>
+              </box>
+
+              <scrollbox
+                flexGrow={1}
+                minHeight={0}
+                verticalScrollbarOptions={{ visible: false }}
+                horizontalScrollbarOptions={{ visible: false }}
+                scrollY
+                focused={state.focus === "diff"}
+              >
+                {!selectedFile && result.files.length > 0 && (
+                  <box paddingY={1} paddingX={1}>
+                    <text fg={palette.TEXT_MUTED}>Select a file from the list to view details</text>
+                  </box>
+                )}
+
+                {selectedFile?.status === "added" && (
+                  <box paddingY={0} paddingX={1} flexDirection="column">
+                    <text fg={palette.SUCCESS}>New file (added)</text>
+                    <text fg={palette.TEXT}>{selectedFile.projectContent}</text>
+                  </box>
+                )}
+
+                {(selectedFile?.status === "moved" || selectedFile?.status === "renamed") && (
+                  <box paddingY={0} paddingX={1} flexDirection="column">
+                    <text fg={palette.SUCCESS}>{pathChangeLabel(selectedFile)}</text>
+                    <text fg={palette.TEXT}>Stage this file to update the template path.</text>
+                  </box>
+                )}
+
+                {selectedFile?.status === "deleted" && (
+                  <box paddingY={0} paddingX={1} flexDirection="column">
+                    <text fg={palette.ERROR}>Deleted file</text>
+                    <text fg={palette.TEXT}>Stage this file to delete it from the template.</text>
+                  </box>
+                )}
+
+                {selectedFile?.status === "stale" && (
+                  <box paddingY={0} paddingX={1} flexDirection="column">
+                    <text fg={palette.ERROR}>Stale tracked file</text>
+                    <text fg={palette.TEXT}>
+                      This file is tracked but no longer exists in the template.
+                    </text>
+                    <text fg={palette.TEXT}>[d] delete from project and remove manifest entry</text>
+                    <text fg={palette.WARNING}>Requires confirmation: press d twice.</text>
+                    <text fg={palette.TEXT}>[u] keep project file but mark untracked</text>
+                  </box>
+                )}
+
+                {selectedFile?.status === "modified" && selectedFile.hunks && (
+                  <box paddingY={0} paddingX={1} flexDirection="column">
+                    {selectedFile.formatOnly && (
+                      <text fg={palette.INFO}>
+                        Formatting/style-only difference. Raw content still differs and can be
+                        staged.
+                      </text>
+                    )}
+                    {selectedFile.hunks.map((hunk, hi) => {
+                      const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
+                      const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
+                      const filetype = pathToFiletype(selectedFile.projectPath);
+                      const syntaxStyle = paletteToSyntaxStyle(palette);
+                      const treeSitterClient = getSharedTreeSitterClient();
+                      return (
+                        <box
+                          key={hi}
+                          backgroundColor={isHunkSelected ? palette.SELECTED_BG : undefined}
+                          marginBottom={1}
+                        >
+                          <text fg={palette.TEXT}>
+                            [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
+                            {hunk.newStart + 1},{hunk.newLines} @@
+                          </text>
+                          <diff
+                            diff={hunkDiffForFile(selectedFile, hunk)}
+                            view={state.diffView}
+                            width="100%"
+                            height={hunkDiffHeight(hunk, state.diffView)}
+                            syntaxStyle={syntaxStyle}
+                            treeSitterClient={treeSitterClient ?? undefined}
+                            filetype={filetype}
+                            fg={palette.TEXT}
+                            addedBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
+                            removedBg={state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
+                            contextBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
+                            addedContentBg={
+                              state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG
+                            }
+                            removedContentBg={
+                              state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
+                            }
+                            contextContentBg={
+                              state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
+                            }
+                            addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
+                            removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
+                            lineNumberFg={palette.TEXT_MUTED}
+                            lineNumberBg={
+                              state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
+                            }
+                            addedLineNumberBg={
+                              state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG
+                            }
+                            removedLineNumberBg={
+                              state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
+                            }
+                            wrapMode="none"
+                            showLineNumbers={state.showLineNumbers}
+                          />
+                        </box>
+                      );
+                    })}
+                  </box>
+                )}
+
+                {selectedFile?.status === "modified" &&
+                  (!selectedFile.hunks || selectedFile.hunks.length === 0) && (
+                    <box paddingY={0} paddingX={1}>
+                      <text fg={palette.WARNING}>No hunks parsed from diff.</text>
+                    </box>
+                  )}
+              </scrollbox>
+            </box>
+          </box>
+
+          {/* Footer — fixed 1 row */}
+          <box
+            flexDirection="row"
+            alignItems="center"
+            height={1}
+            flexShrink={0}
+            paddingY={0}
+            paddingX={1}
+            backgroundColor={palette.HEADER_FG}
+          >
+            {state.pushStatus === "idle" && (
+              <box flexDirection="row" width="100%" flexGrow={1}>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  j/k
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  nav{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  Space
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  stage{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  a
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  toggle all{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  Tab
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  panel{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  Enter
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  push{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  m
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  mark{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  q
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  quit{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  ?
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  help
+                </text>
+                <box flexGrow={1} />
+                {state.statusMessage && (
+                  <text fg={palette.WARNING} flexShrink={0} truncate>
+                    {state.statusMessage}
+                  </text>
+                )}
               </box>
             )}
-
-            {selectedFile?.status === "modified" &&
-              (!selectedFile.hunks || selectedFile.hunks.length === 0) && (
-                <box paddingY={0} paddingX={1}>
-                  <text fg={palette.WARNING}>No hunks parsed from diff.</text>
-                </box>
-              )}
-          </scrollbox>
+            {state.pushStatus === "pushing" && (
+              <text fg={palette.WARNING} width="100%" truncate>
+                Pushing changes...
+              </text>
+            )}
+            {state.pushStatus === "done" && (
+              <text fg={palette.SUCCESS} width="100%" truncate>
+                {state.pushMessage} [q] quit
+              </text>
+            )}
+            {state.pushStatus === "error" && (
+              <text fg={palette.ERROR} width="100%" truncate>
+                {state.pushMessage} [q] quit
+              </text>
+            )}
+          </box>
         </box>
-      </box>
-
-      {/* Footer — fixed 1 row */}
-      <box
-        flexDirection="row"
-        alignItems="center"
-        height={1}
-        flexShrink={0}
-        paddingY={0}
-        paddingX={1}
-        backgroundColor={palette.HEADER_FG}
-      >
-        {state.pushStatus === "idle" && (
-          <text fg={palette.TEXT} width="100%" truncate>
-            [Space] stage/unstage [a] stage all [Tab] switch panel [r] refresh [t] theme [Enter]
-            push staged [q] quit [d] prune stale [u] unmark [s] split/unified [b] colors [g] signs
-            [l] lines
-            {state.statusMessage ? ` | ${state.statusMessage}` : ""}
-          </text>
-        )}
-        {state.pushStatus === "pushing" && (
-          <text fg={palette.WARNING} width="100%" truncate>
-            Pushing changes...
-          </text>
-        )}
-        {state.pushStatus === "done" && (
-          <text fg={palette.SUCCESS} width="100%" truncate>
-            {state.pushMessage} [q] quit
-          </text>
-        )}
-        {state.pushStatus === "error" && (
-          <text fg={palette.ERROR} width="100%" truncate>
-            {state.pushMessage} [q] quit
-          </text>
-        )}
-      </box>
+      )}
     </box>
   );
 }

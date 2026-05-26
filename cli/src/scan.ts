@@ -374,7 +374,7 @@ export async function scan(
       files.push({
         projectPath: relativePath,
         templatePath,
-        status: options.manifestTracked ? "stale" : "added",
+        status: "added",
         projectContent,
       });
     }
