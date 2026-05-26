@@ -1,7 +1,11 @@
 import { Permissions } from '@/decorator/permission.decorator';
 import { CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { type EnhancedSessionUser, hasPermissions, userHasAllPermissions } from '@hillbilly/rbac';
+import {
+  type EnhancedSessionUser,
+  hasPermissions,
+  userHasAllPermissions,
+} from '@hillbilly/rbac/server';
 import type { Request } from 'express';
 import _ from 'lodash';
 

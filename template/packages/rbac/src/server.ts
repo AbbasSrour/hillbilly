@@ -15,6 +15,7 @@ import {
 } from './endpoints';
 import { buildSchema } from './schema';
 import type { RBACPluginConfig, RBACSchemaConfig } from './types';
+export { type EnhancedSessionUser, hasPermissions, userHasAllPermissions } from './types';
 import { getSessionPermissions } from './utils';
 
 /**

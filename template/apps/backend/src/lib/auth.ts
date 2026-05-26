@@ -5,7 +5,7 @@ import { SessionEntity } from '@module/auth/entity/session.entity';
 import { VerificationEntity } from '@module/auth/entity/verification.entity';
 import { UserEntity } from '@module/user/entity/user.entity';
 import { rbac } from '@hillbilly/rbac/server';
-import { BetterAuthOptions } from 'better-auth';
+import { betterAuth, BetterAuthOptions } from 'better-auth';
 import { phoneNumber } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
 
