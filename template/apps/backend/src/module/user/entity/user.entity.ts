@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@/abstract';
-import { UseDto } from '@/decorator';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import {
   Cascade,
   type Opt,

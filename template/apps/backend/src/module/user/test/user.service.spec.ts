@@ -3,8 +3,8 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ExtendedEntityRepository } from '@/abstract';
-import { ValidatorService } from '@/package/validation';
+import { ExtendedEntityRepository } from '@/abstract/repository/abstract-entity.repository';
+import { ValidatorService } from '@/package/validation/service/validator.service';
 import { UserService } from '../service/user.service';
 import { UserEntity } from '../entity/user.entity';
 import { UserSettingsEntity } from '../entity/user-settings.entity';

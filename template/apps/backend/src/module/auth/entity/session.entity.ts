@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@/abstract';
-import { UseDto } from '@/decorator';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import { Entity, Index, ManyToOne, Property } from '@mikro-orm/decorators/legacy';
 import { SessionDto, SessionDtoOptions } from '../dto/session.dto';
 import { UserEntity } from '../../user/entity/user.entity';

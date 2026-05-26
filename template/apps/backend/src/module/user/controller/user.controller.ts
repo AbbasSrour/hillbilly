@@ -18,16 +18,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { PageDto } from '@/abstract';
+import { PageDto } from '@/abstract/dto/page.dto';
 import { RoleType } from '@constant/role-type.constant';
-import { ApiPageOkResponse } from '@/decorator';
-import { AuthUser } from '@/decorator';
-import { Auth } from '@/decorator';
-import { UUIDParam } from '@/decorator';
-import { UseLanguageInterceptor } from '@/interceptor';
+import { ApiPageOkResponse } from '@/decorator/api-page-ok-response.decorator';
+import { AuthUser } from '@/decorator/auth-user.decorator';
+import { Auth } from '@/decorator/auth.decorator';
+import { UUIDParam } from '@/decorator/params/uuid-param.decorator';
+import { UseLanguageInterceptor } from '@/interceptor/language.interceptor';
 import { UserPermissions } from '../constant/user-permissions.constant';
 import { UserFiltersDto } from '../dto/user-filters.dto';
-import { TranslationService } from '@/package/translation';
+import { TranslationService } from '@/package/translation/service/translation.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateCurrentUserDto } from '../dto/update-current-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';

@@ -1,5 +1,6 @@
-import { AbstractDto } from '@/abstract';
-import { DateFieldOptional, StringField, StringFieldOptional } from '@/decorator';
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { DateFieldOptional } from '@/decorator/field/date-field.decorator';
+import { StringField, StringFieldOptional } from '@/decorator/field/string-field.decorator';
 import type { AccountEntity } from '../entity/account.entity';
 
 export type AccountDtoOptions = object;

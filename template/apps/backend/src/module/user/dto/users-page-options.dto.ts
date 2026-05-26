@@ -1,5 +1,5 @@
-import { PageOptionsDto } from '@/abstract';
-import { EnumFieldOptional } from '@/decorator';
+import { PageOptionsDto } from '@/abstract/dto/page-options.dto';
+import { EnumFieldOptional } from '@/decorator/field/enum-field.decorator';
 
 export enum UserSort {
   ID = 'id',

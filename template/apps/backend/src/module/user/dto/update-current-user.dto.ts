@@ -1,8 +1,6 @@
-import {
-  ClassFieldOptional,
-  EmailFieldOptional,
-  PhoneFieldOptional,
-} from '@/decorator';
+import { ClassFieldOptional } from '@/decorator/field/class-field.decorator';
+import { EmailFieldOptional } from '@/decorator/field/email-field.decorator';
+import { PhoneFieldOptional } from '@/decorator/field/phone-field.decorator';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { UpdateProfileDto } from './update-profile.dto';

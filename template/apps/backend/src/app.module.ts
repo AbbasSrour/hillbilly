@@ -15,7 +15,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { MaintenanceMiddleware } from '@/middleware';
+import { MaintenanceMiddleware } from '@/middleware/maintenance.middleware';
 
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AuthModule } from '@module/auth/auth.module';
@@ -24,11 +24,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule as AppConfigModule } from '@config/config.module';
 import { ApiConfigService } from '@config/service/api-config.service';
-import { CryptoModule } from '@/package/crypto';
-import { TranslationModule } from '@/package/translation';
-import { TwilioModule } from '@/package/twilio';
-import { ValidationModule } from '@/package/validation';
-import { PulseModule } from '@/package/pulse';
+import { CryptoModule } from '@/package/crypto/crypto.module';
+import { TranslationModule } from '@/package/translation/translation.module';
+import { TwilioModule } from '@/package/twilio/twilio.module';
+import { ValidationModule } from '@/package/validation/validation.module';
+import { PulseModule } from '@/package/pulse/pulse.module';
 
 @Module({
   imports: [

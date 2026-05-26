@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@/abstract';
-import { UseDto } from '@/decorator';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import { Collection } from '@mikro-orm/core';
 import { Entity, ManyToMany, Property } from '@mikro-orm/decorators/legacy';
 import { RoleDto, RoleDtoOptions } from '../dto/role.dto';

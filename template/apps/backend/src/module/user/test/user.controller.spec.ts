@@ -2,10 +2,10 @@ import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PermissionGuard } from '@/guard';
+import { PermissionGuard } from '@/guard/permission.guard';
 import { UserService } from '../service/user.service';
 import { ApiConfigService } from '@config/service/api-config.service';
-import { TranslationService } from '@/package/translation';
+import { TranslationService } from '@/package/translation/service/translation.service';
 import { UserController } from '../controller/user.controller';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';

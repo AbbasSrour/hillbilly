@@ -7,7 +7,7 @@ import { VerificationEntity } from './entity/verification.entity';
 import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule as AppConfigModule } from '@config/config.module';
-import { TwilioModule } from '@/package/twilio';
+import { TwilioModule } from '@/package/twilio/twilio.module';
 import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
 import { betterAuth } from 'better-auth';
 import { AuthController } from './controller/auth.controller';

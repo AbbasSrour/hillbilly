@@ -1,8 +1,5 @@
-import {
-  DateFieldOptional,
-  StringField,
-  StringFieldOptional,
-} from '@/decorator';
+import { DateFieldOptional } from '@/decorator/field/date-field.decorator';
+import { StringField, StringFieldOptional } from '@/decorator/field/string-field.decorator';
 
 export class CreateProfileDto {
   @StringField()

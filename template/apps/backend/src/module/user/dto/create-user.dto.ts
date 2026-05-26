@@ -1,10 +1,8 @@
-import {
-  ClassField,
-  EmailFieldOptional,
-  PasswordFieldOptional,
-  PhoneFieldOptional,
-  UUIDField,
-} from '@/decorator';
+import { ClassField } from '@/decorator/field/class-field.decorator';
+import { EmailFieldOptional } from '@/decorator/field/email-field.decorator';
+import { PasswordFieldOptional } from '@/decorator/field/password-field.decorator';
+import { PhoneFieldOptional } from '@/decorator/field/phone-field.decorator';
+import { UUIDField } from '@/decorator/field/uuid-field.decorator';
 import { Type } from 'class-transformer';
 import { ValidateIf, ValidateNested } from 'class-validator';
 import { CreateProfileDto } from './create-profile.dto';

@@ -1,6 +1,6 @@
-import { AbstractEntity } from '@/abstract';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
 import { LanguageCode } from '@/constant/language-code.constant';
-import { UseDto } from '@/decorator';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import {
   OptionalProps,
   type Rel,

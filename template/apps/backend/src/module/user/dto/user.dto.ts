@@ -1,11 +1,9 @@
-import { AbstractDto } from '@/abstract';
-import {
-  BooleanField,
-  ClassField,
-  EmailFieldOptional,
-  PhoneFieldOptional,
-  StringField,
-} from '@/decorator';
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { BooleanField } from '@/decorator/field/boolean-field.decorator';
+import { ClassField } from '@/decorator/field/class-field.decorator';
+import { EmailFieldOptional } from '@/decorator/field/email-field.decorator';
+import { PhoneFieldOptional } from '@/decorator/field/phone-field.decorator';
+import { StringField } from '@/decorator/field/string-field.decorator';
 import type { Rel } from '@mikro-orm/core';
 import { UserSettingsDto } from './user-settings.dto';
 import type { UserEntity } from '../entity/user.entity';

@@ -1,5 +1,6 @@
-import { AbstractDto } from '@/abstract';
-import { DateField, StringField } from '@/decorator';
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { DateField } from '@/decorator/field/date-field.decorator';
+import { StringField } from '@/decorator/field/string-field.decorator';
 import type { VerificationEntity } from '../entity/verification.entity';
 
 export type VerificationDtoOptions = object;

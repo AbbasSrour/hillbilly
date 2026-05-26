@@ -1,7 +1,7 @@
-import { AbstractDto } from '@/abstract';
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
 import type { PermissionKeys } from '@constant/permissions.constant';
 import { permissionKeys } from '@constant/permissions.constant';
-import { StringField, StringFieldOptional } from '@/decorator';
+import { StringField, StringFieldOptional } from '@/decorator/field/string-field.decorator';
 import { PermissionEntity } from '../entity/permission.entity';
 
 export type PermissionDtoOptions = object;

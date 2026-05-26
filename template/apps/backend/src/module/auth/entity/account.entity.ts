@@ -1,5 +1,5 @@
-import { AbstractEntity } from '@/abstract';
-import { UseDto } from '@/decorator';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import { Cascade } from '@mikro-orm/core';
 import { Entity, Index, ManyToOne, Property } from '@mikro-orm/decorators/legacy';
 import { AccountDto } from '../dto/account.dto';

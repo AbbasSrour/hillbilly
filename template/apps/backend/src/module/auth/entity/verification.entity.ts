@@ -1,6 +1,6 @@
-import { AbstractEntity } from '@/abstract';
-import { UseDto } from '@/decorator';
-// import { UseDto } from '@/decorator';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import { UseDto } from '@/decorator/use-dto.decorator';
+import { UseDto } from '@/decorator/use-dto.decorator';
 import { Entity, Index, Property } from '@mikro-orm/decorators/legacy';
 import { VerificationDto } from '../dto/verification.dto';
 

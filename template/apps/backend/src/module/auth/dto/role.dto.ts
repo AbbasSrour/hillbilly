@@ -1,5 +1,6 @@
-import { AbstractDto } from '@/abstract';
-import { ClassField, StringField, StringFieldOptional } from '@/decorator';
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { ClassField } from '@/decorator/field/class-field.decorator';
+import { StringField, StringFieldOptional } from '@/decorator/field/string-field.decorator';
 import { Rel } from '@mikro-orm/core';
 import { PermissionDto } from './permission.dto';
 import { RoleEntity } from '../entity/role.entity';
