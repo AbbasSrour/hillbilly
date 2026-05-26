@@ -283,6 +283,57 @@ describe("scan", () => {
     expect(result.files[0]?.status).toBe("modified");
     expect(result.files[0]?.formatOnly).toBe(true);
   });
+
+  it("marks trailing whitespace and newline differences as format-only", async () => {
+    const { project, template } = await makeTempProject();
+    await write(join(template, "code.ts"), "const x = 1;  \nconst y = 2;\n");
+    await write(join(project, "code.ts"), "const x = 1;\nconst y = 2;\n");
+
+    const result = await scan(project, { template });
+
+    expect(result.files).toHaveLength(1);
+    expect(result.files[0]?.formatOnly).toBe(true);
+  });
+
+  it("marks CRLF vs LF as format-only", async () => {
+    const { project, template } = await makeTempProject();
+    await write(join(template, "code.ts"), "const x = 1;\nconst y = 2;\n");
+    await write(join(project, "code.ts"), "const x = 1;\r\nconst y = 2;\r\n");
+
+    const result = await scan(project, { template });
+
+    expect(result.files).toHaveLength(1);
+    expect(result.files[0]?.formatOnly).toBe(true);
+  });
+
+  it("does NOT mark real content changes as format-only", async () => {
+    const { project, template } = await makeTempProject();
+    await write(
+      join(template, "user.service.ts"),
+      "export class UserService {\n  findOne(id: number) {\n    return this.repo.findOne(id);\n  }\n}\n",
+    );
+    await write(
+      join(project, "user.service.ts"),
+      "export class UserService {\n  findOne(id: number) {\n    return this.repo.findById(id);\n  }\n}\n",
+    );
+
+    const result = await scan(project, { template });
+
+    expect(result.files).toHaveLength(1);
+    expect(result.files[0]?.status).toBe("modified");
+    expect(result.files[0]?.formatOnly).toBeFalsy();
+  });
+
+  it("does NOT mark structural changes as format-only", async () => {
+    const { project, template } = await makeTempProject();
+    await write(join(template, "config.ts"), "const port = 3000;\nconst host = 'localhost';\n");
+    await write(join(project, "config.ts"), "const port = 8080;\nconst host = 'localhost';\n");
+
+    const result = await scan(project, { template });
+
+    expect(result.files).toHaveLength(1);
+    expect(result.files[0]?.formatOnly).toBeFalsy();
+  });
 });
 
 describe("applyStagedHunks edge cases", () => {
@@ -421,12 +472,48 @@ describe("applyStagedHunks edge cases", () => {
         oldLines: 1,
         newStart: 0,
         newLines: 1,
+        newNoNewline: true,
       },
     ];
 
     const result = applyStagedHunks(template, hunks, new Set([0]));
 
     expect(result).toBe("new content");
+  });
+
+  it("adds trailing newline when hunk adds it to a file without one", () => {
+    const template = '{\n  "extends": "@ticklet/tsconfig/base.json"\n}';
+    const hunks = [
+      {
+        text: '@@ -1,3 +1,3 @@\n {\n   "extends": "@ticklet/tsconfig/base.json"\n-}\n+}',
+        oldStart: 0,
+        oldLines: 3,
+        newStart: 0,
+        newLines: 3,
+      },
+    ];
+
+    const result = applyStagedHunks(template, hunks, new Set([0]));
+
+    expect(result).toBe('{\n  "extends": "@ticklet/tsconfig/base.json"\n}\n');
+  });
+
+  it("removes trailing newline when new side has no-newline marker", () => {
+    const template = "line1\nline2\n";
+    const hunks = [
+      {
+        text: "@@ -2,1 +2,1 @@\n-line2\n+line2\n\\ No newline at end of file",
+        oldStart: 1,
+        oldLines: 1,
+        newStart: 1,
+        newLines: 1,
+        newNoNewline: true,
+      },
+    ];
+
+    const result = applyStagedHunks(template, hunks, new Set([0]));
+
+    expect(result).toBe("line1\nline2");
   });
 
   it("handles single-line template with full replacement", () => {

@@ -20,6 +20,104 @@ import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
 import { removeSyncFiles, setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 
+const FILE_ICONS: Record<string, string> = {
+  "package.json": "\ue718",
+  "tsconfig.json": "\ue628",
+  "vite.config.ts": "\ue6ba",
+  "vite.config.js": "\ue6ba",
+  "vite.config.mts": "\ue6ba",
+  ".eslintrc": "\ue63e",
+  ".eslintrc.js": "\ue63e",
+  ".eslintrc.json": "\ue63e",
+  ".eslintrc.cjs": "\ue63e",
+  ".prettierrc": "\ue6b3",
+  ".prettierrc.js": "\ue6b3",
+  ".prettierrc.json": "\ue6b3",
+  dockerfile: "\uf308",
+  "docker-compose.yml": "\uf308",
+  "docker-compose.yaml": "\uf308",
+  makefile: "\uf309",
+  "cargo.toml": "\ue6a8",
+  "go.mod": "\ue627",
+  "go.sum": "\ue627",
+  ".gitignore": "\ue702",
+  ".gitattributes": "\ue702",
+  ".env": "\uf462",
+  ".env.local": "\uf462",
+  ".env.production": "\uf462",
+  ".env.development": "\uf462",
+  ".env.test": "\uf462",
+  "readme.md": "\uf48a",
+  license: "\uf49c",
+  "license.md": "\uf49c",
+  "bun.lock": "\ue6a7",
+  "bun.lockb": "\ue6a7",
+  "bunfig.toml": "\ue6a7",
+  "pnpm-lock.yaml": "\uf1b3",
+  "yarn.lock": "\uf1b3",
+  "turbo.json": "\uf1b3",
+  ".nvmrc": "\ue718",
+  ".node-version": "\ue718",
+};
+
+function fileIcon(path: string): string {
+  const base = path.split("/").pop()?.toLowerCase() ?? "";
+  const icon = FILE_ICONS[base] ?? FILE_ICONS[path.toLowerCase()];
+  if (icon) return icon;
+  if (base.endsWith(".spec.ts") || base.endsWith(".test.ts")) return "\uf432";
+  if (base.endsWith(".spec.tsx") || base.endsWith(".test.tsx")) return "\uf432";
+  if (base.endsWith(".spec.js") || base.endsWith(".test.js")) return "\uf432";
+  if (base.endsWith(".spec.jsx") || base.endsWith(".test.jsx")) return "\uf432";
+  if (base.endsWith(".d.ts")) return "\ue628";
+  if (base.endsWith(".ts")) return "\ue628";
+  if (base.endsWith(".tsx")) return "\ue735";
+  if (base.endsWith(".js")) return "\ue74e";
+  if (base.endsWith(".jsx")) return "\ue735";
+  if (base.endsWith(".mjs") || base.endsWith(".cjs")) return "\ue74e";
+  if (base.endsWith(".json")) return "\ue6b1";
+  if (base.endsWith(".md")) return "\uf48a";
+  if (base.endsWith(".mdx")) return "\uf48a";
+  if (base.endsWith(".css")) return "\ue749";
+  if (base.endsWith(".scss")) return "\ue749";
+  if (base.endsWith(".html")) return "\uf13b";
+  if (base.endsWith(".yaml") || base.endsWith(".yml")) return "\ue6a8";
+  if (base.endsWith(".toml")) return "\ue6a8";
+  if (base.endsWith(".py")) return "\ue73c";
+  if (base.endsWith(".rs")) return "\ue6a8";
+  if (base.endsWith(".go")) return "\ue627";
+  if (base.endsWith(".rb")) return "\ue739";
+  if (base.endsWith(".java")) return "\uf4b4";
+  if (base.endsWith(".php")) return "\ue73d";
+  if (base.endsWith(".sh") || base.endsWith(".bash") || base.endsWith(".zsh")) return "\uf120";
+  if (base.endsWith(".sql")) return "\uf1c0";
+  if (base.endsWith(".graphql") || base.endsWith(".gql")) return "\ue6b8";
+  if (base.endsWith(".proto")) return "\ue6b8";
+  if (base.endsWith(".dockerfile")) return "\uf308";
+  if (base.endsWith(".lock")) return "\uf023";
+  if (base.endsWith(".svg")) return "\uf1c5";
+  if (
+    base.endsWith(".png") ||
+    base.endsWith(".jpg") ||
+    base.endsWith(".gif") ||
+    base.endsWith(".webp")
+  )
+    return "\uf1c5";
+  if (base.endsWith(".log")) return "\uf448";
+  if (base.endsWith(".cfg") || base.endsWith(".ini") || base.endsWith(".conf")) return "\uf013";
+  if (base.endsWith(".jinja")) return "\ue6ac";
+  return "\uf15b";
+}
+
+function statusLetter(status: SyncFile["status"], formatOnly: boolean | undefined): string {
+  if (status === "added") return "A";
+  if (status === "moved") return "V";
+  if (status === "renamed") return "R";
+  if (status === "deleted") return "D";
+  if (status === "stale") return "S";
+  if (formatOnly) return "F";
+  return "M";
+}
+
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
@@ -284,7 +382,8 @@ function SplitHunkDiff({
       {splitDiffRows(hunk).map((row, idx) => {
         const leftBg = lineColors && row.type === "change" ? palette.DIFF_REMOVED_BG : undefined;
         const rightBg = lineColors && row.type === "change" ? palette.DIFF_ADDED_BG : undefined;
-        const contextBg = lineColors && row.type === "context" ? palette.DIFF_CONTEXT_BG : undefined;
+        const contextBg =
+          lineColors && row.type === "context" ? palette.DIFF_CONTEXT_BG : undefined;
         const oldNumber = row.oldLine === undefined ? "    " : String(row.oldLine).padStart(4, " ");
         const newNumber = row.newLine === undefined ? "    " : String(row.newLine).padStart(4, " ");
         const oldPrefix = `${lineNumbers ? oldNumber : ""}${signs && row.type === "change" ? " - " : "   "}`;
@@ -408,6 +507,40 @@ function stagedCountForFile(staged: Map<string, Set<number>>, file: SyncFile): s
   if (!set || set.size === 0) return "";
   const total = file.hunks?.length ?? 1;
   return set.size === total ? "\u2713" : `${set.size}/${total}`;
+}
+
+function stageAllHunks(state: State, files: SyncFile[]): State {
+  const next = new Map(state.stagedHunks);
+  const alreadyAll = files.every((f) => {
+    if (f.status === "stale") return true;
+    const hunkCount = f.hunks?.length ?? 0;
+    if (
+      hunkCount === 0 &&
+      (f.status === "added" || f.status === "moved" || f.status === "renamed")
+    ) {
+      return next.has(f.projectPath);
+    }
+    return (next.get(f.projectPath)?.size ?? 0) === hunkCount;
+  });
+  if (alreadyAll) {
+    next.clear();
+  } else {
+    for (const f of files) {
+      if (f.status === "stale") continue;
+      const hunkCount = f.hunks?.length ?? 0;
+      if (
+        hunkCount === 0 &&
+        (f.status === "added" || f.status === "moved" || f.status === "renamed")
+      ) {
+        next.set(f.projectPath, new Set([0]));
+      } else {
+        const all = new Set<number>();
+        for (let i = 0; i < hunkCount; i++) all.add(i);
+        next.set(f.projectPath, all);
+      }
+    }
+  }
+  return { ...state, stagedHunks: next };
 }
 
 function toggleStagedHunks(state: State, file: SyncFile | undefined): State {
@@ -740,6 +873,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             void doUnmarkSelected(file, setResult, setState);
             return prev;
 
+          case "a":
+            return stageAllHunks(prev, currentFiles);
+
           case "d":
             if (file?.status !== "stale") return prev;
             if (prev.pendingPrunePath === file.projectPath) {
@@ -828,102 +964,101 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   const displayNames = uniqueDisplayNames(result.files.map((f) => f.projectPath));
 
   const palette = THEMES[state.themeName] ?? THEMES[DEFAULT_THEME]!;
-  const terminalHeight = Math.max(8, _renderer?.height ?? 24);
-  const mainHeight = Math.max(1, terminalHeight - 2);
-  const fileListHeight = mainHeight;
+  const flistRows = Math.max(1, (_renderer?.height ?? 24) - 2);
   const fileWindowStart = Math.max(
     0,
     Math.min(
-      state.selectedFileIndex - Math.floor(fileListHeight / 2),
-      Math.max(0, result.files.length - fileListHeight),
+      state.selectedFileIndex - Math.floor(flistRows / 2),
+      Math.max(0, result.files.length - flistRows),
     ),
   );
-  const visibleFiles = result.files.slice(fileWindowStart, fileWindowStart + fileListHeight);
+  const visibleFiles = result.files.slice(fileWindowStart, fileWindowStart + flistRows);
 
   return (
-    <box flexDirection="column" width="100%" height={terminalHeight} backgroundColor={palette.BG} overflow="hidden">
-      {/* Header */}
+    <box flexDirection="column" width="100%" height="100%" backgroundColor={palette.BG}>
+      {/* Header — fixed 1 row */}
       <box
         flexDirection="row"
         alignItems="center"
         height={1}
+        flexShrink={0}
         paddingY={0}
         paddingX={1}
         backgroundColor={palette.HEADER_FG}
       >
         <text fg={palette.TEXT} width="100%" truncate>
           Hillbilly Sync | {result.files.length} file{result.files.length !== 1 ? "s" : ""} changed
-          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav q quit d
-          prune u unmark t theme s split b colors g signs l lines
+          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav a all q
+          quit d prune u unmark t theme s split b colors g signs l lines
         </text>
       </box>
 
-      {/* Main content area */}
-      <box flexDirection="row" height={mainHeight} overflow="hidden">
+      {/* Main content area — fills remaining space */}
+      <box flexDirection="row" flexGrow={1} minHeight={0}>
         {/* File list panel */}
         <box
-          width="30%"
-          height="100%"
-          border={["right"]}
-          borderColor={palette.BORDER}
+          width="25%"
           flexDirection="column"
-          overflow="hidden"
+          border={["right"]}
+          borderColor={state.focus === "files" ? palette.BORDER_ACTIVE : palette.BORDER}
         >
-          {visibleFiles.map((file, visibleIndex) => {
-            const index = fileWindowStart + visibleIndex;
-            const isSelected = index === state.selectedFileIndex;
-            const statusColor =
-              file.status === "added" || file.status === "moved" || file.status === "renamed"
-                ? palette.SUCCESS
-                : file.status === "deleted"
-                  ? palette.ERROR
-                  : file.status === "stale"
+          <scrollbox
+            flexGrow={1}
+            minHeight={0}
+            verticalScrollbarOptions={{ visible: false }}
+            horizontalScrollbarOptions={{ visible: false }}
+            scrollY
+            focused={state.focus === "files"}
+          >
+            {visibleFiles.map((file, visibleIndex) => {
+              const index = fileWindowStart + visibleIndex;
+              const isSelected = index === state.selectedFileIndex;
+              const statusColor =
+                file.status === "added" || file.status === "moved" || file.status === "renamed"
+                  ? palette.SUCCESS
+                  : file.status === "deleted"
                     ? palette.ERROR
-                    : file.formatOnly
-                      ? palette.INFO
-                    : palette.WARNING;
-            const count = stagedCountForFile(state.stagedHunks, file);
-            return (
-              <box
-                key={file.projectPath}
-                flexDirection="row"
-                alignItems="center"
-                backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
-                paddingY={0}
-                paddingX={1}
-              >
-                <text fg={palette.TEXT}>{isSelected ? "> " : "  "}</text>
-                <text fg={statusColor}>
-                  {file.status === "added"
-                    ? "A"
-                    : file.status === "moved"
-                      ? "V"
-                      : file.status === "renamed"
-                        ? "R"
-                        : file.status === "deleted"
-                          ? "D"
-                          : file.status === "stale"
-                            ? "S"
-                            : file.formatOnly
-                              ? "F"
-                              : "M"}
-                </text>
-                <text fg={palette.TEXT}>
-                  {" "}
-                  {truncatePath(displayNames.get(file.projectPath) ?? file.projectPath, 22)}
-                </text>
-                {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
-              </box>
-            );
-          })}
+                    : file.status === "stale"
+                      ? palette.ERROR
+                      : file.formatOnly
+                        ? palette.INFO
+                        : palette.WARNING;
+              const count = stagedCountForFile(state.stagedHunks, file);
+              const icon = fileIcon(file.projectPath);
+              return (
+                <box
+                  key={file.projectPath}
+                  flexDirection="row"
+                  alignItems="center"
+                  height={1}
+                  flexShrink={0}
+                  backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
+                  paddingY={0}
+                  paddingX={1}
+                >
+                  <text fg={palette.TEXT}>{isSelected ? ">" : " "}</text>
+                  <text fg={statusColor}>{statusLetter(file.status, file.formatOnly)}</text>
+                  <text fg={palette.TEXT}> </text>
+                  <text fg={palette.TEXT_MUTED}>{icon} </text>
+                  <box flexGrow={1} minWidth={0}>
+                    <text fg={palette.TEXT} wrapMode="none" truncate>
+                      {displayNames.get(file.projectPath) ?? file.projectPath}
+                    </text>
+                  </box>
+                  {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
+                </box>
+              );
+            })}
+          </scrollbox>
         </box>
 
         {/* Diff view panel */}
-        <box flexGrow={1} height="100%" flexDirection="column" overflow="hidden">
-          {/* File path header */}
+        <box flexGrow={1} minHeight={0} flexDirection="column">
+          {/* File path header — fixed 1 row when a file is selected */}
           {selectedFile && (
             <box
               height={1}
+              flexShrink={0}
               paddingY={0}
               paddingX={1}
               backgroundColor={palette.HEADER_FG}
@@ -938,8 +1073,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
           <scrollbox
             flexGrow={1}
-            height={selectedFile ? mainHeight - 1 : mainHeight}
-            flexDirection="column"
+            minHeight={0}
+            verticalScrollbarOptions={{ visible: false }}
+            horizontalScrollbarOptions={{ visible: false }}
             scrollY
             focused={state.focus === "diff"}
           >
@@ -991,57 +1127,65 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
             {selectedFile?.status === "modified" && selectedFile.hunks && (
               <box paddingY={0} paddingX={1} flexDirection="column">
-              <text fg={palette.TEXT} truncate>
-                {selectedFile.projectPath}
-              </text>
-              {selectedFile.formatOnly && (
-                <text fg={palette.INFO}>
-                  Formatting/style-only difference. Raw content still differs and can be staged.
+                <text fg={palette.TEXT} truncate>
+                  {selectedFile.projectPath}
                 </text>
-              )}
-              {selectedFile.hunks.map((hunk, hi) => {
-                const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
-                const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
-                const filetype = pathToFiletype(selectedFile.projectPath);
-                const syntaxStyle = paletteToSyntaxStyle(palette);
-                const treeSitterClient = getSharedTreeSitterClient();
-                return (
-                  <box
-                    key={hi}
-                    backgroundColor={isHunkSelected ? palette.SELECTED_BG : undefined}
-                    marginBottom={1}
-                  >
-                    <text fg={palette.TEXT}>
-                      [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
-                      {hunk.newStart + 1},{hunk.newLines} @@
-                    </text>
-                    <diff
-                      diff={hunkDiffForFile(selectedFile, hunk)}
-                      view={state.diffView}
-                      width="100%"
-                      height={hunkDiffHeight(hunk, state.diffView)}
-                      syntaxStyle={syntaxStyle}
-                      treeSitterClient={treeSitterClient ?? undefined}
-                      filetype={filetype}
-                      fg={palette.TEXT}
-                      addedBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
-                      removedBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
-                      contextBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
-                      addedContentBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
-                      removedContentBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
-                      contextContentBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
-                      addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
-                      removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
-                      lineNumberFg={palette.TEXT_MUTED}
-                      lineNumberBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
-                      addedLineNumberBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
-                      removedLineNumberBg={state.diffView === "split" ? palette.BG : state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
-                      wrapMode="none"
-                      showLineNumbers={state.showLineNumbers}
-                    />
-                  </box>
-                );
-              })}
+                {selectedFile.formatOnly && (
+                  <text fg={palette.INFO}>
+                    Formatting/style-only difference. Raw content still differs and can be staged.
+                  </text>
+                )}
+                {selectedFile.hunks.map((hunk, hi) => {
+                  const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
+                  const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
+                  const filetype = pathToFiletype(selectedFile.projectPath);
+                  const syntaxStyle = paletteToSyntaxStyle(palette);
+                  const treeSitterClient = getSharedTreeSitterClient();
+                  return (
+                    <box
+                      key={hi}
+                      backgroundColor={isHunkSelected ? palette.SELECTED_BG : undefined}
+                      marginBottom={1}
+                    >
+                      <text fg={palette.TEXT}>
+                        [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
+                        {hunk.newStart + 1},{hunk.newLines} @@
+                      </text>
+                      <diff
+                        diff={hunkDiffForFile(selectedFile, hunk)}
+                        view={state.diffView}
+                        width="100%"
+                        height={hunkDiffHeight(hunk, state.diffView)}
+                        syntaxStyle={syntaxStyle}
+                        treeSitterClient={treeSitterClient ?? undefined}
+                        filetype={filetype}
+                        fg={palette.TEXT}
+                        addedBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
+                        removedBg={state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
+                        contextBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
+                        addedContentBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
+                        removedContentBg={
+                          state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
+                        }
+                        contextContentBg={
+                          state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
+                        }
+                        addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
+                        removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
+                        lineNumberFg={palette.TEXT_MUTED}
+                        lineNumberBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
+                        addedLineNumberBg={
+                          state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG
+                        }
+                        removedLineNumberBg={
+                          state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
+                        }
+                        wrapMode="none"
+                        showLineNumbers={state.showLineNumbers}
+                      />
+                    </box>
+                  );
+                })}
               </box>
             )}
 
@@ -1055,28 +1199,38 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         </box>
       </box>
 
-      {/* Footer */}
+      {/* Footer — fixed 1 row */}
       <box
         flexDirection="row"
         alignItems="center"
         height={1}
+        flexShrink={0}
         paddingY={0}
         paddingX={1}
         backgroundColor={palette.HEADER_FG}
       >
         {state.pushStatus === "idle" && (
           <text fg={palette.TEXT} width="100%" truncate>
-            [Space] stage/unstage [Tab] switch panel [r] refresh [t] theme [Enter] push staged [q]
-            quit [d] prune stale [u] unmark [s] split/unified [b] colors [g] signs [l] lines
+            [Space] stage/unstage [a] stage all [Tab] switch panel [r] refresh [t] theme [Enter]
+            push staged [q] quit [d] prune stale [u] unmark [s] split/unified [b] colors [g] signs
+            [l] lines
             {state.statusMessage ? ` | ${state.statusMessage}` : ""}
           </text>
         )}
-        {state.pushStatus === "pushing" && <text fg={palette.WARNING} width="100%" truncate>Pushing changes...</text>}
+        {state.pushStatus === "pushing" && (
+          <text fg={palette.WARNING} width="100%" truncate>
+            Pushing changes...
+          </text>
+        )}
         {state.pushStatus === "done" && (
-          <text fg={palette.SUCCESS} width="100%" truncate>{state.pushMessage} [q] quit</text>
+          <text fg={palette.SUCCESS} width="100%" truncate>
+            {state.pushMessage} [q] quit
+          </text>
         )}
         {state.pushStatus === "error" && (
-          <text fg={palette.ERROR} width="100%" truncate>{state.pushMessage} [q] quit</text>
+          <text fg={palette.ERROR} width="100%" truncate>
+            {state.pushMessage} [q] quit
+          </text>
         )}
       </box>
     </box>

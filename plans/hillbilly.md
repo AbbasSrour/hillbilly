@@ -26,14 +26,14 @@ A single monorepo that:
 
 All packages ship inside the template as local workspace packages. None are published to npm.
 
-| Package           | Location                     | Notes                                    |
-| ----------------- | ---------------------------- | ---------------------------------------- |
-| `@hillbilly/ui`   | `template/packages/ui/`      | Source-distributed UI library, no build  |
-| `@hillbilly/rbac` | `template/packages/rbac/`    | Built ESM workspace package, no publish  |
-| `@hillbilly/sdk`  | `template/packages/sdk/`     | OpenAPI-generated client, pre-generated types  |
-| Nest boilerplate  | `template/apps/backend/src/`  | Local Nest helpers, not a package        |
-| `tsconfig`        | `template/packages/tsconfig/` | Shared tsconfig presets (workspace pkg)  |
-| `templates`       | `template/packages/templates/` | React Email templates                    |
+| Package           | Location                       | Notes                                         |
+| ----------------- | ------------------------------ | --------------------------------------------- |
+| `@hillbilly/ui`   | `template/packages/ui/`        | Source-distributed UI library, no build       |
+| `@hillbilly/rbac` | `template/packages/rbac/`      | Built ESM workspace package, no publish       |
+| `@hillbilly/sdk`  | `template/packages/sdk/`       | OpenAPI-generated client, pre-generated types |
+| Nest boilerplate  | `template/apps/backend/src/`   | Local Nest helpers, not a package             |
+| `tsconfig`        | `template/packages/tsconfig/`  | Shared tsconfig presets (workspace pkg)       |
+| `templates`       | `template/packages/templates/` | React Email templates                         |
 
 ## Template (Copier) — flat config files
 
@@ -124,16 +124,16 @@ All packages ship inside the template as local workspace packages. None are publ
 - **All NestJS packages upgraded and pinned**. Removed `^` prefix on all alpha packages so sub-dependencies can't pull in older versions.
 - **8 packages in root `overrides`** (alphabetic order):
 
-| Package                    | Version            |
-| -------------------------- | ------------------ |
-| `@nestjs/cli`              | `12.0.0-alpha.6`   |
-| `@nestjs/common`           | `12.0.0-alpha.5`   |
-| `@nestjs/core`             | `12.0.0-alpha.5`   |
-| `@nestjs/microservices`    | `12.0.0-alpha.5`   |
-| `@nestjs/platform-express` | `12.0.0-alpha.5`   |
-| `@nestjs/schematics`       | `12.0.0-alpha.9`   |
-| `@nestjs/swagger`          | `12.0.0-alpha.2`   |
-| `@nestjs/testing`          | `12.0.0-alpha.5`   |
+| Package                    | Version          |
+| -------------------------- | ---------------- |
+| `@nestjs/cli`              | `12.0.0-alpha.6` |
+| `@nestjs/common`           | `12.0.0-alpha.5` |
+| `@nestjs/core`             | `12.0.0-alpha.5` |
+| `@nestjs/microservices`    | `12.0.0-alpha.5` |
+| `@nestjs/platform-express` | `12.0.0-alpha.5` |
+| `@nestjs/schematics`       | `12.0.0-alpha.9` |
+| `@nestjs/swagger`          | `12.0.0-alpha.2` |
+| `@nestjs/testing`          | `12.0.0-alpha.5` |
 
 - **Swagger 12 ESM migration**: `@nestjs/swagger@12.0.0-alpha.2` is fully ESM with proper exports. Removed `patch-nest-swagger.cjs` (was fixing `require("@nestjs/common/interfaces")` in CJS swagger-explorer — no longer needed).
 - **Swagger plugin output**: Swagger 12 emits `(await import("..."))` in metadata factories (even without `esmCompatible: true`). The `await` inside non-`async` arrow functions causes `SyntaxError`. Updated `patch-swagger-plugin-output.mjs` to convert `(await import("X"))` → `require("X")` + `createRequire` shim.
@@ -299,17 +299,18 @@ cd apps/backend && vp run build
 
 All stable packages across the template upgraded to latest. Code fixes applied where needed. Skipped: `better-auth-mikro-orm` (kept `1.0.0-next.2`). CLI packages upgraded in a later pass (see below).
 
-| Step | Area | Key changes | Code fixes |
-|------|------|-------------|------------|
-| 1 | Toolchain | commitlint 19→21, lint-staged 15→17, release-it 19→20, knip 5→6 | None needed |
-| 2 | @types/node | ^22.x → ^24.0.0 (5 packages) | None needed |
-| 3 | Backend devDeps | vitest 3→4, swc 1.11→1.15, dotenv 16→17, inquirer 12→13, types bump | None needed |
-| 4 | Backend deps | better-auth 1.6.0→1.6.11, uuid 11→14, zod 4.1→4.4, OTEL 0.205→0.218, removed `better-call` (unused transitive dep) | None needed |
-| 5 | Client | vite 7→8, TanStack 1.154→1.170, lucide-react 0.x→1.x, react-hook-form 7.56→7.76, tailwind 4.0→4.3, jsdom 27→29 | None needed |
-| 6 | UI | react-day-picker 9→10, recharts 2→3, motion 12.7→12.40, react-aria 3.39→3.48, lucide-react 0.477→1.16 | `initialFocus` → `autoFocus` (2 occurrences in datepicker.tsx) |
-| 7 | Templates + SDK | @react-email/* bump, react-email 6.1→6.3, axios 1.8→1.16, openapi-generator-cli 2.19→2.34 | None needed |
+| Step | Area            | Key changes                                                                                                        | Code fixes                                                     |
+| ---- | --------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| 1    | Toolchain       | commitlint 19→21, lint-staged 15→17, release-it 19→20, knip 5→6                                                    | None needed                                                    |
+| 2    | @types/node     | ^22.x → ^24.0.0 (5 packages)                                                                                       | None needed                                                    |
+| 3    | Backend devDeps | vitest 3→4, swc 1.11→1.15, dotenv 16→17, inquirer 12→13, types bump                                                | None needed                                                    |
+| 4    | Backend deps    | better-auth 1.6.0→1.6.11, uuid 11→14, zod 4.1→4.4, OTEL 0.205→0.218, removed `better-call` (unused transitive dep) | None needed                                                    |
+| 5    | Client          | vite 7→8, TanStack 1.154→1.170, lucide-react 0.x→1.x, react-hook-form 7.56→7.76, tailwind 4.0→4.3, jsdom 27→29     | None needed                                                    |
+| 6    | UI              | react-day-picker 9→10, recharts 2→3, motion 12.7→12.40, react-aria 3.39→3.48, lucide-react 0.477→1.16              | `initialFocus` → `autoFocus` (2 occurrences in datepicker.tsx) |
+| 7    | Templates + SDK | @react-email/\* bump, react-email 6.1→6.3, axios 1.8→1.16, openapi-generator-cli 2.19→2.34                         | None needed                                                    |
 
 **Risk notes:**
+
 - vite 7→8, vitest 3→4, uuid 11→14, recharts 2→3, react-day-picker 9→10 — all major bumps, configs verified compatible
 - `better-call` removed from direct deps — never imported, already pulled transitively by better-auth
 - lucide-react icon names may have changed; will surface as TS errors at build time
@@ -323,169 +324,171 @@ All stable packages across the template upgraded to latest. Code fixes applied w
 4. Add missing pages (settings, profile, etc.) to client template
 
 #### NestJS v12 Alphas (NO UPDATE — all at latest)
-| Package                    | Pinned | Latest Alpha |
-| -------------------------- | ------ | ------------ |
-| `@nestjs/cli`              | `12.0.0-alpha.6`  | `12.0.0-alpha.6`  |
-| `@nestjs/common`           | `12.0.0-alpha.5`  | `12.0.0-alpha.5`  |
-| `@nestjs/core`             | `12.0.0-alpha.5`  | `12.0.0-alpha.5`  |
-| `@nestjs/microservices`    | `12.0.0-alpha.5`  | `12.0.0-alpha.5`  |
-| `@nestjs/platform-express` | `12.0.0-alpha.5`  | `12.0.0-alpha.5`  |
-| `@nestjs/schematics`       | `12.0.0-alpha.9`  | `12.0.0-alpha.9`  |
-| `@nestjs/swagger`          | `12.0.0-alpha.2`  | `12.0.0-alpha.2`  |
-| `@nestjs/testing`          | `12.0.0-alpha.5`  | `12.0.0-alpha.5`  |
+
+| Package                    | Pinned           | Latest Alpha     |
+| -------------------------- | ---------------- | ---------------- |
+| `@nestjs/cli`              | `12.0.0-alpha.6` | `12.0.0-alpha.6` |
+| `@nestjs/common`           | `12.0.0-alpha.5` | `12.0.0-alpha.5` |
+| `@nestjs/core`             | `12.0.0-alpha.5` | `12.0.0-alpha.5` |
+| `@nestjs/microservices`    | `12.0.0-alpha.5` | `12.0.0-alpha.5` |
+| `@nestjs/platform-express` | `12.0.0-alpha.5` | `12.0.0-alpha.5` |
+| `@nestjs/schematics`       | `12.0.0-alpha.9` | `12.0.0-alpha.9` |
+| `@nestjs/swagger`          | `12.0.0-alpha.2` | `12.0.0-alpha.2` |
+| `@nestjs/testing`          | `12.0.0-alpha.5` | `12.0.0-alpha.5` |
 
 #### 1. Toolchain — Root + Template Root (`package.json` / `template/package.json.jinja`)
 
-| Package                            | Current    | Latest    | Risk    |
-| ---------------------------------- | ---------- | --------- | ------- |
-| `@commitlint/cli`                    | `^19.8.0`    | `21.0.1`    | **MAJOR** ⨯2 |
-| `@commitlint/config-conventional`    | `^19.8.0`    | `21.0.1`    | **MAJOR**    |
-| `@release-it/conventional-changelog` | `^10.0.0`    | `11.0.0`    | **MAJOR**    |
-| `knip`                               | `^5.50.0`    | `6.14.2`    | **MAJOR**    |
-| `lint-staged`                        | `^15.5.2`    | `17.0.5`    | **MAJOR** ⨯2 |
-| `release-it`                         | `^19.0.2`    | `20.0.1`    | **MAJOR**    |
-| `commitizen`                         | `^4.3.1`     | 4.3.1     | -         |
-| `cz-conventional-changelog`          | `^3.3.0`     | 3.3.0     | -         |
-| `vite-plus`                          | `latest`     | latest    | -         |
+| Package                              | Current   | Latest   | Risk         |
+| ------------------------------------ | --------- | -------- | ------------ |
+| `@commitlint/cli`                    | `^19.8.0` | `21.0.1` | **MAJOR** ⨯2 |
+| `@commitlint/config-conventional`    | `^19.8.0` | `21.0.1` | **MAJOR**    |
+| `@release-it/conventional-changelog` | `^10.0.0` | `11.0.0` | **MAJOR**    |
+| `knip`                               | `^5.50.0` | `6.14.2` | **MAJOR**    |
+| `lint-staged`                        | `^15.5.2` | `17.0.5` | **MAJOR** ⨯2 |
+| `release-it`                         | `^19.0.2` | `20.0.1` | **MAJOR**    |
+| `commitizen`                         | `^4.3.1`  | 4.3.1    | -            |
+| `cz-conventional-changelog`          | `^3.3.0`  | 3.3.0    | -            |
+| `vite-plus`                          | `latest`  | latest   | -            |
 
 #### 2. CLI (`cli/package.json`) — SKIP for now
 
 #### 3. Backend (`template/apps/backend/package.json.jinja`)
 
 **Dependencies:**
-| Package                              | Current          | Latest          | Risk         |
+| Package | Current | Latest | Risk |
 | ------------------------------------ | ---------------- | --------------- | ------------ |
-| `better-auth`                          | `^1.6.0`           | `1.6.11`          | patch        |
-| `better-auth-mikro-orm`                | `1.0.0-next.2`     | KEEP             | -            |
-| `better-call`                          | `^1.0.13`          | `2.0.3`           | **MAJOR**        |
-| `@thallesp/nestjs-better-auth`         | `^2.2.0`           | `2.6.0`           | minor        |
-| `@nestjs/throttler`                    | `^6.4.0`           | `6.5.0`           | minor        |
-| `@nestjs-modules/mailer`               | `^2.0.2`           | `2.3.6`           | minor        |
-| `nestjs-cls`                           | `^6.0.0`           | `6.2.0`           | minor        |
-| `nestjs-i18n`                          | `^10.5.1`          | `10.8.4`          | minor        |
-| `nest-commander`                       | `^3.17.0`          | `3.20.1`          | minor        |
-| `bullmq`                               | `^5.41.1`          | `5.77.3`          | minor        |
-| `@scalar/nestjs-api-reference`         | `^1.0.13`          | `1.1.19`          | minor        |
-| `axios`                                | `^1.9.0`           | `1.16.1`          | minor        |
-| `uuid`                                 | `^11.1.0`          | `14.0.0`          | **MAJOR** ⨯3     |
-| `zod`                                  | `^4.1.13`          | `4.4.3`           | minor        |
-| `class-validator`                      | `^0.14.2`          | `0.15.1`          | minor        |
-| `mime-types`                           | `^3.0.1`           | `3.0.2`           | patch        |
-| `compression`                          | `^1.8.0`           | `1.8.1`           | patch        |
-| `helmet`                               | `^8.1.0`           | `8.2.0`           | minor        |
-| `ioredis`                              | `^5.6.1`           | `5.10.1`          | minor        |
-| `libphonenumber-js`                    | `^1.12.8`          | `1.13.3`          | minor        |
-| `lodash`                               | `^4.17.21`         | `4.18.1`          | minor        |
-| `morgan`                               | `^1.10.0`          | `1.10.1`          | patch        |
-| `slugify`                              | `^1.6.6`           | `1.6.9`           | patch        |
-| `@mikro-orm/*` (all 7.x)               | `^7.1.0/^7.1.1`    | `7.1.1`           | patch        |
-| `@mikro-orm/nestjs`                    | `^7.0.0`           | `7.0.2`           | patch        |
-| **OpenTelemetry** (all `0.205.x`)        | `0.205.x`          | `0.218.x`         | minor bump   |
-|                                       |                    | `sdk-trace-node: 2.7.1` |            |
+| `better-auth` | `^1.6.0` | `1.6.11` | patch |
+| `better-auth-mikro-orm` | `1.0.0-next.2` | KEEP | - |
+| `better-call` | `^1.0.13` | `2.0.3` | **MAJOR** |
+| `@thallesp/nestjs-better-auth` | `^2.2.0` | `2.6.0` | minor |
+| `@nestjs/throttler` | `^6.4.0` | `6.5.0` | minor |
+| `@nestjs-modules/mailer` | `^2.0.2` | `2.3.6` | minor |
+| `nestjs-cls` | `^6.0.0` | `6.2.0` | minor |
+| `nestjs-i18n` | `^10.5.1` | `10.8.4` | minor |
+| `nest-commander` | `^3.17.0` | `3.20.1` | minor |
+| `bullmq` | `^5.41.1` | `5.77.3` | minor |
+| `@scalar/nestjs-api-reference` | `^1.0.13` | `1.1.19` | minor |
+| `axios` | `^1.9.0` | `1.16.1` | minor |
+| `uuid` | `^11.1.0` | `14.0.0` | **MAJOR** ⨯3 |
+| `zod` | `^4.1.13` | `4.4.3` | minor |
+| `class-validator` | `^0.14.2` | `0.15.1` | minor |
+| `mime-types` | `^3.0.1` | `3.0.2` | patch |
+| `compression` | `^1.8.0` | `1.8.1` | patch |
+| `helmet` | `^8.1.0` | `8.2.0` | minor |
+| `ioredis` | `^5.6.1` | `5.10.1` | minor |
+| `libphonenumber-js` | `^1.12.8` | `1.13.3` | minor |
+| `lodash` | `^4.17.21` | `4.18.1` | minor |
+| `morgan` | `^1.10.0` | `1.10.1` | patch |
+| `slugify` | `^1.6.6` | `1.6.9` | patch |
+| `@mikro-orm/*` (all 7.x) | `^7.1.0/^7.1.1` | `7.1.1` | patch |
+| `@mikro-orm/nestjs` | `^7.0.0` | `7.0.2` | patch |
+| **OpenTelemetry** (all `0.205.x`) | `0.205.x` | `0.218.x` | minor bump |
+| | | `sdk-trace-node: 2.7.1` | |
 
 No change: `bcrypt`, `cache-manager-redis-store`, `class-transformer`, `openapi-merge`, `parse-duration`, `reflect-metadata`, `rxjs`, `source-map-support`, `swagger-ui-express`, `tslib`, `twilio`, `@nestjs/bull`, `@nestjs/bullmq`, `@nestjs/config`, `@nestjs/cqrs`, `@nestjs/terminus`, `@abbas_srour/nest-openapi-tools`.
 
 **DevDependencies:**
-| Package                               | Current  | Latest       | Risk             |
+| Package | Current | Latest | Risk |
 | ------------------------------------- | -------- | ------------ | ---------------- |
-| `vitest`                                | `^3.1.4`   | `4.1.7`        | **MAJOR**            |
-| `@vitest/coverage-v8`                   | `^3.1.4`   | `4.1.7`        | **MAJOR**            |
-| `@vitest/ui`                            | `^3.2.4`   | `4.1.7`        | **MAJOR**            |
-| `@swc/core`                             | `^1.11.29` | `1.15.40`      | minor (big jump) |
-| `@swc/cli`                              | `^0.7.7`   | `0.8.1`        | minor            |
-| `@faker-js/faker`                       | `^10.2.0`  | `10.4.0`       | minor            |
-| `dotenv`                                | `^16.5.0`  | `17.4.2`       | **MAJOR**            |
-| `@openapitools/openapi-generator-cli`   | `^2.27.0`  | `2.34.0`       | minor            |
-| `supertest`                             | `^7.1.1`   | `7.2.2`        | minor            |
-| `inquirer`                              | `^12.6.3`  | `13.4.3`       | **MAJOR**            |
-| `cross-env`                             | `^7.0.3`   | `10.1.0`       | **MAJOR**            |
-| `tsc-alias`                             | `^1.8.16`  | `1.8.17`       | patch            |
-| `unplugin-swc`                          | `^1.5.4`   | `1.5.9`        | patch            |
-| `vite-tsconfig-paths`                   | `^5.1.4`   | `6.1.1`        | **MAJOR**            |
-| `@better-auth/cli`                      | `^1.4.10`  | `1.4.21`       | patch            |
-| `@types/node`                           | `^22.10.2` | `24.x`         | types bump       |
-| `@types/bcrypt`                         | `^5.0.2`   | `6.0.0`        | **MAJOR**            |
-| `@types/express`                        | `^5.0.2`   | `5.0.6`        | patch            |
-| `@types/lodash`                         | `^4.17.17` | `4.17.24`      | patch            |
-| `@types/supertest`                      | `^6.0.3`   | `7.2.0`        | **MAJOR**            |
-| `@types/uuid`                           | `^10.0.0`  | `11.0.0`       | **MAJOR**            |
+| `vitest` | `^3.1.4` | `4.1.7` | **MAJOR** |
+| `@vitest/coverage-v8` | `^3.1.4` | `4.1.7` | **MAJOR** |
+| `@vitest/ui` | `^3.2.4` | `4.1.7` | **MAJOR** |
+| `@swc/core` | `^1.11.29` | `1.15.40` | minor (big jump) |
+| `@swc/cli` | `^0.7.7` | `0.8.1` | minor |
+| `@faker-js/faker` | `^10.2.0` | `10.4.0` | minor |
+| `dotenv` | `^16.5.0` | `17.4.2` | **MAJOR** |
+| `@openapitools/openapi-generator-cli` | `^2.27.0` | `2.34.0` | minor |
+| `supertest` | `^7.1.1` | `7.2.2` | minor |
+| `inquirer` | `^12.6.3` | `13.4.3` | **MAJOR** |
+| `cross-env` | `^7.0.3` | `10.1.0` | **MAJOR** |
+| `tsc-alias` | `^1.8.16` | `1.8.17` | patch |
+| `unplugin-swc` | `^1.5.4` | `1.5.9` | patch |
+| `vite-tsconfig-paths` | `^5.1.4` | `6.1.1` | **MAJOR** |
+| `@better-auth/cli` | `^1.4.10` | `1.4.21` | patch |
+| `@types/node` | `^22.10.2` | `24.x` | types bump |
+| `@types/bcrypt` | `^5.0.2` | `6.0.0` | **MAJOR** |
+| `@types/express` | `^5.0.2` | `5.0.6` | patch |
+| `@types/lodash` | `^4.17.17` | `4.17.24` | patch |
+| `@types/supertest` | `^6.0.3` | `7.2.0` | **MAJOR** |
+| `@types/uuid` | `^10.0.0` | `11.0.0` | **MAJOR** |
 
 No change: `@mikro-orm/sqlite`, `ts-node`, `tsconfig-paths`, `@types/compression`, `@types/morgan`.
 
 #### 4. Client (`template/apps/client/package.json.jinja`)
 
-| Package                          | Current          | Latest              | Risk                 |
-| -------------------------------- | ---------------- | ------------------- | -------------------- |
-| `react` / `react-dom`              | `^19.2.0`          | `19.2.6`              | patch                |
-| `react-hook-form`                  | `7.56.0`           | `7.76.1`              | minor                |
-| `tailwindcss`                      | `^4.0.6`           | `4.3.0`               | minor                |
-| `@tailwindcss/vite`                | `^4.0.6`           | `4.3.0`               | minor                |
-| `vite`                             | `^7.1.7`           | `8.0.14`              | **MAJOR**                |
-| `vitest`                           | `^3.0.5`           | `4.1.7`               | **MAJOR**                |
-| `zod`                              | `^4.2.1`           | `4.4.3`               | minor                |
-| `better-auth` (client)             | `^1.4.12`          | `1.6.11`              | minor                |
-| `axios`                            | `^1.8.4`           | `1.16.1`              | minor                |
-| `@tanstack/*` (all `1.154.x`)       | `1.154.x`          | `1.168-1.171.x`       | minor                |
-| `lucide-react`                     | `^0.561.0`         | `1.16.0`              | **MAJOR** (v0→v1)       |
-| `react-hot-toast`                  | `^2.5.2`           | `2.6.0`               | minor                |
-| `tailwind-merge`                   | `^3.0.2`           | `3.6.0`               | minor                |
-| `@tabler/icons-react`              | `^3.36.1`          | `3.44.0`              | minor                |
-| `@t3-oss/env-core`                 | `^0.13.8`          | `0.13.11`             | patch                |
-| `@hookform/resolvers`              | `^5.2.2`           | `5.4.0`               | minor                |
-| `@bprogress/core`                  | `^1.0.2`           | `1.3.4`               | minor                |
-| `@bprogress/react`                 | `^1.0.2`           | `1.2.7`               | minor                |
-| `jsdom`                            | `^27.0.0`          | `29.1.1`              | **MAJOR** ⨯2            |
-| `web-vitals`                       | `^5.1.0`           | `5.2.0`               | minor                |
-| `@vitejs/plugin-react`             | `^5.0.4`           | `6.0.2`               | **MAJOR**                |
-| `@inlang/paraglide-js`             | `^2.8.0`           | `2.18.1`              | minor                |
-| `@testing-library/react`           | `^16.2.0`          | `16.3.2`              | patch                |
-| `tw-animate-css`                   | `^1.3.6`           | `1.4.0`               | minor                |
-| `nitro`                            | `^3.0.1-alpha.2`   | `3.0-beta`            | pre-release (KEEP)   |
+| Package                       | Current          | Latest          | Risk               |
+| ----------------------------- | ---------------- | --------------- | ------------------ |
+| `react` / `react-dom`         | `^19.2.0`        | `19.2.6`        | patch              |
+| `react-hook-form`             | `7.56.0`         | `7.76.1`        | minor              |
+| `tailwindcss`                 | `^4.0.6`         | `4.3.0`         | minor              |
+| `@tailwindcss/vite`           | `^4.0.6`         | `4.3.0`         | minor              |
+| `vite`                        | `^7.1.7`         | `8.0.14`        | **MAJOR**          |
+| `vitest`                      | `^3.0.5`         | `4.1.7`         | **MAJOR**          |
+| `zod`                         | `^4.2.1`         | `4.4.3`         | minor              |
+| `better-auth` (client)        | `^1.4.12`        | `1.6.11`        | minor              |
+| `axios`                       | `^1.8.4`         | `1.16.1`        | minor              |
+| `@tanstack/*` (all `1.154.x`) | `1.154.x`        | `1.168-1.171.x` | minor              |
+| `lucide-react`                | `^0.561.0`       | `1.16.0`        | **MAJOR** (v0→v1)  |
+| `react-hot-toast`             | `^2.5.2`         | `2.6.0`         | minor              |
+| `tailwind-merge`              | `^3.0.2`         | `3.6.0`         | minor              |
+| `@tabler/icons-react`         | `^3.36.1`        | `3.44.0`        | minor              |
+| `@t3-oss/env-core`            | `^0.13.8`        | `0.13.11`       | patch              |
+| `@hookform/resolvers`         | `^5.2.2`         | `5.4.0`         | minor              |
+| `@bprogress/core`             | `^1.0.2`         | `1.3.4`         | minor              |
+| `@bprogress/react`            | `^1.0.2`         | `1.2.7`         | minor              |
+| `jsdom`                       | `^27.0.0`        | `29.1.1`        | **MAJOR** ⨯2       |
+| `web-vitals`                  | `^5.1.0`         | `5.2.0`         | minor              |
+| `@vitejs/plugin-react`        | `^5.0.4`         | `6.0.2`         | **MAJOR**          |
+| `@inlang/paraglide-js`        | `^2.8.0`         | `2.18.1`        | minor              |
+| `@testing-library/react`      | `^16.2.0`        | `16.3.2`        | patch              |
+| `tw-animate-css`              | `^1.3.6`         | `1.4.0`         | minor              |
+| `nitro`                       | `^3.0.1-alpha.2` | `3.0-beta`      | pre-release (KEEP) |
 
 #### 5. UI (`template/packages/ui/package.json.jinja`)
 
-| Package                   | Current    | Latest     | Risk                  |
-| ------------------------- | ---------- | ---------- | --------------------- |
-| `react` / `react-dom`       | `^19.0.0`    | `19.2.6`     | minor                 |
-| `react-hook-form`           | `7.56.0`     | `7.76.1`     | minor                 |
-| `tailwindcss`               | `^4`         | `4.3.0`      | minor                 |
-| `@tailwindcss/postcss`      | `^4`         | `4.3.0`      | minor                 |
-| `zod`                       | `^4.2.1`     | `4.4.3`      | minor                 |
-| `motion`                    | `^12.7.4`    | `12.40.0`    | minor (big jump)     |
-| `react-aria`                | `^3.39.0`    | `3.48.0`     | minor                 |
-| `react-day-picker`          | `9.10.0`     | `10.0.1`     | **MAJOR**                 |
-| `recharts`                  | `^2.15.4`    | `3.8.1`      | **MAJOR**                 |
-| `date-fns`                  | `^4.1.0`     | `4.3.0`      | minor                 |
-| `zustand`                   | `^5.0.3`     | `5.0.13`     | patch                 |
-| `lucide-react` (devDep)     | `0.477.0`    | `1.16.0`     | **MAJOR** (v0→v1)        |
-| `@tanstack/react-pacer`     | `^0.19.3`    | `0.22.1`     | minor                 |
-| `@tanstack/react-virtual`   | `^3.13.12`   | `3.13.25`    | patch                 |
-| `tw-animate-css`            | `^1.2.5`     | `1.4.0`      | minor                 |
-| `@turbo/gen`                | `^2.4.2`     | `2.9.14`     | minor                 |
-| `@radix-ui/react-avatar`    | `^1.1.10`    | `1.1.11`     | patch                 |
-| `@radix-ui/react-label`     | `^2.1.7`     | `2.1.8`      | patch                 |
-| `@radix-ui/react-separator` | `^1.1.7`     | `1.1.8`      | patch                 |
-| `@radix-ui/react-slot`      | `^1.2.3`     | `1.2.4`      | patch                 |
+| Package                     | Current    | Latest    | Risk              |
+| --------------------------- | ---------- | --------- | ----------------- |
+| `react` / `react-dom`       | `^19.0.0`  | `19.2.6`  | minor             |
+| `react-hook-form`           | `7.56.0`   | `7.76.1`  | minor             |
+| `tailwindcss`               | `^4`       | `4.3.0`   | minor             |
+| `@tailwindcss/postcss`      | `^4`       | `4.3.0`   | minor             |
+| `zod`                       | `^4.2.1`   | `4.4.3`   | minor             |
+| `motion`                    | `^12.7.4`  | `12.40.0` | minor (big jump)  |
+| `react-aria`                | `^3.39.0`  | `3.48.0`  | minor             |
+| `react-day-picker`          | `9.10.0`   | `10.0.1`  | **MAJOR**         |
+| `recharts`                  | `^2.15.4`  | `3.8.1`   | **MAJOR**         |
+| `date-fns`                  | `^4.1.0`   | `4.3.0`   | minor             |
+| `zustand`                   | `^5.0.3`   | `5.0.13`  | patch             |
+| `lucide-react` (devDep)     | `0.477.0`  | `1.16.0`  | **MAJOR** (v0→v1) |
+| `@tanstack/react-pacer`     | `^0.19.3`  | `0.22.1`  | minor             |
+| `@tanstack/react-virtual`   | `^3.13.12` | `3.13.25` | patch             |
+| `tw-animate-css`            | `^1.2.5`   | `1.4.0`   | minor             |
+| `@turbo/gen`                | `^2.4.2`   | `2.9.14`  | minor             |
+| `@radix-ui/react-avatar`    | `^1.1.10`  | `1.1.11`  | patch             |
+| `@radix-ui/react-label`     | `^2.1.7`   | `2.1.8`   | patch             |
+| `@radix-ui/react-separator` | `^1.1.7`   | `1.1.8`   | patch             |
+| `@radix-ui/react-slot`      | `^1.2.3`   | `1.2.4`   | patch             |
 
 No change: rest of `@radix-ui/*`, `embla-carousel-react`, `sonner`, `vaul`, `cmdk`, `@tanstack/react-table`, `@uidotdev/usehooks`, `better-themes`, `class-variance-authority`, `clsx`.
 
 #### 6. Templates (`template/packages/templates/package.json.jinja`)
 
-| Package                   | Current | Latest | Risk  |
-| ------------------------- | ------- | ------ | ----- |
-| `@react-email/components`   | `^1.0.9`  | `1.0.12` | patch |
-| `@react-email/render`       | `^2.0.4`  | `2.0.8`  | patch |
-| `react-email`               | `^6.1.3`  | `6.3.3`  | minor |
-| `react` / `react-dom`         | `^19.2.4` | `19.2.6` | patch |
+| Package                   | Current   | Latest   | Risk  |
+| ------------------------- | --------- | -------- | ----- |
+| `@react-email/components` | `^1.0.9`  | `1.0.12` | patch |
+| `@react-email/render`     | `^2.0.4`  | `2.0.8`  | patch |
+| `react-email`             | `^6.1.3`  | `6.3.3`  | minor |
+| `react` / `react-dom`     | `^19.2.4` | `19.2.6` | patch |
 
 #### 7. SDK (`template/packages/sdk/package.json.jinja`)
 
-| Package                               | Current  | Latest   | Risk  |
-| ------------------------------------- | -------- | -------- | ----- |
-| `axios`                                 | `^1.8.4`   | `1.16.1`   | minor |
-| `@openapitools/openapi-generator-cli`   | `^2.19.1`  | `2.34.0`   | minor |
+| Package                               | Current   | Latest   | Risk  |
+| ------------------------------------- | --------- | -------- | ----- |
+| `axios`                               | `^1.8.4`  | `1.16.1` | minor |
+| `@openapitools/openapi-generator-cli` | `^2.19.1` | `2.34.0` | minor |
 
 #### 8. RBAC (`template/packages/rbac/package.json.jinja`)
+
 No updates (peer/better-auth + zod, dev/types-node + vitest — covered elsewhere).
 
 ### Upgrade Order

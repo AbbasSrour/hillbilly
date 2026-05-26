@@ -20,6 +20,8 @@ export interface DiffHunk {
   /** 0-indexed line numbers in the project (new) file */
   newStart: number;
   newLines: number;
+  /** True if the new side of this hunk ends WITHOUT a trailing newline */
+  newNoNewline?: boolean;
 }
 
 export interface SyncFile {
@@ -238,43 +240,55 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
   let oldLines = 0;
   let newStart = 0;
   let newLines = 0;
+  let newNoNewline = false;
 
   // Regex: @@ -oldStart,oldLines +newStart,newLines @@
   const hunkHeader = /^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s+@@/;
+
+  function pushHunk() {
+    if (!inHunk) return;
+    hunks.push({
+      text: currentHunk.join("\n"),
+      oldStart: Math.max(0, oldStart - 1), // convert to 0-indexed
+      oldLines,
+      newStart: Math.max(0, newStart - 1),
+      newLines,
+      newNoNewline,
+    });
+  }
 
   for (const line of lines) {
     const match = hunkHeader.exec(line);
     if (match) {
       // Push previous hunk
-      if (inHunk) {
-        hunks.push({
-          text: currentHunk.join("\n"),
-          oldStart: Math.max(0, oldStart - 1), // convert to 0-indexed
-          oldLines,
-          newStart: Math.max(0, newStart - 1),
-          newLines,
-        });
-      }
+      pushHunk();
       currentHunk = [line];
       inHunk = true;
+      newNoNewline = false;
       oldStart = Number.parseInt(match[1]!, 10);
       oldLines = match[2] ? Number.parseInt(match[2], 10) : 1;
       newStart = Number.parseInt(match[3]!, 10);
       newLines = match[4] ? Number.parseInt(match[4], 10) : 1;
     } else if (inHunk) {
       currentHunk.push(line);
+      if (line.startsWith("\\") && line.includes("No newline")) {
+        // Check if the no-newline marker follows a '+' line by scanning backwards
+        const body = currentHunk;
+        for (let i = body.length - 2; i >= 0; i--) {
+          if (body[i]!.startsWith("+")) {
+            newNoNewline = true;
+            break;
+          }
+          if (body[i]!.startsWith("-")) {
+            // follows old-side — not newNoNewline
+            break;
+          }
+        }
+      }
     }
   }
 
-  if (inHunk) {
-    hunks.push({
-      text: currentHunk.join("\n"),
-      oldStart: Math.max(0, oldStart - 1),
-      oldLines,
-      newStart: Math.max(0, newStart - 1),
-      newLines,
-    });
-  }
+  pushHunk();
 
   return hunks;
 }
@@ -422,7 +436,9 @@ export function applyStagedHunks(
   hunks: DiffHunk[],
   stagedHunkIndices: Set<number>,
 ): string {
-  const lines = templateContent.split("\n");
+  const lines = templateContent === "" ? [] : templateContent.split("\n");
+  const templateEndsWithNewline = templateContent.endsWith("\n");
+  let resultEndsWithNewline = templateEndsWithNewline;
 
   // Apply hunks in reverse order to avoid index shifting
   const sorted = [...stagedHunkIndices]
@@ -454,7 +470,22 @@ export function applyStagedHunks(
     }
 
     lines.splice(hunk.oldStart, hunk.oldLines, ...newLines);
+
+    // After splice, the new content occupies positions oldStart to oldStart + newLines.length.
+    // If that reaches the end, this hunk determines trailing newline state.
+    if (hunk.newNoNewline) {
+      resultEndsWithNewline = false;
+    } else if (hunk.oldStart + newLines.length >= lines.length) {
+      resultEndsWithNewline = true;
+    }
   }
 
-  return lines.join("\n");
+  let result = lines.join("\n");
+  if (resultEndsWithNewline && !result.endsWith("\n")) {
+    result += "\n";
+  }
+  if (!resultEndsWithNewline && result.endsWith("\n")) {
+    result = result.slice(0, -1);
+  }
+  return result;
 }
