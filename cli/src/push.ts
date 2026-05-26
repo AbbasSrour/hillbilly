@@ -43,6 +43,16 @@ export async function pushChanges(
       if (file.status === "deleted") {
         await unlink(file.templatePath);
         result.deleted.push(file.templatePath);
+      } else if (file.status === "moved" || file.status === "renamed") {
+        if (file.projectContent === undefined) {
+          throw new Error("projectContent is missing for moved/renamed file");
+        }
+        await writeFile(file.templatePath, file.projectContent, "utf-8");
+        result.written.push(file.templatePath);
+        if (file.movedFromTemplatePath) {
+          await unlink(file.movedFromTemplatePath);
+          result.deleted.push(file.movedFromTemplatePath);
+        }
       } else if (file.status === "added") {
         if (file.projectContent === undefined) {
           throw new Error("projectContent is missing for added file");

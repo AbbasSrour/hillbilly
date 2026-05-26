@@ -49,8 +49,10 @@ export function resolveProjectRoot(startPath: string): string {
 export async function readConfig(path: string): Promise<HillbillyConfig | null> {
   if (!existsSync(path)) return null;
   const raw = await readFile(path, "utf-8");
-  const parsed = parseYaml(raw) as HillbillyConfig | null;
-  return parsed ?? {};
+  const parsed = parseYaml(raw);
+  return (parsed && typeof parsed === "object" && !Array.isArray(parsed))
+    ? (parsed as HillbillyConfig)
+    : {};
 }
 
 export async function writeConfig(path: string, config: HillbillyConfig): Promise<void> {

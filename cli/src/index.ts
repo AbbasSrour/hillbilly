@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
 import { existsSync } from "node:fs";
-import { chmod, mkdir, readFile, readdir, rename, unlink, writeFile } from "node:fs/promises";
-import { relative, resolve, join } from "node:path";
+import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
+import { resolve, join } from "node:path";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
 import {
@@ -13,51 +13,12 @@ import {
   writeTemplateConfig,
 } from "./config.js";
 import { readSyncManifest, setSyncFileState, syncManifestPath } from "./manifest.js";
+import { atomicCopyFile, expandMarkPath, fishCompletion } from "./helpers.js";
 
 const program = new Command();
 
 const RUNTIME_ASSET_PATTERN =
   /^(parser\.worker\.js|tree-sitter-.*\.wasm|highlights-.*\.scm|injections-.*\.scm)$/;
-
-async function atomicCopyFile(source: string, dest: string, mode?: number): Promise<void> {
-  const tmp = `${dest}.tmp`;
-  await writeFile(tmp, await readFile(source));
-  if (mode !== undefined) await chmod(tmp, mode);
-  await rename(tmp, dest);
-}
-
-function fishCompletion(): string {
-  return String.raw`# Fish completions for hillbilly
-
-complete -c hillbilly -f
-complete -c hillbilly -n "not __fish_seen_subcommand_from sync config completion upgrade help" -a sync -d "Sync template changes"
-complete -c hillbilly -n "not __fish_seen_subcommand_from sync config completion upgrade help" -a upgrade -d "Upgrade hillbilly binary from template"
-complete -c hillbilly -n "not __fish_seen_subcommand_from sync config completion upgrade help" -a config -d "Manage configuration"
-complete -c hillbilly -n "not __fish_seen_subcommand_from sync config completion upgrade help" -a completion -d "Generate shell completions"
-
-complete -c hillbilly -n "__fish_seen_subcommand_from sync; and not __fish_seen_subcommand_from push pull mark unmark list help" -a push -d "Push project changes to template"
-complete -c hillbilly -n "__fish_seen_subcommand_from sync; and not __fish_seen_subcommand_from push pull mark unmark list help" -a pull -d "Pull template changes into project"
-complete -c hillbilly -n "__fish_seen_subcommand_from sync; and not __fish_seen_subcommand_from push pull mark unmark list help" -a mark -d "Track files for sync"
-complete -c hillbilly -n "__fish_seen_subcommand_from sync; and not __fish_seen_subcommand_from push pull mark unmark list help" -a unmark -d "Stop tracking files for sync"
-complete -c hillbilly -n "__fish_seen_subcommand_from sync; and not __fish_seen_subcommand_from push pull mark unmark list help" -a list -d "List sync manifest files"
-
-complete -c hillbilly -n "__fish_seen_subcommand_from push pull mark unmark list doctor set-template" -s p -l project -r -F -d "Generated project path"
-complete -c hillbilly -n "__fish_seen_subcommand_from push doctor" -s t -l template -r -F -d "Hillbilly repo or template path"
-complete -c hillbilly -n "__fish_seen_subcommand_from pull" -s r -l vcs-ref -r -d "Template git ref"
-complete -c hillbilly -n "__fish_seen_subcommand_from pull" -l recopy -d "Use copier recopy"
-
-complete -c hillbilly -n "__fish_seen_subcommand_from config; and not __fish_seen_subcommand_from set-template doctor help" -a set-template -d "Set template repo path"
-complete -c hillbilly -n "__fish_seen_subcommand_from config; and not __fish_seen_subcommand_from set-template doctor help" -a doctor -d "Show template resolution"
-complete -c hillbilly -n "__fish_seen_subcommand_from set-template" -l global -d "Write global config"
-complete -c hillbilly -n "__fish_seen_subcommand_from set-template" -l template-subdir -r -F -d "Template subdirectory"
-
-complete -c hillbilly -n "__fish_seen_subcommand_from completion; and not __fish_seen_subcommand_from fish help" -a fish -d "Generate Fish completions"
-
-# sync mark/unmark take project files.
-complete -c hillbilly -n "__fish_seen_subcommand_from mark" -F
-complete -c hillbilly -n "__fish_seen_subcommand_from unmark" -F
-`;
-}
 
 program
   .name("hillbilly")
@@ -118,7 +79,7 @@ sync
         console.error(`Missing: ${file}`);
         continue;
       }
-      existingFiles.push(relative(projectRoot, filePath).replaceAll("\\", "/"));
+      existingFiles.push(...(await expandMarkPath(projectRoot, file)));
     }
 
     if (existingFiles.length === 0) return;
@@ -143,9 +104,20 @@ sync
   .option("-p, --project <path>", "Path to the generated project", process.cwd())
   .action(async (files: string[], options: { project: string }) => {
     const projectRoot = resolveProjectRoot(options.project);
-    await setSyncFileState(projectRoot, files, "untracked");
+    const expandedFiles: string[] = [];
+
+    for (const file of files) {
+      const filePath = resolve(process.cwd(), file);
+      if (existsSync(filePath)) {
+        expandedFiles.push(...(await expandMarkPath(projectRoot, file)));
+      } else {
+        expandedFiles.push(file);
+      }
+    }
+
+    await setSyncFileState(projectRoot, expandedFiles, "untracked");
     console.log(`Updated ${syncManifestPath(projectRoot)}`);
-    for (const file of files) console.log(`Untracked: ${file}`);
+    for (const file of expandedFiles) console.log(`Untracked: ${file}`);
   });
 
 sync
@@ -170,9 +142,7 @@ sync
     const manifestPath = syncManifestPath(projectRoot);
     const manifestBackup = existsSync(manifestPath) ? await readFile(manifestPath) : null;
     const copierCommand = options.recopy ? "recopy" : "update";
-    console.log(
-      `Running copier ${copierCommand} --vcs-ref ${options.vcsRef} in ${projectRoot}...`,
-    );
+    console.log(`Running copier ${copierCommand} --vcs-ref ${options.vcsRef} in ${projectRoot}...`);
     const proc = Bun.spawn(["copier", copierCommand, "--vcs-ref", options.vcsRef], {
       cwd: projectRoot,
       stdio: ["inherit", "inherit", "inherit"],

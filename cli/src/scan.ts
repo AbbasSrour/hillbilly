@@ -1,6 +1,6 @@
 /// <reference types="bun" />
 import { readFile, readdir } from "node:fs/promises";
-import { resolve, relative, join } from "node:path";
+import { basename, dirname, resolve, relative, join } from "node:path";
 import { existsSync } from "node:fs";
 import { createPatch } from "diff";
 import { parse as parseYaml } from "yaml";
@@ -28,11 +28,17 @@ export interface SyncFile {
   /** Full path to the corresponding file in the hillbilly template */
   templatePath: string;
   /** Status of this file relative to the template */
-  status: "modified" | "added" | "deleted" | "stale";
+  status: "modified" | "added" | "deleted" | "stale" | "moved" | "renamed";
+  /** Original project/template path for detected moves/renames */
+  movedFrom?: string;
+  /** Original template file path for detected moves/renames */
+  movedFromTemplatePath?: string;
   /** Parsed hunks (for modified files) — each hunk is independently stageable */
   hunks?: DiffHunk[];
   /** Full unified diff */
   diff?: string;
+  /** Raw content differs, but the difference appears limited to formatting/style. */
+  formatOnly?: boolean;
   /** Full content of the project file (for added files) */
   projectContent?: string;
 }
@@ -75,6 +81,12 @@ function shouldExclude(filePath: string): boolean {
     return true;
   }
 
+  // OpenAPI SDK output is generated per project at backend startup. The template
+  // ships a seed/stub, but generated output should not be reverse-synced.
+  if (normalized === "packages/sdk/openapi.json" || normalized.startsWith("packages/sdk/src/")) {
+    return true;
+  }
+
   // Inlang manages these files itself; settings.json is the source of truth we sync.
   if (
     (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
@@ -87,7 +99,7 @@ function shouldExclude(filePath: string): boolean {
   const base = parts[parts.length - 1] ?? "";
   if (
     base.endsWith(".log") ||
-    /^\.env(\..*)?$/.test(base) ||
+    /^\.env(\.(local|development|production|staging|test))?$/.test(base) ||
     base === ".gitkeep" ||
     base === ".DS_Store" ||
     base === ".hillbilly-sync.yml" ||
@@ -120,6 +132,29 @@ async function walkTemplate(templateRoot: string): Promise<string[]> {
   }
 
   await walk(templateRoot);
+  return results;
+}
+
+async function walkProject(projectRoot: string): Promise<string[]> {
+  const results: string[] = [];
+
+  async function walk(dir: string): Promise<void> {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      const relativePath = relative(projectRoot, fullPath).replaceAll("\\", "/");
+
+      if (shouldExclude(relativePath)) continue;
+
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile()) {
+        results.push(relativePath);
+      }
+    }
+  }
+
+  await walk(projectRoot);
   return results;
 }
 
@@ -168,6 +203,28 @@ function resolveTemplateFilePath(templateRoot: string, relativePath: string): st
   return templatePath;
 }
 
+function pathChangeStatus(oldPath: string, newPath: string): "moved" | "renamed" {
+  if (dirname(oldPath) === dirname(newPath) && basename(oldPath) !== basename(newPath)) {
+    return "renamed";
+  }
+
+  return "moved";
+}
+
+function normalizeFormatStyle(content: string): string {
+  return content
+    .replaceAll("\r\n", "\n")
+    .replace(/[ \t]+$/gm, "")
+    .replace(/['"]/g, '"')
+    .replace(/;/g, "")
+    .replace(/\s+/g, "");
+}
+
+function isFormattingOnlyDifference(templateContent: string, projectContent: string): boolean {
+  if (templateContent === projectContent) return false;
+  return normalizeFormatStyle(templateContent) === normalizeFormatStyle(projectContent);
+}
+
 // ---------------------------------------------------------------------------
 // Hunk parsing
 // ---------------------------------------------------------------------------
@@ -192,9 +249,9 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
       if (inHunk) {
         hunks.push({
           text: currentHunk.join("\n"),
-          oldStart: oldStart - 1, // convert to 0-indexed
+          oldStart: Math.max(0, oldStart - 1), // convert to 0-indexed
           oldLines,
-          newStart: newStart - 1,
+          newStart: Math.max(0, newStart - 1),
           newLines,
         });
       }
@@ -212,9 +269,9 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
   if (inHunk) {
     hunks.push({
       text: currentHunk.join("\n"),
-      oldStart: oldStart - 1,
+      oldStart: Math.max(0, oldStart - 1),
       oldLines,
-      newStart: newStart - 1,
+      newStart: Math.max(0, newStart - 1),
       newLines,
     });
   }
@@ -241,8 +298,12 @@ export async function scan(
 
   const files: SyncFile[] = [];
   const seenPaths = new Set<string>();
+  const deletedFiles = new Map<string, { file: SyncFile; templateContent: string }>();
 
-  async function addSyncFile(relativePath: string, options: { manifestTracked?: boolean } = {}): Promise<void> {
+  async function addSyncFile(
+    relativePath: string,
+    options: { manifestTracked?: boolean } = {},
+  ): Promise<void> {
     if (seenPaths.has(relativePath)) return;
     seenPaths.add(relativePath);
 
@@ -267,6 +328,7 @@ export async function scan(
           diff,
           hunks: parseHunks(diff),
         });
+        deletedFiles.set(relativePath, { file: files[files.length - 1]!, templateContent });
       }
       return;
     }
@@ -290,6 +352,7 @@ export async function scan(
         templatePath,
         status: "modified",
         diff,
+        formatOnly: isFormattingOnlyDifference(templateContent, projectContent),
         hunks: parseHunks(diff),
       });
     } else {
@@ -314,6 +377,36 @@ export async function scan(
   for (const relativePath of trackedSyncPaths(manifest)) {
     if (!seenPaths.has(relativePath)) {
       await addSyncFile(relativePath, { manifestTracked: true });
+    }
+  }
+
+  // 3. Detect project-side moves before requiring manual mark. Exact content
+  // matches are intentionally conservative to avoid guessing unrelated adds.
+  if (deletedFiles.size > 0) {
+    const projectFiles = await walkProject(resolvedProjectRoot);
+    for (const relativePath of projectFiles) {
+      if (seenPaths.has(relativePath) || untrackedPaths.has(relativePath)) continue;
+
+      const projectContent = await readFile(resolve(resolvedProjectRoot, relativePath), "utf-8");
+      const match = [...deletedFiles.entries()].find(
+        ([, deleted]) => deleted.templateContent === projectContent,
+      );
+      if (!match) continue;
+
+      const [oldPath, deleted] = match;
+      const deletedIndex = files.indexOf(deleted.file);
+      if (deletedIndex !== -1) files.splice(deletedIndex, 1);
+      deletedFiles.delete(oldPath);
+      seenPaths.add(relativePath);
+
+      files.push({
+        projectPath: relativePath,
+        templatePath: resolveTemplateFilePath(templateRoot, relativePath),
+        status: pathChangeStatus(oldPath, relativePath),
+        movedFrom: oldPath,
+        movedFromTemplatePath: deleted.file.templatePath,
+        projectContent,
+      });
     }
   }
 
