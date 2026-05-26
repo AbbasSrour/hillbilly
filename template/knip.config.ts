@@ -16,6 +16,9 @@ export default {
       ignoreDependencies: [
         "@tanstack/react-router-devtools",
         "@tanstack/react-query-devtools",
+        "@tanstack/devtools-event-client",
+        "@tanstack/devtools-vite",
+        "@tanstack/router-plugin",
         "@testing-library/dom",
         "@testing-library/react",
         "jsdom",
@@ -31,6 +34,7 @@ export default {
   ignoreDependencies: [
     "@commitlint/cli",
     "@commitlint/config-conventional",
+    "@typescript/native-preview",
     "commitizen",
     "cz-conventional-changelog",
     "knip",
