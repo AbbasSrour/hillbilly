@@ -9,9 +9,9 @@ import {
 } from "@opentui/core";
 import type { CliRenderer, ThemeTokenStyle } from "@opentui/core";
 import { createRoot } from "@opentui/react";
-import { existsSync } from "node:fs";
-import { readdir, rm } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { existsSync, watch } from "node:fs";
+import { rm } from "node:fs/promises";
+import { basename, dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
@@ -20,6 +20,7 @@ import { pushChanges } from "./push.js";
 import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
 import { readSyncManifest, removeSyncFiles, setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
+import { shouldExclude, walkFiles } from "./exclude.js";
 
 const FILE_ICONS: Record<string, string> = {
   "package.json": "\ue718",
@@ -145,6 +146,10 @@ interface State {
   markPickerSelected: Set<string>;
   markPickerIndex: number;
   markPickerFilter: string;
+  helpOpen: boolean;
+  fileListFilter: string;
+  fileListFilterActive: boolean;
+  pushConfirmOpen: boolean;
 }
 
 function makeInitialState(): State {
@@ -170,6 +175,10 @@ function makeInitialState(): State {
     markPickerSelected: new Set(),
     markPickerIndex: 0,
     markPickerFilter: "",
+    helpOpen: false,
+    fileListFilter: "",
+    fileListFilterActive: false,
+    pushConfirmOpen: false,
   };
 }
 
@@ -233,75 +242,6 @@ function paletteToSyntaxStyle(palette: Palette): SyntaxStyle {
 // Mark picker helpers
 // ---------------------------------------------------------------------------
 
-function shouldExcludeForMark(filePath: string): boolean {
-  const normalized = filePath.replaceAll("\\", "/");
-  const parts = normalized.split("/");
-
-  for (const part of parts) {
-    if (
-      part === "node_modules" ||
-      part === "dist" ||
-      part === ".git" ||
-      part === "coverage" ||
-      part === ".turbo" ||
-      part === ".vite" ||
-      part === "bin" ||
-      part === "paraglide"
-    ) {
-      return true;
-    }
-  }
-
-  if (parts.some((part, index) => part === "i18n" && parts[index + 1] === "generated")) {
-    return true;
-  }
-
-  if (normalized === "packages/sdk/openapi.json" || normalized.startsWith("packages/sdk/src/")) {
-    return true;
-  }
-
-  if (
-    (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
-    !normalized.endsWith("project.inlang/settings.json")
-  ) {
-    return true;
-  }
-
-  const base = parts[parts.length - 1] ?? "";
-  if (
-    base.endsWith(".log") ||
-    /^\.env(\.(local|development|production|staging|test))?$/.test(base) ||
-    base === ".gitkeep" ||
-    base === ".DS_Store" ||
-    base === ".hillbilly-sync.yml" ||
-    base === ".copier-answers.yml" ||
-    base === ".copier-answers.yml.jinja"
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
-async function walkProjectForMark(projectRoot: string): Promise<string[]> {
-  const results: string[] = [];
-  async function walk(dir: string): Promise<void> {
-    const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = join(dir, entry.name);
-      const relativePath = relative(projectRoot, fullPath).replaceAll("\\", "/");
-      if (shouldExcludeForMark(relativePath)) continue;
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else if (entry.isFile()) {
-        results.push(relativePath);
-      }
-    }
-  }
-  await walk(projectRoot);
-  return results;
-}
-
 async function getGitIgnoredSet(projectRoot: string, paths: string[]): Promise<Set<string>> {
   if (paths.length === 0) return new Set();
   return new Promise((resolve) => {
@@ -322,36 +262,14 @@ async function getGitIgnoredSet(projectRoot: string, paths: string[]): Promise<S
   });
 }
 
-async function walkTemplateForMark(templateRoot: string): Promise<string[]> {
-  const results: string[] = [];
-  async function walk(dir: string): Promise<void> {
-    const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = join(dir, entry.name);
-      const relativePath = relative(templateRoot, fullPath).replaceAll("\\", "/");
-      if (shouldExcludeForMark(relativePath)) continue;
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else if (entry.isFile()) {
-        const stripped = relativePath.endsWith(".jinja")
-          ? relativePath.slice(0, -".jinja".length)
-          : relativePath;
-        results.push(stripped);
-      }
-    }
-  }
-  await walk(templateRoot);
-  return results;
-}
-
 async function getMarkableFiles(
   projectRoot: string,
   templateRoot: string,
   scanFiles: SyncFile[],
 ): Promise<string[]> {
   const [allProjectFiles, templateFiles, manifest] = await Promise.all([
-    walkProjectForMark(projectRoot),
-    walkTemplateForMark(templateRoot),
+    walkFiles(projectRoot),
+    walkFiles(templateRoot, { stripJinja: true }),
     readSyncManifest(projectRoot),
   ]);
   const templateOwned = new Set([...templateFiles, ...scanFiles.map((f) => f.projectPath)]);
@@ -404,7 +322,11 @@ function resolveTreeSitterWorkerPath(): string | null {
     resolve(import.meta.dirname, "../node_modules/@opentui/core/parser.worker.js"),
   ];
 
-  return candidates.find((path) => existsSync(path)) ?? null;
+  const found = candidates.find((path) => existsSync(path)) ?? null;
+  if (!found && process.env.NODE_ENV !== "test") {
+    console.warn("hillbilly: tree-sitter worker not found, syntax highlighting disabled");
+  }
+  return found;
 }
 
 function getSharedTreeSitterClient(): TreeSitterClient | null {
@@ -426,30 +348,34 @@ function getSharedTreeSitterClient(): TreeSitterClient | null {
   return client;
 }
 
+let _configWritePending: Promise<void> | null = null;
+
 async function saveThemePreference(themeName: string): Promise<void> {
-  const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
-  await writeConfig(GLOBAL_CONFIG_PATH, {
-    ...config,
-    tui: {
-      ...config.tui,
-      theme: themeName,
-    },
-  });
+  const prev = _configWritePending;
+  _configWritePending = prev?.then?.(() => _doSaveTheme(themeName)) ?? _doSaveTheme(themeName);
+  async function _doSaveTheme(name: string) {
+    const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
+    await writeConfig(GLOBAL_CONFIG_PATH, { ...config, tui: { ...config.tui, theme: name } });
+  }
 }
 
 async function saveTuiPreferences(state: State): Promise<void> {
-  const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
-  await writeConfig(GLOBAL_CONFIG_PATH, {
-    ...config,
-    tui: {
-      ...config.tui,
-      theme: state.themeName,
-      diffView: state.diffView,
-      diffLineColors: state.diffLineColors,
-      diffSigns: state.diffSigns,
-      showLineNumbers: state.showLineNumbers,
-    },
-  });
+  const prev = _configWritePending;
+  _configWritePending = prev?.then?.(() => _doSave(state)) ?? _doSave(state);
+  async function _doSave(s: State) {
+    const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
+    await writeConfig(GLOBAL_CONFIG_PATH, {
+      ...config,
+      tui: {
+        ...config.tui,
+        theme: s.themeName,
+        diffView: s.diffView,
+        diffLineColors: s.diffLineColors,
+        diffSigns: s.diffSigns,
+        showLineNumbers: s.showLineNumbers,
+      },
+    });
+  }
 }
 
 interface SplitDiffRow {
@@ -766,10 +692,20 @@ async function doPush(
     return;
   }
 
+  if (!state.pushConfirmOpen) {
+    const count = state.stagedHunks.size;
+    setState((p) => ({
+      ...p,
+      pushConfirmOpen: true,
+      statusMessage: `Push ${count} staged change(s) to template? Enter to confirm, Esc/q to cancel`,
+    }));
+    return;
+  }
+
   // Capture staged set before async work
   const staged = new Map([...state.stagedHunks].map(([k, v]) => [k, new Set(v)]));
 
-  setState((p) => ({ ...p, pushStatus: "pushing", pushMessage: "" }));
+  setState((p) => ({ ...p, pushStatus: "pushing", pushMessage: "", pushConfirmOpen: false }));
 
   try {
     const templateRoot = ""; // not needed, paths are absolute in SyncFile
@@ -952,13 +888,51 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
     const handler = (event: KeyEvent) => {
       setState((prev) => {
-        const file = currentFiles[prev.selectedFileIndex];
+        const filtered = prev.fileListFilter
+          ? currentFiles.filter((f) =>
+              f.projectPath.toLowerCase().includes(prev.fileListFilter.toLowerCase()),
+            )
+          : currentFiles;
+        const file = filtered[prev.selectedFileIndex];
         const hCount = file?.hunks?.length ?? 0;
+        const fileCount = Math.max(filtered.length - 1, 0);
 
         if (event.name === "c" && event.ctrl) {
           r.keyInput.off("keypress", handler);
           quitResolver?.();
           return prev;
+        }
+
+        // Help overlay mode
+        if (prev.helpOpen) {
+          switch (event.name) {
+            case "?":
+            case "escape":
+            case "q":
+              return { ...prev, helpOpen: false };
+            default:
+              return prev;
+          }
+        }
+
+        // File list filter mode
+        if (prev.fileListFilterActive) {
+          switch (event.name) {
+            case "escape":
+              return { ...prev, fileListFilter: "", fileListFilterActive: false, pushConfirmOpen: false };
+            case "enter":
+            case "return":
+              return { ...prev, fileListFilterActive: false };
+            case "backspace":
+              return { ...prev, fileListFilter: prev.fileListFilter.slice(0, -1) };
+            case "delete":
+              return { ...prev, fileListFilter: "" };
+            default:
+              if (event.name.length === 1 && !event.ctrl && !event.meta && !event.shift) {
+                return { ...prev, fileListFilter: prev.fileListFilter + event.name };
+              }
+              return prev;
+          }
         }
 
         // Theme picker mode — capture navigation and typing
@@ -1118,6 +1092,12 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             quitResolver?.();
             return prev;
 
+          case "/":
+            return { ...prev, focus: "files", fileListFilter: "", fileListFilterActive: true, selectedFileIndex: 0, pushConfirmOpen: false };
+
+          case "escape":
+            return { ...prev, pushConfirmOpen: false, fileListFilter: "", fileListFilterActive: false, pendingPrunePath: null };
+
           case "j":
           case "down":
             if (prev.focus === "diff") {
@@ -1130,7 +1110,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return {
               ...prev,
               pendingPrunePath: null,
-              selectedFileIndex: Math.min(prev.selectedFileIndex + 1, currentFiles.length - 1),
+                selectedFileIndex: Math.min(prev.selectedFileIndex + 1, fileCount),
               selectedHunkIndex: 0,
             };
 
@@ -1258,11 +1238,8 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           }
 
           case "?": {
-            return {
-              ...prev,
-              statusMessage:
-                "r=refresh m=mark files t=theme picker s=split/unified b=line colors g=+/- signs l=line numbers d=prune u=unmark",
-            };
+            if (prev.helpOpen) return { ...prev, helpOpen: false };
+            return { ...prev, helpOpen: true };
           }
 
           case "enter":
@@ -1286,7 +1263,15 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   currentScanResult = result;
   currentFiles = result.files;
 
-  const selectedFile = result.files[state.selectedFileIndex] ?? null;
+  const displayNames = uniqueDisplayNames(result.files.map((f) => f.projectPath));
+
+  const filteredFileList = state.fileListFilter
+    ? result.files.filter((f) =>
+        f.projectPath.toLowerCase().includes(state.fileListFilter.toLowerCase()),
+      )
+    : result.files;
+
+  const selectedFile = filteredFileList[state.selectedFileIndex] ?? null;
   const hunkCount = selectedFile?.hunks?.length ?? 0;
   const clampedHunkIdx = Math.min(state.selectedHunkIndex, Math.max(hunkCount - 1, 0));
 
@@ -1294,18 +1279,16 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   let totalStaged = 0;
   for (const s of state.stagedHunks.values()) totalStaged += s.size;
 
-  const displayNames = uniqueDisplayNames(result.files.map((f) => f.projectPath));
-
   const palette = THEMES[state.themeName] ?? THEMES[DEFAULT_THEME]!;
   const flistRows = Math.max(1, (_renderer?.height ?? 24) - 3);
   const fileWindowStart = Math.max(
     0,
     Math.min(
       state.selectedFileIndex - Math.floor(flistRows / 2),
-      Math.max(0, result.files.length - flistRows),
+      Math.max(0, filteredFileList.length - flistRows),
     ),
   );
-  const visibleFiles = result.files.slice(fileWindowStart, fileWindowStart + flistRows);
+  const visibleFiles = filteredFileList.slice(fileWindowStart, fileWindowStart + flistRows);
 
   const filteredThemes = THEME_NAMES.filter((n) =>
     n.toLowerCase().includes(state.pickerFilter.toLowerCase()),
@@ -1317,7 +1300,42 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
   return (
     <box flexDirection="column" width="100%" height="100%" backgroundColor={palette.BG}>
-      {state.markPickerOpen ? (
+      {state.helpOpen ? (
+        <box flexDirection="column" flexGrow={1} paddingX={2} paddingY={1}>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.PRIMARY}>Keybindings</text>
+          </box>
+          {[
+            ["j/k   .", "Navigate files / hunks"],
+            ["Space  .", "Stage current file or hunk"],
+            ["a      .", "Toggle all hunks in all files"],
+            ["Tab    .", "Switch panel (files <> diff)"],
+            ["Enter  .", "Push staged changes to template"],
+            ["r      .", "Refresh scan"],
+            ["m      .", "Mark project files for sync"],
+            ["u      .", "Unmark / untrack selected file"],
+            ["d      .", "Delete/prune stale file (press twice)"],
+            ["/      .", "Filter files by path"],
+            ["t      .", "Theme picker"],
+            ["s      .", "Toggle unified / split diff view"],
+            ["b      .", "Toggle line colors"],
+            ["g      .", "Toggle +/- markers"],
+            ["l      .", "Toggle line numbers"],
+            ["?      .", "Toggle this help overlay"],
+            ["q Esc  .", "Quit / close picker"],
+          ].map(([key, desc], i) => (
+            <box key={i} height={1} flexShrink={0} flexDirection="row">
+              <text fg={palette.PRIMARY} width={20}>
+                {key}
+              </text>
+              <text fg={palette.TEXT_MUTED}>{desc}</text>
+            </box>
+          ))}
+          <box height={1} flexShrink={0}>
+            <text fg={palette.TEXT_MUTED}>Press ? or Esc or q to close</text>
+          </box>
+        </box>
+      ) : state.markPickerOpen ? (
         <box flexDirection="column" flexGrow={1} paddingX={2} paddingY={1}>
           <box height={1} flexShrink={0}>
             <text fg={palette.PRIMARY}>Mark Files for Sync</text>
@@ -1492,8 +1510,23 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                   flexShrink={0}
                 >
                   {result.files.length}
+                  {state.fileListFilter ? ` / ${filteredFileList.length}` : ""}
                 </text>
               </box>
+              {state.fileListFilterActive && (
+                <box
+                  height={1}
+                  flexShrink={0}
+                  paddingX={1}
+                  backgroundColor={palette.HEADER_FG}
+                  flexDirection="row"
+                >
+                  <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                    /
+                  </text>
+                  <text fg={palette.TEXT}>{state.fileListFilter || " "}</text>
+                </box>
+              )}
               <scrollbox
                 flexGrow={1}
                 minHeight={0}
@@ -1538,6 +1571,13 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                         </text>
                       </box>
                       {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
+                      {file.addedLines !== undefined && file.removedLines !== undefined && (
+                        <text fg={palette.TEXT_MUTED}>
+                          {" "}
+                          +{file.addedLines} -{file.removedLines}
+                        </text>
+                      )}
+                      <text> </text>
                     </box>
                   );
                 })}
@@ -1817,6 +1857,32 @@ export async function launchTui(
   _renderer = renderer;
   refreshScanRef = refreshScan ?? null;
 
+  // Auto-refresh on project changes (debounced 500ms)
+  let watcherTimer: ReturnType<typeof setTimeout> | null = null;
+  const watcher = watch(
+    result.projectRoot,
+    { recursive: true },
+    (_event, filename) => {
+      if (!filename || !refreshScanRef) return;
+      if (shouldExclude(filename)) return;
+      if (watcherTimer) clearTimeout(watcherTimer);
+      watcherTimer = setTimeout(async () => {
+        try {
+          const next = await refreshScanRef?.();
+          if (!next) return;
+          currentScanResult = next;
+          currentFiles = next.files;
+          if (_renderer) {
+            const root = createRoot(_renderer);
+            root.render(<SyncTui scanResult={next} />);
+          }
+        } catch {
+          // Silently skip refresh errors
+        }
+      }, 500);
+    },
+  );
+
   await new Promise<void>((resolve) => {
     quitResolver = resolve;
     const root = createRoot(renderer);
@@ -1825,6 +1891,8 @@ export async function launchTui(
   });
 
   // Cleanup after quit
+  watcher.close();
+  if (watcherTimer) clearTimeout(watcherTimer);
   _renderer = null;
   refreshScanRef = null;
   renderer.stop();

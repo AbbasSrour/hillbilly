@@ -18,7 +18,6 @@
     "@opentui/react": "^0.2.15",
     "commander": "^14.0.3",
     "diff": "^9.0.0",
-    "fast-glob": "^3.3.3",
     "react": "^19.2.6",
     "yaml": "^2.7.1"
   },

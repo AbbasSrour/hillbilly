@@ -1,11 +1,12 @@
 /// <reference types="bun" />
-import { readFile, readdir } from "node:fs/promises";
-import { basename, dirname, resolve, relative, join } from "node:path";
+import { readFile } from "node:fs/promises";
+import { basename, dirname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { createPatch } from "diff";
 import { parse as parseYaml } from "yaml";
 import { resolveProjectRoot, resolveTemplateRoot } from "./config.js";
 import { readSyncManifest, trackedSyncPaths } from "./manifest.js";
+import { shouldExclude, walkFiles } from "./exclude.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -25,24 +26,17 @@ export interface DiffHunk {
 }
 
 export interface SyncFile {
-  /** Path relative to the project root */
   projectPath: string;
-  /** Full path to the corresponding file in the hillbilly template */
   templatePath: string;
-  /** Status of this file relative to the template */
   status: "modified" | "added" | "deleted" | "stale" | "moved" | "renamed";
-  /** Original project/template path for detected moves/renames */
   movedFrom?: string;
-  /** Original template file path for detected moves/renames */
   movedFromTemplatePath?: string;
-  /** Parsed hunks (for modified files) — each hunk is independently stageable */
   hunks?: DiffHunk[];
-  /** Full unified diff */
-  diff?: string;
-  /** Raw content differs, but the difference appears limited to formatting/style. */
   formatOnly?: boolean;
-  /** Full content of the project file (for added files) */
   projectContent?: string;
+  templateContent?: string;
+  addedLines?: number;
+  removedLines?: number;
 }
 
 export interface ScanResult {
@@ -52,112 +46,6 @@ export interface ScanResult {
   templateRoot: string;
   /** All syncable files found */
   files: SyncFile[];
-}
-
-// ---------------------------------------------------------------------------
-// Template walker
-// ---------------------------------------------------------------------------
-
-function shouldExclude(filePath: string): boolean {
-  const normalized = filePath.replaceAll("\\", "/");
-  const parts = normalized.split("/");
-
-  // Directory name exclusions
-  for (const part of parts) {
-    if (
-      part === "node_modules" ||
-      part === "dist" ||
-      part === ".git" ||
-      part === "coverage" ||
-      part === ".turbo" ||
-      part === ".vite" ||
-      part === "bin" ||
-      part === "paraglide"
-    ) {
-      return true;
-    }
-  }
-
-  // Generated i18n output can exist at any package/app depth.
-  if (parts.some((part, index) => part === "i18n" && parts[index + 1] === "generated")) {
-    return true;
-  }
-
-  // OpenAPI SDK output is generated per project at backend startup. The template
-  // ships a seed/stub, but generated output should not be reverse-synced.
-  if (normalized === "packages/sdk/openapi.json" || normalized.startsWith("packages/sdk/src/")) {
-    return true;
-  }
-
-  // Inlang manages these files itself; settings.json is the source of truth we sync.
-  if (
-    (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
-    !normalized.endsWith("project.inlang/settings.json")
-  ) {
-    return true;
-  }
-
-  // File pattern exclusions
-  const base = parts[parts.length - 1] ?? "";
-  if (
-    base.endsWith(".log") ||
-    /^\.env(\.(local|development|production|staging|test))?$/.test(base) ||
-    base === ".gitkeep" ||
-    base === ".DS_Store" ||
-    base === ".hillbilly-sync.yml" ||
-    base === ".copier-answers.yml" ||
-    base === ".copier-answers.yml.jinja"
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
-async function walkTemplate(templateRoot: string): Promise<string[]> {
-  const results: string[] = [];
-
-  async function walk(dir: string): Promise<void> {
-    const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = join(dir, entry.name);
-      const relativePath = relative(templateRoot, fullPath).replaceAll("\\", "/");
-
-      if (shouldExclude(relativePath)) continue;
-
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else if (entry.isFile()) {
-        results.push(relativePath);
-      }
-    }
-  }
-
-  await walk(templateRoot);
-  return results;
-}
-
-async function walkProject(projectRoot: string): Promise<string[]> {
-  const results: string[] = [];
-
-  async function walk(dir: string): Promise<void> {
-    const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = join(dir, entry.name);
-      const relativePath = relative(projectRoot, fullPath).replaceAll("\\", "/");
-
-      if (shouldExclude(relativePath)) continue;
-
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else if (entry.isFile()) {
-        results.push(relativePath);
-      }
-    }
-  }
-
-  await walk(projectRoot);
-  return results;
 }
 
 // ---------------------------------------------------------------------------
@@ -297,6 +185,27 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
 // Main scanner
 // ---------------------------------------------------------------------------
 
+async function tryReadText(path: string): Promise<string | null> {
+  try {
+    return await readFile(path, "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+function diffStat(file: SyncFile): { added: number; removed: number } {
+  if (!file.hunks) return { added: 0, removed: 0 };
+  let added = 0;
+  let removed = 0;
+  for (const hunk of file.hunks) {
+    for (const line of hunk.text.split("\n").slice(1)) {
+      if (line.startsWith("+")) added++;
+      else if (line.startsWith("-")) removed++;
+    }
+  }
+  return { added, removed };
+}
+
 export async function scan(
   projectRoot: string,
   options: { template?: string } = {},
@@ -328,19 +237,30 @@ export async function scan(
 
     if (!existsSync(filePath)) {
       if (existsSync(templatePath)) {
-        const rawTemplateContent = await readFile(templatePath, "utf-8");
+        const rawTemplateContent = await tryReadText(templatePath);
+        if (rawTemplateContent === null) return;
         const templateContent = renderTemplateForComparison(
           templatePath,
           rawTemplateContent,
           copierAnswers,
         );
-        const diff = createPatch(relativePath, templateContent, "");
+        const unifiedDiff = createPatch(relativePath, templateContent, "");
+        const hunks = parseHunks(unifiedDiff);
+        const stats = { added: 0, removed: 0 };
+        for (const hunk of hunks) {
+          for (const line of hunk.text.split("\n").slice(1)) {
+            if (line.startsWith("+")) stats.added++;
+            else if (line.startsWith("-")) stats.removed++;
+          }
+        }
         files.push({
           projectPath: relativePath,
           templatePath,
           status: "deleted",
-          diff,
-          hunks: parseHunks(diff),
+          hunks,
+          addedLines: stats.added,
+          removedLines: stats.removed,
+          templateContent,
         });
         deletedFiles.set(relativePath, { file: files[files.length - 1]!, templateContent });
       }
@@ -349,9 +269,11 @@ export async function scan(
 
     if (existsSync(templatePath)) {
       const [projectContent, rawTemplateContent] = await Promise.all([
-        readFile(filePath, "utf-8"),
-        readFile(templatePath, "utf-8"),
+        tryReadText(filePath),
+        tryReadText(templatePath),
       ]);
+      if (projectContent === null || rawTemplateContent === null) return;
+
       const templateContent = renderTemplateForComparison(
         templatePath,
         rawTemplateContent,
@@ -360,28 +282,43 @@ export async function scan(
 
       if (projectContent === templateContent) return;
 
-      const diff = createPatch(relativePath, templateContent, projectContent);
+      const unifiedDiff = createPatch(relativePath, templateContent, projectContent);
+      const hunks = parseHunks(unifiedDiff);
+      const stats = { added: 0, removed: 0 };
+      for (const hunk of hunks) {
+        for (const line of hunk.text.split("\n").slice(1)) {
+          if (line.startsWith("+")) stats.added++;
+          else if (line.startsWith("-")) stats.removed++;
+        }
+      }
       files.push({
         projectPath: relativePath,
         templatePath,
         status: "modified",
-        diff,
         formatOnly: isFormattingOnlyDifference(templateContent, projectContent),
-        hunks: parseHunks(diff),
+        hunks,
+        addedLines: stats.added,
+        removedLines: stats.removed,
+        templateContent,
+        projectContent,
       });
     } else {
-      const projectContent = await readFile(filePath, "utf-8");
+      const projectContent = await tryReadText(filePath);
+      if (projectContent === null) return;
+      const lineCount = projectContent.split("\n").length;
       files.push({
         projectPath: relativePath,
         templatePath,
         status: "added",
         projectContent,
+        addedLines: lineCount,
+        removedLines: 0,
       });
     }
   }
 
   // 1. Walk the template directory and auto-discover all files
-  const templateFiles = await walkTemplate(templateRoot);
+  const templateFiles = await walkFiles(templateRoot);
   for (const templateRelativePath of templateFiles) {
     const projectPath = toProjectPath(templateRelativePath);
     await addSyncFile(projectPath);
@@ -397,11 +334,13 @@ export async function scan(
   // 3. Detect project-side moves before requiring manual mark. Exact content
   // matches are intentionally conservative to avoid guessing unrelated adds.
   if (deletedFiles.size > 0) {
-    const projectFiles = await walkProject(resolvedProjectRoot);
+    const projectFiles = await walkFiles(resolvedProjectRoot);
     for (const relativePath of projectFiles) {
       if (seenPaths.has(relativePath) || untrackedPaths.has(relativePath)) continue;
 
-      const projectContent = await readFile(resolve(resolvedProjectRoot, relativePath), "utf-8");
+      const projectContent = await tryReadText(resolve(resolvedProjectRoot, relativePath));
+      if (projectContent === null) continue;
+
       const match = [...deletedFiles.entries()].find(
         ([, deleted]) => deleted.templateContent === projectContent,
       );

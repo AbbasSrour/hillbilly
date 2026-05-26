@@ -562,8 +562,7 @@ describe("renderSimpleCopierVariables through scan", () => {
 
     expect(result.files.map((file) => file.projectPath)).toEqual(["config.json"]);
     expect(result.files[0]?.status).toBe("deleted");
-    const diff = result.files[0]?.diff ?? "";
-    expect(diff).toContain("[[ missing_key ]]");
+    expect(result.files[0]?.templateContent).toContain("[[ missing_key ]]");
   });
 
   it("leaves [[ key ]] unchanged when value is an object", async () => {
@@ -579,8 +578,7 @@ describe("renderSimpleCopierVariables through scan", () => {
 
     const file = result.files.find((f) => f.projectPath === "config.json");
     expect(file?.status).toBe("deleted");
-    const diff = file?.diff ?? "";
-    expect(diff).toContain("[[ nested ]]");
+    expect(file?.templateContent).toContain("[[ nested ]]");
   });
 
   it("leaves [[ key ]] unchanged when value is an array", async () => {
@@ -596,8 +594,7 @@ describe("renderSimpleCopierVariables through scan", () => {
 
     const file = result.files.find((f) => f.projectPath === "config.json");
     expect(file?.status).toBe("deleted");
-    const diff = file?.diff ?? "";
-    expect(diff).toContain("[[ items ]]");
+    expect(file?.templateContent).toContain("[[ items ]]");
   });
 
   it("renders boolean Copier variables", async () => {
