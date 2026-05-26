@@ -2,7 +2,7 @@
 import { Command } from "commander";
 import { existsSync } from "node:fs";
 import { chmod, mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
-import { resolve, join } from "node:path";
+import { relative, resolve, join } from "node:path";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
 import {
@@ -113,12 +113,12 @@ sync
     const existingFiles: string[] = [];
 
     for (const file of files) {
-      const filePath = resolve(projectRoot, file);
+      const filePath = resolve(process.cwd(), file);
       if (!existsSync(filePath)) {
         console.error(`Missing: ${file}`);
         continue;
       }
-      existingFiles.push(file);
+      existingFiles.push(relative(projectRoot, filePath).replaceAll("\\", "/"));
     }
 
     if (existingFiles.length === 0) return;

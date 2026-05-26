@@ -31,16 +31,14 @@ export async function readSyncManifest(projectRoot: string): Promise<SyncManifes
   return {
     version: 1,
     files: Array.isArray(parsed?.files)
-      ? parsed.files
-          .filter((file): file is SyncManifestFile => {
-            return (
-              typeof file === "object" &&
-              file !== null &&
-              typeof file.path === "string" &&
-              (file.state === "tracked" || file.state === "untracked")
-            );
-          })
-          .sort((a, b) => a.path.localeCompare(b.path))
+      ? parsed.files.filter((file): file is SyncManifestFile => {
+          return (
+            typeof file === "object" &&
+            file !== null &&
+            typeof file.path === "string" &&
+            (file.state === "tracked" || file.state === "untracked")
+          );
+        })
       : [],
   };
 }
@@ -51,11 +49,7 @@ export async function writeSyncManifest(
 ): Promise<void> {
   const path = syncManifestPath(projectRoot);
   await mkdir(dirname(path), { recursive: true });
-  const normalized: SyncManifest = {
-    version: 1,
-    files: [...manifest.files].sort((a, b) => a.path.localeCompare(b.path)),
-  };
-  await writeFile(path, stringifyYaml(normalized), "utf-8");
+  await writeFile(path, stringifyYaml({ version: 1, files: manifest.files }), "utf-8");
 }
 
 export function normalizeProjectPath(projectRoot: string, path: string): string {

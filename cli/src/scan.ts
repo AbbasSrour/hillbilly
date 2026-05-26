@@ -5,7 +5,7 @@ import { existsSync } from "node:fs";
 import { createPatch } from "diff";
 import { parse as parseYaml } from "yaml";
 import { resolveProjectRoot, resolveTemplateRoot } from "./config.js";
-import { readSyncManifest, SYNC_MANIFEST_NAME, trackedSyncPaths } from "./manifest.js";
+import { readSyncManifest, trackedSyncPaths } from "./manifest.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -90,6 +90,7 @@ function shouldExclude(filePath: string): boolean {
     /^\.env(\..*)?$/.test(base) ||
     base === ".gitkeep" ||
     base === ".DS_Store" ||
+    base === ".hillbilly-sync.yml" ||
     base === ".copier-answers.yml" ||
     base === ".copier-answers.yml.jinja"
   ) {
@@ -310,9 +311,6 @@ export async function scan(
       await addSyncFile(relativePath);
     }
   }
-
-  // 3. Always include the manifest itself
-  await addSyncFile(SYNC_MANIFEST_NAME);
 
   return { projectRoot: resolvedProjectRoot, templateRoot, files };
 }
