@@ -14,12 +14,7 @@ const config = defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./', import.meta.url)),
     },
-    dedupe: [
-      'react',
-      'react-dom',
-      '@tanstack/react-router',
-      '@tanstack/router-core',
-    ],
+    dedupe: ['react', 'react-dom', '@tanstack/react-router', '@tanstack/router-core'],
   },
   optimizeDeps: {
     include: ['@hillbilly/ui', '@hillbilly/rbac', '@hillbilly/sdk', 'react-use'],

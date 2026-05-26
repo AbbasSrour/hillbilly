@@ -1,54 +1,54 @@
-import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from "better-auth";
-import { APIError, createAuthEndpoint, sessionMiddleware } from "better-auth/api";
+import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from 'better-auth';
+import { APIError, createAuthEndpoint, sessionMiddleware } from 'better-auth/api';
 import {
   paginationQuerySchema,
   listRolePermissionsQuerySchema,
   assignPermissionSchema,
   removePermissionSchema,
-} from "../schemas";
-import type { Permission, Role as RoleModel } from "../types/schema";
-import { isStaticRole } from "../utils";
+} from '../schemas';
+import type { Permission, Role as RoleModel } from '../types/schema';
+import { isStaticRole } from '../utils';
 
-const listPermissionsPath = "/rbac/permissions" as const;
+const listPermissionsPath = '/rbac/permissions' as const;
 const listPermissionsConfig = (permissionCodes?: string[]) => {
   const permissionCodeSchema = {
-    type: "string",
+    type: 'string',
     ...(permissionCodes && permissionCodes.length > 0 ? { enum: permissionCodes } : {}),
   } as const;
 
   const permissionSchema = {
-    type: "object",
+    type: 'object',
     properties: {
-      id: { type: "string" },
-      name: { type: "string" },
+      id: { type: 'string' },
+      name: { type: 'string' },
       code: permissionCodeSchema,
-      description: { type: "string", nullable: true },
+      description: { type: 'string', nullable: true },
     },
-    required: ["id", "name", "code"],
+    required: ['id', 'name', 'code'],
     additionalProperties: true,
   } as const;
 
   return {
-    method: "GET",
+    method: 'GET',
     use: [sessionMiddleware],
     query: paginationQuerySchema,
     metadata: {
       openapi: {
         responses: {
           200: {
-            description: "Permissions list",
+            description: 'Permissions list',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  type: "object",
+                  type: 'object',
                   properties: {
                     permissions: {
-                      type: "array",
+                      type: 'array',
                       items: permissionSchema,
                     },
-                    total: { type: "number" },
+                    total: { type: 'number' },
                   },
-                  required: ["permissions", "total"],
+                  required: ['permissions', 'total'],
                 },
               },
             },
@@ -74,17 +74,17 @@ export const listPermissionsHandler = async (
 
   // Count total
   const permissionsCount = await ctx.context.adapter.count({
-    model: "permission",
+    model: 'permission',
   });
 
   // Get permissions
   const permissions = await ctx.context.adapter.findMany<Permission>({
-    model: "permission",
+    model: 'permission',
     limit,
     offset,
     sortBy: {
-      field: query.sortBy || "name",
-      direction: query.sortDirection || "asc",
+      field: query.sortBy || 'name',
+      direction: query.sortDirection || 'asc',
     },
   });
 
@@ -102,46 +102,46 @@ export const listPermissionsEndpoint = (permissionCodes?: string[]) => {
   );
 };
 
-const listRolePermissionsPath = "/rbac/role-permissions" as const;
+const listRolePermissionsPath = '/rbac/role-permissions' as const;
 const listRolePermissionsConfig = (permissionCodes?: string[]) => {
   const permissionCodeSchema = {
-    type: "string",
+    type: 'string',
     ...(permissionCodes && permissionCodes.length > 0 ? { enum: permissionCodes } : {}),
   } as const;
 
   const permissionSchema = {
-    type: "object",
+    type: 'object',
     properties: {
-      id: { type: "string" },
-      name: { type: "string" },
+      id: { type: 'string' },
+      name: { type: 'string' },
       code: permissionCodeSchema,
-      description: { type: "string", nullable: true },
+      description: { type: 'string', nullable: true },
     },
-    required: ["id", "name", "code"],
+    required: ['id', 'name', 'code'],
     additionalProperties: true,
   } as const;
 
   return {
-    method: "GET",
+    method: 'GET',
     use: [sessionMiddleware],
     query: listRolePermissionsQuerySchema,
     metadata: {
       openapi: {
         responses: {
           200: {
-            description: "Role permissions list",
+            description: 'Role permissions list',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  type: "object",
+                  type: 'object',
                   properties: {
                     permissions: {
-                      type: "array",
+                      type: 'array',
                       items: permissionSchema,
                     },
-                    total: { type: "number" },
+                    total: { type: 'number' },
                   },
-                  required: ["permissions", "total"],
+                  required: ['permissions', 'total'],
                 },
               },
             },
@@ -165,8 +165,8 @@ export const listRolePermissionsHandler = async (
 
   // Get role permissions
   const rolePermissions = (await ctx.context.adapter.findMany({
-    model: "rolePermission",
-    where: [{ field: "roleId", value: roleId }],
+    model: 'rolePermission',
+    where: [{ field: 'roleId', value: roleId }],
   })) as { permissionId: string }[];
 
   const permissionIds = rolePermissions.map((rp) => rp.permissionId);
@@ -176,8 +176,8 @@ export const listRolePermissionsHandler = async (
   }
 
   const permissions = (await ctx.context.adapter.findMany({
-    model: "permission",
-    where: [{ field: "id", operator: "in", value: permissionIds }],
+    model: 'permission',
+    where: [{ field: 'id', operator: 'in', value: permissionIds }],
   })) as Permission[];
 
   return ctx.json({
@@ -194,9 +194,9 @@ export const listRolePermissionsEndpoint = (permissionCodes?: string[]) => {
   );
 };
 
-const assignPermissionPath = "/rbac/role-permissions/assign" as const;
+const assignPermissionPath = '/rbac/role-permissions/assign' as const;
 const assignPermissionConfig = {
-  method: "POST",
+  method: 'POST',
   use: [sessionMiddleware],
   body: assignPermissionSchema,
 } satisfies EndpointOptions;
@@ -212,63 +212,63 @@ export const assignPermissionHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
 
-    if (session.user.role !== "admin") {
-      throw new APIError("FORBIDDEN", {
-        message: "Admin access required",
+    if (session.user.role !== 'admin') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Admin access required',
       });
     }
 
     const { roleId, permissionId } = ctx.body;
 
     const role = (await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     })) as RoleModel;
 
     if (!role) {
-      throw new APIError("NOT_FOUND", {
-        message: "Role not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Role not found',
       });
     }
 
     if (isStaticRole(role.name, staticRoles)) {
-      throw new APIError("FORBIDDEN", {
-        message: "Cannot modify permissions of a static role",
+      throw new APIError('FORBIDDEN', {
+        message: 'Cannot modify permissions of a static role',
       });
     }
 
     // Check if permission exists
     const permission = await ctx.context.adapter.findOne({
-      model: "permission",
-      where: [{ field: "id", value: permissionId }],
+      model: 'permission',
+      where: [{ field: 'id', value: permissionId }],
     });
 
     if (!permission) {
-      throw new APIError("NOT_FOUND", {
-        message: "Permission not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Permission not found',
       });
     }
 
     // Check if already assigned
     const existing = await ctx.context.adapter.findOne({
-      model: "rolePermission",
+      model: 'rolePermission',
       where: [
-        { field: "roleId", value: roleId },
-        { field: "permissionId", value: permissionId },
+        { field: 'roleId', value: roleId },
+        { field: 'permissionId', value: permissionId },
       ],
     });
 
     if (existing) {
-      return ctx.json({ success: true, message: "Already assigned" });
+      return ctx.json({ success: true, message: 'Already assigned' });
     }
 
     await ctx.context.adapter.create({
-      model: "rolePermission",
+      model: 'rolePermission',
       data: { roleId, permissionId },
     });
 
@@ -283,9 +283,9 @@ export const assignPermissionEndpoint = (staticRoles: Record<string, string[]>) 
   );
 };
 
-const removePermissionPath = "/rbac/role-permissions/remove" as const;
+const removePermissionPath = '/rbac/role-permissions/remove' as const;
 const removePermissionConfig = {
-  method: "POST",
+  method: 'POST',
   use: [sessionMiddleware],
   body: removePermissionSchema,
 } satisfies EndpointOptions;
@@ -301,41 +301,41 @@ export const removePermissionHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
 
-    if (session.user.role !== "admin") {
-      throw new APIError("FORBIDDEN", {
-        message: "Admin access required",
+    if (session.user.role !== 'admin') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Admin access required',
       });
     }
 
     const { roleId, permissionId } = ctx.body;
 
     const role = (await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     })) as RoleModel;
 
     if (!role) {
-      throw new APIError("NOT_FOUND", {
-        message: "Role not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Role not found',
       });
     }
 
     if (isStaticRole(role.name, staticRoles)) {
-      throw new APIError("FORBIDDEN", {
-        message: "Cannot modify permissions of a static role",
+      throw new APIError('FORBIDDEN', {
+        message: 'Cannot modify permissions of a static role',
       });
     }
 
     await ctx.context.adapter.deleteMany({
-      model: "rolePermission",
+      model: 'rolePermission',
       where: [
-        { field: "roleId", value: roleId },
-        { field: "permissionId", value: permissionId },
+        { field: 'roleId', value: roleId },
+        { field: 'permissionId', value: permissionId },
       ],
     });
 

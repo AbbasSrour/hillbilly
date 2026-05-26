@@ -1,5 +1,5 @@
-import type { UseQueryResult } from "@tanstack/react-query";
-import type { ColumnFiltersState } from "@tanstack/react-table";
+import type { UseQueryResult } from '@tanstack/react-query';
+import type { ColumnFiltersState } from '@tanstack/react-table';
 
 type FacetQueryData = {
   meta?: {
@@ -46,9 +46,9 @@ export type FilterDefinitionWithHelpers<
   TRow,
   TQueryOptions = Record<string, unknown>,
 > = FilterDefinition<TOption, TValue, TFullType, TConditions, TRow, TQueryOptions> & {
-  toColumnFilter: (value: ColumnFiltersState[number]["value"]) => {
+  toColumnFilter: (value: ColumnFiltersState[number]['value']) => {
     id: string;
-    value: ColumnFiltersState[number]["value"];
+    value: ColumnFiltersState[number]['value'];
   };
   facetQueries: (ctx: {
     searchValue: string;
@@ -68,7 +68,7 @@ export function createFilterDefinition<
 ): FilterDefinitionWithHelpers<TOption, TValue, TFullType, TConditions, TRow, TQueryOptions> {
   return {
     ...def,
-    toColumnFilter: (value: ColumnFiltersState[number]["value"]) => ({
+    toColumnFilter: (value: ColumnFiltersState[number]['value']) => ({
       id: def.id,
       value,
     }),

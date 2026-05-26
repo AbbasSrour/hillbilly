@@ -39,15 +39,8 @@ export function UserDataTable() {
 
   const { sorting, setSorting, sortValue } = useSort();
   const { searchValue } = useSearch();
-  const { columnFilters, setColumnFilters } = useFilters([
-    userRoleFilter,
-    userStatusFilter,
-  ]);
-  const { pagination, setPagination } = usePagination({}, [
-    searchValue,
-    columnFilters,
-    sorting,
-  ]);
+  const { columnFilters, setColumnFilters } = useFilters([userRoleFilter, userStatusFilter]);
+  const { pagination, setPagination } = usePagination({}, [searchValue, columnFilters, sorting]);
 
   const statusConditions = userStatusFilter.toConditions(columnFilters);
   const roleConditions = userRoleFilter.toConditions(columnFilters);

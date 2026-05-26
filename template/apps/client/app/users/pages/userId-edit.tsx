@@ -12,9 +12,7 @@ import { userToFormValues } from '@/app/users/utils/user-form-transformer.ts';
 export const Route = createFileRoute('/admin/users/$userId/edit')({
   pendingComponent: EditUserSkeleton,
   loader: async ({ context, params }) => {
-    await context.queryClient.ensureQueryData(
-      userQueries.single(params.userId),
-    );
+    await context.queryClient.ensureQueryData(userQueries.single(params.userId));
     await context.queryClient.ensureQueryData(rolesQueries.list());
   },
   head: () => ({
@@ -52,15 +50,8 @@ function EditUserPage() {
 
   return (
     <Main>
-      <PageHeader
-        title={`Edit ${user.name}`}
-        description="Update the user details."
-        withSeparator
-      >
-        <Link
-          to="/admin/users"
-          search={{ search: '', page: 1, pageSize: 10, role: undefined }}
-        >
+      <PageHeader title={`Edit ${user.name}`} description="Update the user details." withSeparator>
+        <Link to="/admin/users" search={{ search: '', page: 1, pageSize: 10, role: undefined }}>
           <Button variant="ghost">Back to Users</Button>
         </Link>
       </PageHeader>

@@ -1,13 +1,13 @@
-import { Controller, Get } from "@nestjs/common";
-import type { HealthCheckResult } from "@nestjs/terminus";
-import { HealthCheck, HealthCheckService, MikroOrmHealthIndicator } from "@nestjs/terminus";
+import { Controller, Get } from '@nestjs/common';
+import type { HealthCheckResult } from '@nestjs/terminus';
+import { HealthCheck, HealthCheckService, MikroOrmHealthIndicator } from '@nestjs/terminus';
 
-import { ApiTags } from "@nestjs/swagger";
-import { Auth } from "@/decorator/auth.decorator";
-import { ServiceHealthIndicator } from "../service/service.indicator";
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@/decorator/auth.decorator';
+import { ServiceHealthIndicator } from '../service/service.indicator';
 
-@ApiTags("Pulse")
-@Controller("pulse")
+@ApiTags('Pulse')
+@Controller('pulse')
 export class PulseController {
   constructor(
     private readonly healthCheckService: HealthCheckService,
@@ -20,8 +20,8 @@ export class PulseController {
   @HealthCheck()
   async check(): Promise<HealthCheckResult> {
     return this.healthCheckService.check([
-      () => this.ormIndicator.pingCheck("database", { timeout: 1500 }),
-      () => this.serviceIndicator.isHealthy("search-service-health"),
+      () => this.ormIndicator.pingCheck('database', { timeout: 1500 }),
+      () => this.serviceIndicator.isHealthy('search-service-health'),
     ]);
   }
 }

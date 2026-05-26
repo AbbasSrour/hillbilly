@@ -3,16 +3,16 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
-import { useDataTableContext } from "@hillbilly/ui/components/data-table/data-table-provider";
-import { Button } from "@hillbilly/ui/core/button";
+} from '@radix-ui/react-icons';
+import { useDataTableContext } from '@hillbilly/ui/components/data-table/data-table-provider';
+import { Button } from '@hillbilly/ui/core/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hillbilly/ui/core/select";
+} from '@hillbilly/ui/core/select';
 
 export function DataTablePagination() {
   const table = useDataTableContext();
@@ -41,7 +41,7 @@ export function DataTablePagination() {
       style={{ overflowClipMargin: 1 }}
     >
       <div className="text-muted-foreground hidden flex-1 text-sm sm:block">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+        {table.getFilteredSelectedRowModel().rows.length} of{' '}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">

@@ -1,12 +1,12 @@
-import { Order } from "@/constant/order.constant";
-import { EnumFieldOptional } from "@/decorator/field/enum-field.decorator";
-import { NumberFieldOptional } from "@/decorator/field/number-field.decorator";
-import { StringFieldOptional } from "@/decorator/field/string-field.decorator";
+import { Order } from '@/constant/order.constant';
+import { EnumFieldOptional } from '@/decorator/field/enum-field.decorator';
+import { NumberFieldOptional } from '@/decorator/field/number-field.decorator';
+import { StringFieldOptional } from '@/decorator/field/string-field.decorator';
 
 export enum DefaultSortOptions {
-  ID = "id",
-  CREATED_AT = "createdAt",
-  UPDATED_AT = "updatedAt",
+  ID = 'id',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
 }
 
 export class PageOptionsDto<T extends string = string> {

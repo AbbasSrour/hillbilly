@@ -1,4 +1,4 @@
-import type { PermissionDefinition } from "../types";
+import type { PermissionDefinition } from '../types';
 
 /**
  * Check if a role is static (from Admin plugin)
@@ -24,12 +24,12 @@ export function buildStatementFromPermissions(
   const statement: Record<string, string[]> = {};
 
   for (const permission of permissions) {
-    const parts = permission.code.split(".");
+    const parts = permission.code.split('.');
     const resource = parts[0];
 
     if (!resource) continue;
 
-    const action = parts.slice(1).join(".");
+    const action = parts.slice(1).join('.');
 
     if (!statement[resource]) {
       statement[resource] = [];
@@ -54,12 +54,12 @@ export function buildRolePermissions(
 
   for (const permission of permissions) {
     if (permission.users?.includes(role)) {
-      const parts = permission.code.split(".");
+      const parts = permission.code.split('.');
       const resource = parts[0];
 
       if (!resource) continue;
 
-      const action = parts.slice(1).join(".");
+      const action = parts.slice(1).join('.');
 
       if (!rolePerms[resource]) {
         rolePerms[resource] = [];

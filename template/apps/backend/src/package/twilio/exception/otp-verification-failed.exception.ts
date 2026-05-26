@@ -1,7 +1,7 @@
-import { InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException } from '@nestjs/common';
 
 export class OtpVerificationFailedException extends InternalServerErrorException {
   constructor(error?: string) {
-    super("error.auth.otpVerificationFailed", error);
+    super('error.auth.otpVerificationFailed', error);
   }
 }

@@ -7,9 +7,7 @@ import { AuthService as BetterAuthService } from '@thallesp/nestjs-better-auth';
  */
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly betterAuth: BetterAuthService<BetterAuthInstance>,
-  ) {}
+  constructor(private readonly betterAuth: BetterAuthService<BetterAuthInstance>) {}
 
   public get api() {
     return this.betterAuth.api;

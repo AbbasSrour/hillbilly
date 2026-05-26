@@ -1,5 +1,5 @@
-import type { BetterAuthPlugin } from "better-auth";
-import type { FieldAttribute, RBACSchemaConfig, TableSchemaConfig } from "./types";
+import type { BetterAuthPlugin } from 'better-auth';
+import type { FieldAttribute, RBACSchemaConfig, TableSchemaConfig } from './types';
 
 // ============================================================================
 // Base Schema Definition
@@ -13,12 +13,12 @@ export const baseSchema = {
   role: {
     fields: {
       name: {
-        type: "string" as const,
+        type: 'string' as const,
         required: true,
         unique: true,
       },
       description: {
-        type: "string" as const,
+        type: 'string' as const,
         required: false,
       },
     },
@@ -26,16 +26,16 @@ export const baseSchema = {
   permission: {
     fields: {
       name: {
-        type: "string" as const,
+        type: 'string' as const,
         required: true,
       },
       code: {
-        type: "string" as const,
+        type: 'string' as const,
         required: true,
         unique: true,
       },
       description: {
-        type: "string" as const,
+        type: 'string' as const,
         required: false,
       },
     },
@@ -43,32 +43,32 @@ export const baseSchema = {
   rolePermission: {
     fields: {
       roleId: {
-        type: "string" as const,
+        type: 'string' as const,
         required: true,
         references: {
-          model: "role",
-          field: "id",
-          onDelete: "cascade" as const,
+          model: 'role',
+          field: 'id',
+          onDelete: 'cascade' as const,
         },
       },
       permissionId: {
-        type: "string" as const,
+        type: 'string' as const,
         required: true,
         references: {
-          model: "permission",
-          field: "id",
-          onDelete: "cascade" as const,
+          model: 'permission',
+          field: 'id',
+          onDelete: 'cascade' as const,
         },
       },
     },
   },
-} satisfies BetterAuthPlugin["schema"];
+} satisfies BetterAuthPlugin['schema'];
 
 // ============================================================================
 // Schema Builder Types
 // ============================================================================
 
-type DBFieldType = "string" | "number" | "boolean" | "date";
+type DBFieldType = 'string' | 'number' | 'boolean' | 'date';
 type DBPrimitive = string | number | boolean | Date | null | undefined;
 
 interface DBFieldAttributeBase {
@@ -78,7 +78,7 @@ interface DBFieldAttributeBase {
   references?: {
     model: string;
     field: string;
-    onDelete?: "cascade" | "set null" | "restrict" | "no action";
+    onDelete?: 'cascade' | 'set null' | 'restrict' | 'no action';
   };
   defaultValue?: DBPrimitive | (() => DBPrimitive);
   input?: boolean;
@@ -179,7 +179,7 @@ function buildTableSchema<T extends DBTableSchemaBase>(
  * });
  * ```
  */
-export function buildSchema(schemaConfig?: RBACSchemaConfig): BetterAuthPlugin["schema"] {
+export function buildSchema(schemaConfig?: RBACSchemaConfig): BetterAuthPlugin['schema'] {
   if (!schemaConfig) {
     return baseSchema;
   }
@@ -190,7 +190,7 @@ export function buildSchema(schemaConfig?: RBACSchemaConfig): BetterAuthPlugin["
     rolePermission: buildTableSchema(baseSchema.rolePermission, schemaConfig.rolePermission),
   };
 
-  return result as BetterAuthPlugin["schema"];
+  return result as BetterAuthPlugin['schema'];
 }
 
 /**

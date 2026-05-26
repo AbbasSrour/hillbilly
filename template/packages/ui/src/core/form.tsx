@@ -1,11 +1,11 @@
-import { Button } from "@hillbilly/ui/core/button";
-import { Label } from "@hillbilly/ui/core/label";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@hillbilly/ui/core/tooltip";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
-import * as React from "react";
+import { Button } from '@hillbilly/ui/core/button';
+import { Label } from '@hillbilly/ui/core/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@hillbilly/ui/core/tooltip';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import type { HTMLAttributes } from 'react';
+import * as React from 'react';
 import {
   Controller,
   type ControllerProps,
@@ -14,7 +14,7 @@ import {
   FormProvider,
   useFormContext,
   useFormState,
-} from "react-hook-form";
+} from 'react-hook-form';
 
 const Form = FormProvider as typeof FormProvider;
 
@@ -48,7 +48,7 @@ const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState);
 
   if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>");
+    throw new Error('useFormField should be used within <FormField>');
   }
 
   const { id } = itemContext;
@@ -69,17 +69,17 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
-function FormItem({ className, ...props }: React.ComponentProps<"div">) {
+function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId();
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div data-slot="form-item" className={cn("grid gap-2", className)} {...props} />
+      <div data-slot="form-item" className={cn('grid gap-2', className)} {...props} />
     </FormItemContext.Provider>
   );
 }
 
-FormItem.displayName = "FormItem";
+FormItem.displayName = 'FormItem';
 
 function FormLabel({
   className,
@@ -96,9 +96,9 @@ function FormLabel({
     <Label
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className, {
-        "gap-0": required,
-        "cursor-help": !!tooltip,
+      className={cn('data-[error=true]:text-destructive', className, {
+        'gap-0': required,
+        'cursor-help': !!tooltip,
       })}
       htmlFor={formItemId}
       {...props}
@@ -120,7 +120,7 @@ function FormLabel({
   return label;
 }
 
-FormLabel.displayName = "FormLabel";
+FormLabel.displayName = 'FormLabel';
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
@@ -136,26 +136,26 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   );
 }
 
-FormControl.displayName = "FormControl";
+FormControl.displayName = 'FormControl';
 
-function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
+function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const { formDescriptionId } = useFormField();
 
   return (
     <p
       data-slot="form-description"
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn('text-sm text-muted-foreground', className)}
       {...props}
     />
   );
 }
 
-FormDescription.displayName = "FormDescription";
+FormDescription.displayName = 'FormDescription';
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? "") : props.children;
+  const body = error ? String(error?.message ?? '') : props.children;
 
   if (!body) {
     return null;
@@ -165,7 +165,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={cn('text-destructive text-sm', className)}
       {...props}
     >
       {body}
@@ -173,7 +173,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-FormMessage.displayName = "FormMessage";
+FormMessage.displayName = 'FormMessage';
 
 interface FormContentProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -182,18 +182,18 @@ function FormContent({
   className,
   ...props
 }: FormContentProps & { ref?: React.Ref<HTMLDivElement> }) {
-  return <div {...props} className={cn("pb-6 space-y-6", className)} />;
+  return <div {...props} className={cn('pb-6 space-y-6', className)} />;
 }
 
-FormContent.displayName = "FormContent";
+FormContent.displayName = 'FormContent';
 
 interface FormSectionProps extends HTMLAttributes<HTMLDivElement> {
-  layout?: "vertical" | "horizontal";
+  layout?: 'vertical' | 'horizontal';
 }
 
 // FormSection
 function FormSection({
-  layout = "vertical",
+  layout = 'vertical',
   className,
   ...props
 }: FormSectionProps & { ref?: React.Ref<HTMLDivElement> }) {
@@ -201,17 +201,17 @@ function FormSection({
     <div
       {...props}
       className={cn(
-        "border-b border-border pb-6",
-        layout === "horizontal"
-          ? "grid grid-cols-1 gap-x-8 space-y-6 md:grid-cols-3 md:space-y-0"
-          : "space-y-6",
+        'border-b border-border pb-6',
+        layout === 'horizontal'
+          ? 'grid grid-cols-1 gap-x-8 space-y-6 md:grid-cols-3 md:space-y-0'
+          : 'space-y-6',
         className,
       )}
     />
   );
 }
 
-FormSection.displayName = "FormSection";
+FormSection.displayName = 'FormSection';
 
 interface FormSectionHeaderProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -220,10 +220,10 @@ function FormSectionHeader({
   className,
   ...props
 }: FormSectionHeaderProps & { ref?: React.Ref<HTMLDivElement> }) {
-  return <div {...props} className={cn("flex flex-col gap-0.5", className)} />;
+  return <div {...props} className={cn('flex flex-col gap-0.5', className)} />;
 }
 
-FormSectionHeader.displayName = "FormSectionHeader";
+FormSectionHeader.displayName = 'FormSectionHeader';
 
 interface FormSectionTitleProps extends HTMLAttributes<HTMLHeadingElement> {}
 
@@ -232,10 +232,10 @@ function FormSectionTitle({
   className,
   ...props
 }: FormSectionTitleProps & { ref?: React.Ref<HTMLHeadingElement> }) {
-  return <h2 {...props} className={cn("text-lg font-semibold tracking-tight", className)} />;
+  return <h2 {...props} className={cn('text-lg font-semibold tracking-tight', className)} />;
 }
 
-FormSectionTitle.displayName = "FormSectionTitle";
+FormSectionTitle.displayName = 'FormSectionTitle';
 
 interface FormSectionDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
 
@@ -244,67 +244,67 @@ function FormSectionDescription({
   className,
   ...props
 }: FormSectionDescriptionProps & { ref?: React.Ref<HTMLParagraphElement> }) {
-  return <p {...props} className={cn("text-sm text-muted-foreground", className)} />;
+  return <p {...props} className={cn('text-sm text-muted-foreground', className)} />;
 }
 
-const formSectionContentVariants = cva("col-span-2", {
+const formSectionContentVariants = cva('col-span-2', {
   variants: {
     layout: {
-      grid: "grid",
-      flex: "flex",
+      grid: 'grid',
+      flex: 'flex',
     },
     direction: {
-      row: "flex-row flex-wrap",
-      column: "flex-col",
+      row: 'flex-row flex-wrap',
+      column: 'flex-col',
     },
     cols: {
-      1: "grid-cols-1",
-      2: "grid-cols-1 sm:grid-cols-2",
-      3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-      4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-4",
-      6: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6",
+      1: 'grid-cols-1',
+      2: 'grid-cols-1 sm:grid-cols-2',
+      3: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+      4: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4',
+      6: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6',
     },
     spacing: {
-      none: "gap-0",
-      xs: "gap-x-2 gap-y-2",
-      sm: "gap-x-4 gap-y-3",
-      md: "gap-x-6 gap-y-4",
-      lg: "gap-x-8 gap-y-6",
-      xl: "gap-x-10 gap-y-8",
+      none: 'gap-0',
+      xs: 'gap-x-2 gap-y-2',
+      sm: 'gap-x-4 gap-y-3',
+      md: 'gap-x-6 gap-y-4',
+      lg: 'gap-x-8 gap-y-6',
+      xl: 'gap-x-10 gap-y-8',
     },
     align: {
-      start: "items-start",
-      center: "items-center",
-      end: "items-end",
-      stretch: "items-stretch",
-      baseline: "items-baseline",
+      start: 'items-start',
+      center: 'items-center',
+      end: 'items-end',
+      stretch: 'items-stretch',
+      baseline: 'items-baseline',
     },
     justify: {
-      start: "justify-start",
-      center: "justify-center",
-      end: "justify-end",
-      between: "justify-between",
-      around: "justify-around",
-      evenly: "justify-evenly",
+      start: 'justify-start',
+      center: 'justify-center',
+      end: 'justify-end',
+      between: 'justify-between',
+      around: 'justify-around',
+      evenly: 'justify-evenly',
     },
   },
   compoundVariants: [
     {
-      layout: "flex",
-      direction: "row",
-      className: "flex-row flex-wrap",
+      layout: 'flex',
+      direction: 'row',
+      className: 'flex-row flex-wrap',
     },
     {
-      layout: "flex",
-      direction: "column",
-      className: "flex-col",
+      layout: 'flex',
+      direction: 'column',
+      className: 'flex-col',
     },
   ],
   defaultVariants: {
-    layout: "grid",
+    layout: 'grid',
     cols: 1,
-    spacing: "md",
-    align: "start",
+    spacing: 'md',
+    align: 'start',
   },
 });
 
@@ -315,11 +315,11 @@ interface FormSectionContentProps
 
 // FormSectionContent
 function FormSectionContent({
-  layout = "grid",
-  direction = "column",
+  layout = 'grid',
+  direction = 'column',
   cols = 1,
-  spacing = "md",
-  align = "start",
+  spacing = 'md',
+  align = 'start',
   justify,
   gridTemplate,
   className,
@@ -345,46 +345,46 @@ function FormSectionContent({
   );
 }
 
-FormSectionContent.displayName = "FormSectionContent";
+FormSectionContent.displayName = 'FormSectionContent';
 
-const formRowVariants = cva("grid w-full", {
+const formRowVariants = cva('grid w-full', {
   variants: {
     cols: {
-      1: "grid-cols-1",
-      2: "grid-cols-1 sm:grid-cols-2",
-      3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-      4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-4",
-      6: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6",
-      auto: "grid-cols-auto",
+      1: 'grid-cols-1',
+      2: 'grid-cols-1 sm:grid-cols-2',
+      3: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+      4: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4',
+      6: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6',
+      auto: 'grid-cols-auto',
     },
     spacing: {
-      none: "gap-0",
-      xs: "gap-x-2 gap-y-2",
-      sm: "gap-x-4 gap-y-3",
-      md: "gap-x-6 gap-y-4",
-      lg: "gap-x-8 gap-y-6",
-      xl: "gap-x-10 gap-y-8",
+      none: 'gap-0',
+      xs: 'gap-x-2 gap-y-2',
+      sm: 'gap-x-4 gap-y-3',
+      md: 'gap-x-6 gap-y-4',
+      lg: 'gap-x-8 gap-y-6',
+      xl: 'gap-x-10 gap-y-8',
     },
     align: {
-      start: "items-start",
-      center: "items-center",
-      end: "items-end",
-      stretch: "items-stretch",
-      baseline: "items-baseline",
+      start: 'items-start',
+      center: 'items-center',
+      end: 'items-end',
+      stretch: 'items-stretch',
+      baseline: 'items-baseline',
     },
     justify: {
-      start: "justify-start",
-      center: "justify-center",
-      end: "justify-end",
-      between: "justify-between",
-      around: "justify-around",
-      evenly: "justify-evenly",
+      start: 'justify-start',
+      center: 'justify-center',
+      end: 'justify-end',
+      between: 'justify-between',
+      around: 'justify-around',
+      evenly: 'justify-evenly',
     },
   },
   defaultVariants: {
     cols: 1,
-    spacing: "md",
-    align: "start",
+    spacing: 'md',
+    align: 'start',
   },
 });
 
@@ -396,8 +396,8 @@ interface FormRowProps
 // FormRow
 function FormRow({
   cols = 1,
-  spacing = "md",
-  align = "start",
+  spacing = 'md',
+  align = 'start',
   justify,
   gridTemplate,
   className,
@@ -413,7 +413,7 @@ function FormRow({
   );
 }
 
-FormRow.displayName = "FormRow";
+FormRow.displayName = 'FormRow';
 
 interface FormFooterProps extends HTMLAttributes<HTMLDivElement> {
   onCancel?: () => void;
@@ -437,18 +437,18 @@ function FormFooter({
   };
 
   return (
-    <div {...props} className={cn("flex items-center justify-end gap-x-2", className)}>
-      <Button type="button" variant={"outline"} className={"min-w-40"} onClick={handleCancel}>
+    <div {...props} className={cn('flex items-center justify-end gap-x-2', className)}>
+      <Button type="button" variant={'outline'} className={'min-w-40'} onClick={handleCancel}>
         Cancel
       </Button>
-      <Button type="submit" variant={"default"} className={"min-w-40"} disabled={submitDisabled}>
+      <Button type="submit" variant={'default'} className={'min-w-40'} disabled={submitDisabled}>
         Save
       </Button>
     </div>
   );
 }
 
-FormFooter.displayName = "FormFooter";
+FormFooter.displayName = 'FormFooter';
 
 export {
   useFormField,

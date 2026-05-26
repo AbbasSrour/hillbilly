@@ -1,20 +1,20 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsDefined, NotEquals, ValidateNested } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsDefined, NotEquals, ValidateNested } from 'class-validator';
 
-import { ToArray } from "@/decorator/transformer/to-array.decorator";
-import { Constructor } from "@/types/utils";
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IFieldOptions } from "./field-options";
+import { ToArray } from '@/decorator/transformer/to-array.decorator';
+import { Constructor } from '@/types/utils';
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IFieldOptions } from './field-options';
 
 type IClassFieldOptions = IFieldOptions;
 
 export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
-  options: Omit<ApiPropertyOptions, "type"> & IClassFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
   const classValue = getClass();
 
@@ -49,7 +49,7 @@ export function ClassField<TClass extends Constructor>(
 
 export function ClassFieldOptional<TClass extends Constructor>(
   getClass: () => TClass,
-  options: Omit<ApiPropertyOptions, "type" | "required"> & IClassFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & IClassFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), ClassField(getClass, { required: false, ...options }));
 }

@@ -61,9 +61,7 @@ export const ProfileForm = ({ user }: { user: UserDto }) => {
           <FormSection layout="vertical">
             <FormSectionHeader>
               <FormSectionTitle>Profile</FormSectionTitle>
-              <FormSectionDescription>
-                Update your personal information.
-              </FormSectionDescription>
+              <FormSectionDescription>Update your personal information.</FormSectionDescription>
             </FormSectionHeader>
             <FormSectionContent cols={1} spacing="lg">
               <FormRow cols={4}>
@@ -104,11 +102,7 @@ export const ProfileForm = ({ user }: { user: UserDto }) => {
                     <FormItem>
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
-                        <PhoneInput
-                          {...field}
-                          placeholder="00 000 000"
-                          defaultCountry="LB"
-                        />
+                        <PhoneInput {...field} placeholder="00 000 000" defaultCountry="LB" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

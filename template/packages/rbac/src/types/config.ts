@@ -1,4 +1,4 @@
-import type { RBACSchemaConfig } from "./schema";
+import type { RBACSchemaConfig } from './schema';
 
 export interface PermissionDefinition {
   code: string;

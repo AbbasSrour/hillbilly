@@ -1,6 +1,6 @@
-import { createSelectors } from "@hillbilly/ui/lib/selectors";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { createSelectors } from '@hillbilly/ui/lib/selectors';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface Recent {
   id: string;
@@ -44,7 +44,7 @@ const useBaseRecentStore = create<RecentsStore>()(
       },
     }),
     {
-      name: "recents-store",
+      name: 'recents-store',
       storage: createJSONStorage(() => localStorage),
     },
   ),

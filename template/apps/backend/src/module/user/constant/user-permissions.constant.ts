@@ -12,8 +12,7 @@ export const UserPermissionConfig = [
   {
     name: 'View Users',
     code: UserPermissions.VIEW,
-    description:
-      'Users with this permission can view all users and view their details.',
+    description: 'Users with this permission can view all users and view their details.',
     users: [RoleType.ADMIN, RoleType.USER],
   },
   {

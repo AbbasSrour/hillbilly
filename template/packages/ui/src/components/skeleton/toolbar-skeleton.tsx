@@ -1,6 +1,6 @@
-import { InputSkeleton } from "@hillbilly/ui/components/skeleton/input-skeleton";
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { PropsWithChildren } from "react";
+import { InputSkeleton } from '@hillbilly/ui/components/skeleton/input-skeleton';
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { PropsWithChildren } from 'react';
 
 interface ToolbarSkeletonProps extends PropsWithChildren {
   className?: string;
@@ -8,7 +8,7 @@ interface ToolbarSkeletonProps extends PropsWithChildren {
 
 export function ToolbarSkeleton({ children, className }: ToolbarSkeletonProps) {
   return (
-    <div className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:items-center", className)}>
+    <div className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:items-center', className)}>
       <InputSkeleton className="h-8 w-full sm:w-50 lg:w-100" />
       <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         {children}

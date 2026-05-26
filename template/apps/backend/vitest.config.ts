@@ -1,47 +1,47 @@
-import swc from "unplugin-swc";
-import { defineConfig } from "vitest/config";
+import swc from 'unplugin-swc';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   esbuild: {
-    target: "node22",
+    target: 'node22',
   },
   plugins: [
     swc.vite({
-      module: { type: "es6" },
+      module: { type: 'es6' },
     }),
   ],
   test: {
     globals: true,
-    root: "./",
+    root: './',
     coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
-      reportsDirectory: "./coverage",
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './coverage',
       exclude: [
-        "node_modules/",
-        "dist/",
-        "test/",
-        "**/*.spec.ts",
-        "**/*.integration-spec.ts",
-        "**/*.e2e-spec.ts",
-        "**/*.interface.ts",
-        "**/*.dto.ts",
-        "**/*.entity.ts",
-        "**/*.config.*",
-        "**/migrations/**",
-        "**/generated/**",
+        'node_modules/',
+        'dist/',
+        'test/',
+        '**/*.spec.ts',
+        '**/*.integration-spec.ts',
+        '**/*.e2e-spec.ts',
+        '**/*.interface.ts',
+        '**/*.dto.ts',
+        '**/*.entity.ts',
+        '**/*.config.*',
+        '**/migrations/**',
+        '**/generated/**',
       ],
     },
     projects: [
       {
         extends: true,
         test: {
-          name: { label: "unit", color: "blue" },
-          include: ["src/**/*.spec.ts"],
-          exclude: ["node_modules", "dist", "test", "**/*.integration-spec.ts", "**/*.e2e-spec.ts"],
-          setupFiles: ["./vitest.setup.ts"],
+          name: { label: 'unit', color: 'blue' },
+          include: ['src/**/*.spec.ts'],
+          exclude: ['node_modules', 'dist', 'test', '**/*.integration-spec.ts', '**/*.e2e-spec.ts'],
+          setupFiles: ['./vitest.setup.ts'],
           isolate: false,
-          pool: "threads",
+          pool: 'threads',
           testTimeout: 10_000,
           hookTimeout: 10_000,
         },
@@ -49,12 +49,12 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          name: { label: "integration", color: "yellow" },
-          include: ["src/**/*.integration-spec.ts", "test/**/*.integration-spec.ts"],
-          exclude: ["node_modules", "dist", "**/*.spec.ts", "**/*.e2e-spec.ts"],
-          setupFiles: ["./vitest.setup.ts"],
+          name: { label: 'integration', color: 'yellow' },
+          include: ['src/**/*.integration-spec.ts', 'test/**/*.integration-spec.ts'],
+          exclude: ['node_modules', 'dist', '**/*.spec.ts', '**/*.e2e-spec.ts'],
+          setupFiles: ['./vitest.setup.ts'],
           isolate: true,
-          pool: "forks",
+          pool: 'forks',
           poolOptions: { forks: { singleFork: false } },
           testTimeout: 20_000,
           hookTimeout: 20_000,
@@ -64,13 +64,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          name: { label: "e2e", color: "green" },
-          include: ["test/**/*.e2e-spec.ts"],
-          exclude: ["node_modules", "dist", "src/**/*.spec.ts", "**/*.integration-spec.ts"],
-          setupFiles: ["./vitest.setup.ts"],
-          globalSetup: ["./test/setup/global-setup.ts"],
+          name: { label: 'e2e', color: 'green' },
+          include: ['test/**/*.e2e-spec.ts'],
+          exclude: ['node_modules', 'dist', 'src/**/*.spec.ts', '**/*.integration-spec.ts'],
+          setupFiles: ['./vitest.setup.ts'],
+          globalSetup: ['./test/setup/global-setup.ts'],
           isolate: true,
-          pool: "forks",
+          pool: 'forks',
           poolOptions: { forks: { singleFork: true } },
           testTimeout: 30_000,
           hookTimeout: 60_000,

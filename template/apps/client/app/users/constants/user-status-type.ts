@@ -2,8 +2,7 @@ export const userStatusType = [
   {
     label: 'Active',
     value: 'active',
-    className:
-      'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200',
+    className: 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200',
   },
   {
     label: 'Invited',

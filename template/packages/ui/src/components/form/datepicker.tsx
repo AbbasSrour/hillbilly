@@ -1,18 +1,18 @@
-import { Button } from "@hillbilly/ui/core/button";
-import { Calendar } from "@hillbilly/ui/core/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@hillbilly/ui/core/popover";
+import { Button } from '@hillbilly/ui/core/button';
+import { Calendar } from '@hillbilly/ui/core/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@hillbilly/ui/core/popover';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hillbilly/ui/core/select";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { addDays, format, getMonth, getYear, isSameDay, setMonth, setYear } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
-import type { DateRange } from "react-day-picker";
+} from '@hillbilly/ui/core/select';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { addDays, format, getMonth, getYear, isSameDay, setMonth, setYear } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import * as React from 'react';
+import type { DateRange } from 'react-day-picker';
 
 export type DatePreset = {
   label: string;
@@ -22,28 +22,28 @@ export type DatePreset = {
 
 const DEFAULT_DATE_PRESETS: DatePreset[] = [
   {
-    label: "Today",
-    value: "today",
+    label: 'Today',
+    value: 'today',
     getDate: () => new Date(),
   },
   {
-    label: "Tomorrow",
-    value: "tomorrow",
+    label: 'Tomorrow',
+    value: 'tomorrow',
     getDate: () => addDays(new Date(), 1),
   },
   {
-    label: "In 3 days",
-    value: "in-3-days",
+    label: 'In 3 days',
+    value: 'in-3-days',
     getDate: () => addDays(new Date(), 3),
   },
   {
-    label: "In a week",
-    value: "in-a-week",
+    label: 'In a week',
+    value: 'in-a-week',
     getDate: () => addDays(new Date(), 7),
   },
   {
-    label: "In 2 weeks",
-    value: "in-2-weeks",
+    label: 'In 2 weeks',
+    value: 'in-2-weeks',
     getDate: () => addDays(new Date(), 14),
   },
 ];
@@ -63,7 +63,7 @@ interface DatePickerProps {
 export function DatePicker({
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder = 'Pick a date',
   className,
   disabled = false,
   showPresets = false,
@@ -77,18 +77,18 @@ export function DatePicker({
   );
 
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const years = React.useMemo(() => {
@@ -135,7 +135,7 @@ export function DatePicker({
     if (selectedDate) {
       const matchingPreset = findMatchingPreset(selectedDate);
       setSelectedPresetValue(matchingPreset?.value || undefined);
-      onChange(selectedDate.toISOString().split("T")[0]);
+      onChange(selectedDate.toISOString().split('T')[0]);
     } else {
       setSelectedPresetValue(undefined);
       onChange(undefined);
@@ -148,7 +148,7 @@ export function DatePicker({
       const presetDate = selectedPreset.getDate();
       setDate(presetDate);
       setSelectedPresetValue(value);
-      onChange(presetDate.toISOString().split("T")[0]);
+      onChange(presetDate.toISOString().split('T')[0]);
     }
   };
 
@@ -156,19 +156,19 @@ export function DatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            'w-full justify-start text-left font-normal',
+            !date && 'text-muted-foreground',
             className,
           )}
           disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{placeholder}</span>}
+          {date ? format(date, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("w-auto", showPresets ? "p-2 space-y-2" : "p-0")} align="start">
+      <PopoverContent className={cn('w-auto', showPresets ? 'p-2 space-y-2' : 'p-0')} align="start">
         {showPresets && presets.length > 0 && (
           <Select value={selectedPresetValue} onValueChange={handlePresetChange}>
             <SelectTrigger className="w-full">
@@ -183,14 +183,8 @@ export function DatePicker({
             </SelectContent>
           </Select>
         )}
-        <div className={cn("rounded-md", showPresets && "border")}>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleSelect}
-            autoFocus
-            month={date}
-          />
+        <div className={cn('rounded-md', showPresets && 'border')}>
+          <Calendar mode="single" selected={date} onSelect={handleSelect} autoFocus month={date} />
         </div>
         {date && (
           <div className="flex justify-between gap-2">
@@ -234,24 +228,24 @@ export type DateRangePreset = {
 
 const DEFAULT_DATE_RANGE_PRESETS: DateRangePreset[] = [
   {
-    label: "Today",
-    value: "today",
+    label: 'Today',
+    value: 'today',
     dateRange: () => {
       const today = new Date();
       return { from: today, to: today };
     },
   },
   {
-    label: "Next 7 days",
-    value: "next-7-days",
+    label: 'Next 7 days',
+    value: 'next-7-days',
     dateRange: () => {
       const today = new Date();
       return { from: today, to: addDays(today, 6) };
     },
   },
   {
-    label: "Next 30 days",
-    value: "next-30-days",
+    label: 'Next 30 days',
+    value: 'next-30-days',
     dateRange: () => {
       const today = new Date();
       return { from: today, to: addDays(today, 29) };
@@ -275,7 +269,7 @@ interface DateRangePickerProps {
 export function DateRangePicker({
   value,
   onChange,
-  placeholder = "Select date range",
+  placeholder = 'Select date range',
   className,
   disabled = false,
   numberOfMonths = 2,
@@ -294,18 +288,18 @@ export function DateRangePicker({
 
   // Month and year arrays for selectors
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const years = React.useMemo(() => {
@@ -384,10 +378,10 @@ export function DateRangePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "w-full justify-start text-left font-normal",
-            !dateRange && "text-muted-foreground",
+            'w-full justify-start text-left font-normal',
+            !dateRange && 'text-muted-foreground',
             className,
           )}
           disabled={disabled}
@@ -396,17 +390,17 @@ export function DateRangePicker({
           {dateRange?.from ? (
             dateRange.to ? (
               <>
-                {format(dateRange.from, "PPP")} - {format(dateRange.to, "PPP")}
+                {format(dateRange.from, 'PPP')} - {format(dateRange.to, 'PPP')}
               </>
             ) : (
-              format(dateRange.from, "PPP")
+              format(dateRange.from, 'PPP')
             )
           ) : (
             <span>{placeholder}</span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("w-auto", showPresets ? "p-2 space-y-2" : "p-0")} align="start">
+      <PopoverContent className={cn('w-auto', showPresets ? 'p-2 space-y-2' : 'p-0')} align="start">
         {showPresets && presets.length > 0 && (
           <Select value={selectedPresetValue} onValueChange={handlePresetChange}>
             <SelectTrigger className="w-full">
@@ -421,7 +415,7 @@ export function DateRangePicker({
             </SelectContent>
           </Select>
         )}
-        <div className={cn("rounded-md", showPresets && "border")}>
+        <div className={cn('rounded-md', showPresets && 'border')}>
           <Calendar
             mode="range"
             month={currentMonth}

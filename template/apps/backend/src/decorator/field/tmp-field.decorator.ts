@@ -1,14 +1,14 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
-import { NotEquals } from "class-validator";
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsTmpKey } from "../validator/is-tmpkey.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IStringFieldOptions, StringField } from "./string-field.decorator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
+import { NotEquals } from 'class-validator';
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsTmpKey } from '../validator/is-tmpkey.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IStringFieldOptions, StringField } from './string-field.decorator';
 
 export function TmpKeyField(
-  options: Omit<ApiPropertyOptions, "type"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   const decorators = [StringField(options), IsTmpKey({ each: options.each })];
 
@@ -32,7 +32,7 @@ export function TmpKeyField(
 }
 
 export function TmpKeyFieldOptional(
-  options: Omit<ApiPropertyOptions, "type" | "required"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), TmpKeyField({ required: false, ...options }));
 }

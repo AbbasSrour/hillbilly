@@ -63,33 +63,21 @@ const queryCache = new QueryCache({
 
 const mutationCache = new MutationCache({
   onMutate: (_, mutation) => {
-    if (
-      mutation.meta &&
-      mutation.options.mutationKey &&
-      mutation.meta.showToast !== false
-    ) {
+    if (mutation.meta && mutation.options.mutationKey && mutation.meta.showToast !== false) {
       toast.loading(mutation.meta.loadingMessage || 'Loading...', {
         id: mutation.options.mutationKey?.join('-'),
       });
     }
   },
   onSuccess: (_, __, ___, mutation) => {
-    if (
-      mutation.meta &&
-      mutation.options.mutationKey &&
-      mutation.meta.showToast !== false
-    ) {
+    if (mutation.meta && mutation.options.mutationKey && mutation.meta.showToast !== false) {
       toast.success(mutation.meta.successMessage || 'Success...', {
         id: mutation.options.mutationKey?.join('-'),
       });
     }
   },
   onError: (err, _variables, _context, mutation) => {
-    if (
-      mutation.meta &&
-      mutation.options.mutationKey &&
-      mutation.meta.showToast !== false
-    ) {
+    if (mutation.meta && mutation.options.mutationKey && mutation.meta.showToast !== false) {
       const isAxios = isAxiosError(err);
       if (!isAxios) {
         const fallbackErrorMessage =
@@ -106,9 +94,7 @@ const mutationCache = new MutationCache({
         return;
       }
 
-      const statusInWhitelist = errorHandlingCodeWhitelist.includes(
-        err.response?.status as number,
-      );
+      const statusInWhitelist = errorHandlingCodeWhitelist.includes(err.response?.status as number);
 
       if (!statusInWhitelist) {
         const fallbackErrorMessage =

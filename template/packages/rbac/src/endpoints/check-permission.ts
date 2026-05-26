@@ -1,54 +1,54 @@
-import type { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from "better-auth";
-import { APIError, createAuthEndpoint, sessionMiddleware } from "better-auth/api";
-import { checkPermissionSchema } from "../schemas";
-import type { RBACPluginConfig } from "../types/config";
-import type { RBACSchemaConfig, Role as RoleModel } from "../types/schema";
-import { getRolePermissions } from "../utils";
+import type { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from 'better-auth';
+import { APIError, createAuthEndpoint, sessionMiddleware } from 'better-auth/api';
+import { checkPermissionSchema } from '../schemas';
+import type { RBACPluginConfig } from '../types/config';
+import type { RBACSchemaConfig, Role as RoleModel } from '../types/schema';
+import { getRolePermissions } from '../utils';
 
-const checkPermissionPath = "/rbac/check-permission" as const;
+const checkPermissionPath = '/rbac/check-permission' as const;
 const checkPermissionConfig = (permissionCodes?: string[]) => {
   const permissionCodeSchema = {
-    type: "string",
+    type: 'string',
     ...(permissionCodes && permissionCodes.length > 0 ? { enum: permissionCodes } : {}),
   } as const;
 
   return {
-    method: "POST",
+    method: 'POST',
     use: [sessionMiddleware],
     body: checkPermissionSchema,
     metadata: {
       openapi: {
         requestBody: {
           content: {
-            "application/json": {
+            'application/json': {
               schema: {
-                type: "object",
+                type: 'object',
                 properties: {
                   permission: {
-                    oneOf: [permissionCodeSchema, { type: "array", items: permissionCodeSchema }],
+                    oneOf: [permissionCodeSchema, { type: 'array', items: permissionCodeSchema }],
                   },
                 },
-                required: ["permission"],
+                required: ['permission'],
               },
             },
           },
         },
         responses: {
           200: {
-            description: "Permission check result",
+            description: 'Permission check result',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  type: "object",
+                  type: 'object',
                   properties: {
-                    hasPermission: { type: "boolean" },
-                    checked: { type: "array", items: permissionCodeSchema },
+                    hasPermission: { type: 'boolean' },
+                    checked: { type: 'array', items: permissionCodeSchema },
                     userPermissions: {
-                      type: "array",
+                      type: 'array',
                       items: permissionCodeSchema,
                     },
                   },
-                  required: ["hasPermission", "checked", "userPermissions"],
+                  required: ['hasPermission', 'checked', 'userPermissions'],
                 },
               },
             },
@@ -72,8 +72,8 @@ export const checkPermissionHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
 
@@ -85,8 +85,8 @@ export const checkPermissionHandler =
 
     if (userRoleName) {
       const role = (await ctx.context.adapter.findOne({
-        model: "role",
-        where: [{ field: "name", value: userRoleName }],
+        model: 'role',
+        where: [{ field: 'name', value: userRoleName }],
       })) as RoleModel | null;
 
       if (role) {

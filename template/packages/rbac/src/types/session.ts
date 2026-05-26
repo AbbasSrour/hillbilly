@@ -36,11 +36,11 @@ export interface EnhancedSession {
  */
 export function hasPermissions(user: unknown): user is EnhancedSessionUser {
   return (
-    typeof user === "object" &&
+    typeof user === 'object' &&
     user !== null &&
-    "permissions" in user &&
+    'permissions' in user &&
     Array.isArray((user as EnhancedSessionUser).permissions) &&
-    (user as EnhancedSessionUser).permissions.every((p) => typeof p === "string")
+    (user as EnhancedSessionUser).permissions.every((p) => typeof p === 'string')
   );
 }
 

@@ -9,10 +9,7 @@ interface TotalUsersInsightProps {
   iconClassName?: string;
 }
 
-export const TotalUsersInsight = ({
-  gradientClassName,
-  iconClassName,
-}: TotalUsersInsightProps) => {
+export const TotalUsersInsight = ({ gradientClassName, iconClassName }: TotalUsersInsightProps) => {
   const { searchValue } = useSearch();
 
   const { data: totalData } = useQuery(
@@ -37,9 +34,7 @@ export const TotalUsersInsight = ({
       value={totalUsers.toLocaleString()}
       subtext={`${activeRate.toFixed(1)}% Active`}
       icon={IconUsers}
-      gradientClassName={
-        gradientClassName ?? 'from-blue-500/20 to-indigo-500/20'
-      }
+      gradientClassName={gradientClassName ?? 'from-blue-500/20 to-indigo-500/20'}
       iconClassName={iconClassName ?? 'text-indigo-500'}
     />
   );

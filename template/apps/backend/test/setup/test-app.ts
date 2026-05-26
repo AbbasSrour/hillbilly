@@ -1,8 +1,8 @@
-import { MikroORM } from "@mikro-orm/core";
-import type { INestApplication } from "@nestjs/common";
-import { ValidationPipe, VersioningType } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { Test, type TestingModule } from "@nestjs/testing";
+import { MikroORM } from '@mikro-orm/core';
+import type { INestApplication } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Test, type TestingModule } from '@nestjs/testing';
 
 // TODO: Import your exception filters when they exist
 // import { HttpExceptionFilter } from "../src/filter/bad-request.filter";
@@ -11,7 +11,7 @@ import { Test, type TestingModule } from "@nestjs/testing";
 // TODO: Use your actual AppModule
 // import { AppModule } from "../src/app.module";
 
-import { AppModule } from "../../src/app.module";
+import { AppModule } from '../../src/app.module';
 
 export interface TestApp {
   app: INestApplication;
@@ -28,7 +28,7 @@ export async function createTestApp(): Promise<TestApp> {
   const orm = moduleFixture.get(MikroORM);
   const reflector = app.get(Reflector);
 
-  app.setGlobalPrefix("/api");
+  app.setGlobalPrefix('/api');
   app.enableVersioning({ type: VersioningType.URI });
 
   // TODO: Add your exception filters when they exist

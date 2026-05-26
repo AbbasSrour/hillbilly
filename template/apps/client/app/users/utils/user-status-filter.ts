@@ -30,8 +30,7 @@ export const userStatusFilter = createFilterDefinition({
     return 'active';
   },
   toConditions: (columnFilters: ColumnFiltersState): StatusConditions => {
-    const statusFilter = columnFilters.find((filter) => filter.id === 'status')
-      ?.value as string[];
+    const statusFilter = columnFilters.find((filter) => filter.id === 'status')?.value as string[];
 
     return (
       statusFilter?.reduce<StatusConditions>((acc, status) => {

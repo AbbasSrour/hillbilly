@@ -19,9 +19,7 @@ export class CryptoService {
   }
 
   public async decrypt(value: string): Promise<string> {
-    const [iv, encrypted] = value
-      .split(':')
-      .map((part) => Buffer.from(part, 'hex'));
+    const [iv, encrypted] = value.split(':').map((part) => Buffer.from(part, 'hex'));
 
     if (!iv || !encrypted) {
       throw new Error('Invalid encrypted value');
@@ -30,10 +28,7 @@ export class CryptoService {
     const key = this.getKey();
 
     const decipher = crypto.createDecipheriv(this.ALGORITHM, key, iv);
-    const decrypted = Buffer.concat([
-      decipher.update(encrypted),
-      decipher.final(),
-    ]);
+    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
 
     return decrypted.toString();
   }

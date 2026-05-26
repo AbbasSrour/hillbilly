@@ -1,5 +1,5 @@
-import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
-import { type MockAdapter, createMockAdapter } from "./test-utils";
+import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockAdapter, createMockAdapter } from './test-utils';
 
 /**
  * User type for session hook testing
@@ -24,7 +24,7 @@ interface SessionHookContext {
       user?: SessionUser;
     };
   };
-  json: (data: unknown) => { type: "json"; data: unknown };
+  json: (data: unknown) => { type: 'json'; data: unknown };
 }
 
 /**
@@ -32,7 +32,7 @@ interface SessionHookContext {
  */
 type SessionHookResult =
   | {
-      type: "json";
+      type: 'json';
       data: {
         session: unknown;
         user: SessionUser;
@@ -88,7 +88,7 @@ function createSessionHookHandler(
   };
 }
 
-describe("Session Hook", () => {
+describe('Session Hook', () => {
   let mockAdapter: MockAdapter;
   let mockGetSessionPermissions: Mock<
     (ctx: SessionHookContext, user: SessionUser) => Promise<string[]>
@@ -101,25 +101,25 @@ describe("Session Hook", () => {
     sessionHookHandler = createSessionHookHandler(mockGetSessionPermissions);
   });
 
-  describe("matcher function", () => {
-    it("should match /get-session path", () => {
-      const matcher = (context: { path: string }) => context.path === "/get-session";
+  describe('matcher function', () => {
+    it('should match /get-session path', () => {
+      const matcher = (context: { path: string }) => context.path === '/get-session';
 
-      expect(matcher({ path: "/get-session" })).toBe(true);
-      expect(matcher({ path: "/login" })).toBe(false);
-      expect(matcher({ path: "/get-sessions" })).toBe(false);
-      expect(matcher({ path: "/api/get-session" })).toBe(false);
+      expect(matcher({ path: '/get-session' })).toBe(true);
+      expect(matcher({ path: '/login' })).toBe(false);
+      expect(matcher({ path: '/get-sessions' })).toBe(false);
+      expect(matcher({ path: '/api/get-session' })).toBe(false);
     });
   });
 
-  describe("no session handling", () => {
-    it("should return undefined when response is null", async () => {
+  describe('no session handling', () => {
+    it('should return undefined when response is null', async () => {
       const ctx: SessionHookContext = {
         context: {
           adapter: mockAdapter,
           returned: undefined,
         },
-        json: vi.fn((data) => ({ type: "json" as const, data })),
+        json: vi.fn((data) => ({ type: 'json' as const, data })),
       };
 
       const result = await sessionHookHandler(ctx);
@@ -128,13 +128,13 @@ describe("Session Hook", () => {
       expect(mockGetSessionPermissions).not.toHaveBeenCalled();
     });
 
-    it("should return undefined when response has no user", async () => {
+    it('should return undefined when response has no user', async () => {
       const ctx: SessionHookContext = {
         context: {
           adapter: mockAdapter,
           returned: { session: {}, user: undefined },
         },
-        json: vi.fn((data) => ({ type: "json" as const, data })),
+        json: vi.fn((data) => ({ type: 'json' as const, data })),
       };
 
       const result = await sessionHookHandler(ctx);
@@ -144,52 +144,52 @@ describe("Session Hook", () => {
     });
   });
 
-  describe("permission injection", () => {
-    it("should add permissions to session user from getSessionPermissions", async () => {
+  describe('permission injection', () => {
+    it('should add permissions to session user from getSessionPermissions', async () => {
       const ctx: SessionHookContext = {
         context: {
           adapter: mockAdapter,
           returned: {
             session: {},
             user: {
-              id: "user_1",
-              role: "admin",
-              email: "admin@example.com",
+              id: 'user_1',
+              role: 'admin',
+              email: 'admin@example.com',
             },
           },
         },
-        json: vi.fn((data) => ({ type: "json" as const, data })),
+        json: vi.fn((data) => ({ type: 'json' as const, data })),
       };
 
-      mockGetSessionPermissions.mockResolvedValueOnce(["user.view", "user.create", "user.delete"]);
+      mockGetSessionPermissions.mockResolvedValueOnce(['user.view', 'user.create', 'user.delete']);
 
       const result = await sessionHookHandler(ctx);
 
       expect(result).toBeDefined();
-      expect(result?.data.user.permissions).toEqual(["user.view", "user.create", "user.delete"]);
+      expect(result?.data.user.permissions).toEqual(['user.view', 'user.create', 'user.delete']);
       expect(mockGetSessionPermissions).toHaveBeenCalledWith(
         ctx,
         expect.objectContaining({
-          id: "user_1",
-          role: "admin",
-          email: "admin@example.com",
+          id: 'user_1',
+          role: 'admin',
+          email: 'admin@example.com',
         }),
       );
     });
 
-    it("should add empty permissions array when utility returns empty", async () => {
+    it('should add empty permissions array when utility returns empty', async () => {
       const ctx: SessionHookContext = {
         context: {
           adapter: mockAdapter,
           returned: {
             session: {},
             user: {
-              id: "user_2",
-              email: "noone@example.com",
+              id: 'user_2',
+              email: 'noone@example.com',
             },
           },
         },
-        json: vi.fn((data) => ({ type: "json" as const, data })),
+        json: vi.fn((data) => ({ type: 'json' as const, data })),
       };
 
       mockGetSessionPermissions.mockResolvedValueOnce([]);
@@ -200,39 +200,39 @@ describe("Session Hook", () => {
       expect(mockGetSessionPermissions).toHaveBeenCalledWith(
         ctx,
         expect.objectContaining({
-          id: "user_2",
-          email: "noone@example.com",
+          id: 'user_2',
+          email: 'noone@example.com',
         }),
       );
     });
 
-    it("should preserve other user properties when adding permissions", async () => {
+    it('should preserve other user properties when adding permissions', async () => {
       const ctx: SessionHookContext = {
         context: {
           adapter: mockAdapter,
           returned: {
             session: {},
             user: {
-              id: "user_3",
-              role: "admin",
-              email: "admin@example.com",
-              name: "Admin User",
+              id: 'user_3',
+              role: 'admin',
+              email: 'admin@example.com',
+              name: 'Admin User',
             },
           },
         },
-        json: vi.fn((data) => ({ type: "json" as const, data })),
+        json: vi.fn((data) => ({ type: 'json' as const, data })),
       };
 
-      mockGetSessionPermissions.mockResolvedValueOnce(["admin.access"]);
+      mockGetSessionPermissions.mockResolvedValueOnce(['admin.access']);
 
       const result = await sessionHookHandler(ctx);
 
       const user = result?.data.user;
-      expect(user?.id).toBe("user_3");
-      expect(user?.role).toBe("admin");
-      expect(user?.email).toBe("admin@example.com");
-      expect(user?.name).toBe("Admin User");
-      expect(user?.permissions).toEqual(["admin.access"]);
+      expect(user?.id).toBe('user_3');
+      expect(user?.role).toBe('admin');
+      expect(user?.email).toBe('admin@example.com');
+      expect(user?.name).toBe('Admin User');
+      expect(user?.permissions).toEqual(['admin.access']);
     });
   });
 });

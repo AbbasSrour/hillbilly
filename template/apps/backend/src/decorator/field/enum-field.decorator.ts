@@ -1,14 +1,14 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
-import { IsEnum, NotEquals } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
+import { IsEnum, NotEquals } from 'class-validator';
 
-import { FilterField, FilterOperationType } from "@/decorator/field/filter-field.decorator";
-import { GeneratorProvider } from "@/provider/generator.provider";
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { ToArray } from "../transformer/to-array.decorator";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IFieldOptions } from "./field-options";
+import { FilterField, FilterOperationType } from '@/decorator/field/filter-field.decorator';
+import { GeneratorProvider } from '@/provider/generator.provider';
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { ToArray } from '../transformer/to-array.decorator';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IFieldOptions } from './field-options';
 
 type IEnumFieldOptions = IFieldOptions;
 
@@ -16,7 +16,7 @@ type ApiPropertyEnumType = never[] | Record<string, never> | object;
 
 export function ApiEnumProperty<TEnum extends ApiPropertyEnumType>(
   getEnum: () => TEnum,
-  options: Omit<ApiPropertyOptions, "type"> & { each?: boolean } = {},
+  options: Omit<ApiPropertyOptions, 'type'> & { each?: boolean } = {},
 ): PropertyDecorator {
   const enumValue = getEnum();
 
@@ -30,7 +30,7 @@ export function ApiEnumProperty<TEnum extends ApiPropertyEnumType>(
 
 export function ApiEnumPropertyOptional<TEnum extends ApiPropertyEnumType>(
   getEnum: () => TEnum,
-  options: Omit<ApiPropertyOptions, "type" | "required"> & {
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & {
     each?: boolean;
   } = {},
 ): PropertyDecorator {
@@ -39,7 +39,7 @@ export function ApiEnumPropertyOptional<TEnum extends ApiPropertyEnumType>(
 
 export function EnumField<TEnum extends object>(
   getEnum: () => TEnum,
-  options: Omit<ApiPropertyOptions, "type" | "enum" | "enumName" | "isArray"> &
+  options: Omit<ApiPropertyOptions, 'type' | 'enum' | 'enumName' | 'isArray'> &
     IEnumFieldOptions = {},
 ): PropertyDecorator {
   const enumValue = getEnum();
@@ -70,7 +70,7 @@ export function EnumField<TEnum extends object>(
 
 export function EnumFieldOptional<TEnum extends object>(
   getEnum: () => TEnum,
-  options: Omit<ApiPropertyOptions, "type" | "required" | "enum" | "enumName"> &
+  options: Omit<ApiPropertyOptions, 'type' | 'required' | 'enum' | 'enumName'> &
     IEnumFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), EnumField(getEnum, { required: false, ...options }));

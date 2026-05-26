@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   app:
     env_file:
@@ -9,7 +9,7 @@ services:
       context: ../..
       dockerfile: apps/backend/Dockerfile
     ports:
-      - "$PORT:$PORT"
+      - '$PORT:$PORT'
     links:
       - postgres
   postgres:
@@ -18,10 +18,10 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
-      TZ: "GMT"
-      PGTZ: "GMT"
+      TZ: 'GMT'
+      PGTZ: 'GMT'
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres:/data/postgres
       - ./scripts/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
@@ -31,7 +31,7 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - /data/pgadmin:/root/.pgadmin
     env_file:

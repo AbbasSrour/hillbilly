@@ -1,5 +1,5 @@
-import { RoleWithPermissions as RoleWithPermissionsModel } from "./schema";
-import type { Permission } from "./schema";
+import { RoleWithPermissions as RoleWithPermissionsModel } from './schema';
+import type { Permission } from './schema';
 
 export interface SyncResponse {
   permissions: {

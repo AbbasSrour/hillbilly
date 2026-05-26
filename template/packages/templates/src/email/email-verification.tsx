@@ -1,6 +1,6 @@
-import { Button, Link, Section, Text } from "@react-email/components";
-import { render, toPlainText } from "@react-email/render";
-import { EmailLayout } from "./components/email-layout";
+import { Button, Link, Section, Text } from '@react-email/components';
+import { render, toPlainText } from '@react-email/render';
+import { EmailLayout } from './components/email-layout';
 
 export interface EmailVerificationEmailProps {
   appName: string;
@@ -13,9 +13,9 @@ export default function EmailVerificationEmail({
   appName,
   name,
   verificationUrl,
-  expiresIn = "1 hour",
+  expiresIn = '1 hour',
 }: EmailVerificationEmailProps) {
-  const recipientName = name?.trim() || "there";
+  const recipientName = name?.trim() || 'there';
 
   return (
     <EmailLayout

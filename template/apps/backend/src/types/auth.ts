@@ -1,4 +1,4 @@
-import type { EnhancedSessionUser } from "@hillbilly/rbac";
+import type { EnhancedSessionUser } from '@hillbilly/rbac';
 
 /**
  * Authenticated user type. Extends RBAC permissions by default.

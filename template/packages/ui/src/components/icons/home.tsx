@@ -1,8 +1,8 @@
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { Transition, Variants } from "motion/react";
-import { motion, useAnimation } from "motion/react";
-import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { Transition, Variants } from 'motion/react';
+import { motion, useAnimation } from 'motion/react';
+import type { HTMLAttributes } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 
 export interface HomeIconHandle {
   startAnimation: () => void;
@@ -38,15 +38,15 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
       isControlledRef.current = true;
 
       return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
+        startAnimation: () => controls.start('animate'),
+        stopAnimation: () => controls.start('normal'),
       };
     });
 
     const handleMouseEnter = useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
         if (!isControlledRef.current) {
-          void controls.start("animate");
+          void controls.start('animate');
         } else {
           onMouseEnter?.(e);
         }
@@ -57,7 +57,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
     const handleMouseLeave = useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
         if (!isControlledRef.current) {
-          void controls.start("normal");
+          void controls.start('normal');
         } else {
           onMouseLeave?.(e);
         }
@@ -67,7 +67,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
     return (
       <div
         className={cn(
-          "cursor-pointer select-none p-2 hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center",
+          'cursor-pointer select-none p-2 hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center',
           className,
         )}
         onMouseEnter={handleMouseEnter}
@@ -75,7 +75,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
         {...props}
       >
         <svg
-          role={"img"}
+          role={'img'}
           xmlns="http://www.w3.org/2000/svg"
           width={size}
           height={size}
@@ -99,6 +99,6 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
   },
 );
 
-HomeIcon.displayName = "HomeIcon";
+HomeIcon.displayName = 'HomeIcon';
 
 export { HomeIcon };

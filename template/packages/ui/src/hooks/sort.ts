@@ -1,8 +1,8 @@
-import { useNavigate, useSearch as useRouterSearch } from "@tanstack/react-router";
-import type { SortingState } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useNavigate, useSearch as useRouterSearch } from '@tanstack/react-router';
+import type { SortingState } from '@tanstack/react-table';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
-export type SortDirection = "ASC" | "DESC";
+export type SortDirection = 'ASC' | 'DESC';
 
 export interface SortValue {
   sort: string;
@@ -56,23 +56,23 @@ type SortItem = { id: string; desc: boolean };
 
 const sortItemToValue = (sort: SortItem): SortValue => ({
   sort: sort.id,
-  order: sort.desc ? "DESC" : "ASC",
+  order: sort.desc ? 'DESC' : 'ASC',
 });
 
 export const parseSortValue = (value: string): SortItem | null => {
   if (!value) return null;
 
   // Handle "-column" format (descending)
-  if (value.startsWith("-")) {
+  if (value.startsWith('-')) {
     return { id: value.slice(1), desc: true };
   }
 
   // Handle "column:asc" or "column:desc" format
-  const colonIndex = value.indexOf(":");
+  const colonIndex = value.indexOf(':');
   if (colonIndex !== -1) {
     const id = value.slice(0, colonIndex);
     const direction = value.slice(colonIndex + 1).toLowerCase();
-    return { id, desc: direction === "desc" };
+    return { id, desc: direction === 'desc' };
   }
 
   // Default: ascending
@@ -131,7 +131,7 @@ export const toSortValueMulti = (sorting: SortingState): SortValue[] | undefined
 export function useSort<TMulti extends boolean = false>(
   options?: UseSortOptions<TMulti>,
 ): UseSortResult<TMulti> {
-  const { searchParam = "sort", multi = false } = (options ?? {}) as UseSortOptionsBase;
+  const { searchParam = 'sort', multi = false } = (options ?? {}) as UseSortOptionsBase;
   const navigate = useNavigate();
   const searchParams = useRouterSearch({ strict: false }) as Record<
     string,
@@ -150,7 +150,7 @@ export function useSort<TMulti extends boolean = false>(
         initialSortingRef.current = paramValue
           .map(parseSortValue)
           .filter((sort): sort is SortItem => sort !== null);
-      } else if (typeof paramValue === "string") {
+      } else if (typeof paramValue === 'string') {
         // Single sort column (or single value in multi mode)
         const parsed = parseSortValue(paramValue);
         if (parsed) {
@@ -166,7 +166,7 @@ export function useSort<TMulti extends boolean = false>(
 
   const setSorting = useCallback(
     (updater: SortUpdater) => {
-      const newSorting = typeof updater === "function" ? updater(sorting) : updater;
+      const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
 
       setSortingState(newSorting);
 

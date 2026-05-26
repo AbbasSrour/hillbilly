@@ -23,8 +23,7 @@ import {
 
 @Injectable()
 export class BetterAuthConfigService {
-  private readonly permissionConfigs: PermissionWithRoles[][] =
-    Object.values(permissions);
+  private readonly permissionConfigs: PermissionWithRoles[][] = Object.values(permissions);
 
   constructor(
     private readonly orm: MikroORM,
@@ -34,8 +33,7 @@ export class BetterAuthConfigService {
   ) {}
 
   getAuthMiddleware() {
-    return (_: unknown, __: unknown, next: () => void) =>
-      RequestContext.create(this.orm.em, next);
+    return (_: unknown, __: unknown, next: () => void) => RequestContext.create(this.orm.em, next);
   }
 
   createAuthConfig() {
@@ -57,10 +55,8 @@ export class BetterAuthConfigService {
         autoSignIn: false,
         revokeSessionsOnPasswordReset: true,
         password: {
-          hash: async (password: string) =>
-            GeneratorProvider.generateHash(password),
-          verify: async ({ password, hash }) =>
-            GeneratorProvider.validateHash(password, hash),
+          hash: async (password: string) => GeneratorProvider.generateHash(password),
+          verify: async ({ password, hash }) => GeneratorProvider.validateHash(password, hash),
         },
         sendResetPassword: async ({ user, url }) => {
           const appName = this.configService.appName;
@@ -149,26 +145,19 @@ export class BetterAuthConfigService {
     const statement = {
       ...defaultStatements,
       ...customStatement,
-      user: [
-        ...(defaultStatements.user || []),
-        ...(customStatement.user || []),
-      ].filter((v, i, a) => a.indexOf(v) === i),
+      user: [...(defaultStatements.user || []), ...(customStatement.user || [])].filter(
+        (v, i, a) => a.indexOf(v) === i,
+      ),
     } as const;
 
     const ac = createAccessControl(statement);
     const roles: Record<string, ReturnType<typeof ac.newRole>> = {};
 
     for (const roleType of Object.values(RoleType)) {
-      const rolePermissions = this.buildRoleAccessControlStatement(
-        allPermissions,
-        roleType,
-      );
+      const rolePermissions = this.buildRoleAccessControlStatement(allPermissions, roleType);
 
       if (roleType === RoleType.ADMIN) {
-        const mergedStatements = this.mergeStatementsWithBase(
-          adminAc.statements,
-          rolePermissions,
-        );
+        const mergedStatements = this.mergeStatementsWithBase(adminAc.statements, rolePermissions);
 
         roles[roleType] = ac.newRole(mergedStatements);
       } else {
@@ -193,8 +182,7 @@ export class BetterAuthConfigService {
       const action = actionParts.join('.');
       if (!action) continue;
       if (!statement[resource]) statement[resource] = [];
-      if (!statement[resource].includes(action))
-        statement[resource].push(action);
+      if (!statement[resource].includes(action)) statement[resource].push(action);
     }
     return statement;
   }
@@ -211,8 +199,7 @@ export class BetterAuthConfigService {
         const action = actionParts.join('.');
         if (!action) continue;
         if (!rolePerms[resource]) rolePerms[resource] = [];
-        if (!rolePerms[resource].includes(action))
-          rolePerms[resource].push(action);
+        if (!rolePerms[resource].includes(action)) rolePerms[resource].push(action);
       }
     }
 
@@ -227,10 +214,9 @@ export class BetterAuthConfigService {
 
     for (const statement of [base, ...statements]) {
       for (const [resource, actions] of Object.entries(statement)) {
-        merged[resource] = [
-          ...(merged[resource] ?? []),
-          ...actions,
-        ].filter((value, index, arr) => arr.indexOf(value) === index);
+        merged[resource] = [...(merged[resource] ?? []), ...actions].filter(
+          (value, index, arr) => arr.indexOf(value) === index,
+        );
       }
     }
 

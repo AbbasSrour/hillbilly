@@ -1,29 +1,29 @@
-import { FilterField, FilterOperationType } from "@/decorator/field/filter-field.decorator";
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
-import { IsBoolean, NotEquals } from "class-validator";
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { ToBoolean } from "../transformer/to-boolean.decorator";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IFieldOptions } from "./field-options";
+import { FilterField, FilterOperationType } from '@/decorator/field/filter-field.decorator';
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
+import { IsBoolean, NotEquals } from 'class-validator';
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { ToBoolean } from '../transformer/to-boolean.decorator';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IFieldOptions } from './field-options';
 
 type IBooleanFieldOptions = IFieldOptions;
 
 export function ApiBooleanProperty(
-  options: Omit<ApiPropertyOptions, "type"> = {},
+  options: Omit<ApiPropertyOptions, 'type'> = {},
 ): PropertyDecorator {
   return ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) });
 }
 
 export function ApiBooleanPropertyOptional(
-  options: Omit<ApiPropertyOptions, "type" | "required"> = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> = {},
 ): PropertyDecorator {
   return ApiBooleanProperty({ required: false, ...options });
 }
 
 export function BooleanField(
-  options: Omit<ApiPropertyOptions, "type"> & IBooleanFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IBooleanFieldOptions = {},
 ): PropertyDecorator {
   const decorators = [
     ToBoolean(),
@@ -53,7 +53,7 @@ export function BooleanField(
 }
 
 export function BooleanFieldOptional(
-  options: Omit<ApiPropertyOptions, "type" | "required"> & IBooleanFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & IBooleanFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), BooleanField({ required: false, ...options }));
 }

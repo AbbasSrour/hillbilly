@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
-import { parsePhoneNumberWithError } from "libphonenumber-js";
+import { Transform } from 'class-transformer';
+import { parsePhoneNumberWithError } from 'libphonenumber-js';
 
 export function PhoneNumberSerializer(): PropertyDecorator {
   return Transform((params) => {

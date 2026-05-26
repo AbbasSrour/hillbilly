@@ -3,11 +3,7 @@ import { ThemeSwitch } from '@hillbilly/ui/components/utils/theme-switcher';
 import { NavigationProvider } from '@hillbilly/ui/context/navigation';
 import { PermissionProvider } from '@hillbilly/ui/context/permission';
 import { Separator } from '@hillbilly/ui/core/separator';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@hillbilly/ui/core/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@hillbilly/ui/core/sidebar';
 import type { PermissionKeys } from '@hillbilly/ui/types/permission-keys';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -29,9 +25,7 @@ function AdminRoute() {
   const user = sessionData?.user;
 
   return (
-    <PermissionProvider
-      permissions={(user?.permissions as Array<PermissionKeys>) || []}
-    >
+    <PermissionProvider permissions={(user?.permissions as Array<PermissionKeys>) || []}>
       <NavigationProvider
         projectName={'[[ project_name ]]'}
         main={navigationConfig.admin}

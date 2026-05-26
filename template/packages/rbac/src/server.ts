@@ -1,4 +1,4 @@
-import { createAuthMiddleware } from "better-auth/api";
+import { createAuthMiddleware } from 'better-auth/api';
 import {
   assignPermissionEndpoint,
   checkPermissionEndpoint,
@@ -12,10 +12,10 @@ import {
   syncEndpoint,
   updateRoleEndpoint,
   userPermissionsEndpoint,
-} from "./endpoints";
-import { buildSchema } from "./schema";
-import type { RBACPluginConfig, RBACSchemaConfig } from "./types";
-import { getSessionPermissions } from "./utils";
+} from './endpoints';
+import { buildSchema } from './schema';
+import type { RBACPluginConfig, RBACSchemaConfig } from './types';
+import { getSessionPermissions } from './utils';
 
 /**
  * Helper to get the endpoint response from context.
@@ -72,7 +72,7 @@ export const rbac = <S extends RBACSchemaConfig = RBACSchemaConfig>(
   const hooks = {
     after: [
       {
-        matcher: (context) => context.path === "/get-session",
+        matcher: (context) => context.path === '/get-session',
         handler: createAuthMiddleware(async (ctx) => {
           // Get the original response from the endpoint
           const response = await getEndpointResponse<{
@@ -102,7 +102,7 @@ export const rbac = <S extends RBACSchemaConfig = RBACSchemaConfig>(
   };
 
   return {
-    id: "rbac",
+    id: 'rbac',
     schema: pluginSchema,
     endpoints,
     hooks,

@@ -16,9 +16,10 @@ export class CreateSettingsCommand implements ICommand {
 }
 
 @CommandHandler(CreateSettingsCommand)
-export class CreateSettingsHandler
-  implements ICommandHandler<CreateSettingsCommand, UserSettingsEntity>
-{
+export class CreateSettingsHandler implements ICommandHandler<
+  CreateSettingsCommand,
+  UserSettingsEntity
+> {
   constructor(
     @InjectRepository(UserSettingsEntity)
     private readonly userSettingsRepository: EntityRepository<UserSettingsEntity>,
@@ -26,11 +27,10 @@ export class CreateSettingsHandler
 
   async execute(command: CreateSettingsCommand) {
     const { userId, createSettingsDto } = command;
-    const userSettingsEntity =
-      this.userSettingsRepository.create({
-        ...createSettingsDto,
-        user: userId
-      });
+    const userSettingsEntity = this.userSettingsRepository.create({
+      ...createSettingsDto,
+      user: userId,
+    });
 
     await this.userSettingsRepository.insert(userSettingsEntity);
 

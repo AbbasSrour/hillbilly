@@ -1,7 +1,7 @@
-import { Param, PipeTransform, Type } from "@nestjs/common";
-import { ApiParamOptions } from "@nestjs/swagger";
-import { DECORATORS } from "@/constant/swagger.constants";
-import _ from "lodash";
+import { Param, PipeTransform, Type } from '@nestjs/common';
+import { ApiParamOptions } from '@nestjs/swagger';
+import { DECORATORS } from '@/constant/swagger.constants';
+import _ from 'lodash';
 const { isString, omit } = _;
 
 type SwaggerEnumType = object | (string | number)[];
@@ -9,7 +9,7 @@ type SwaggerEnumType = object | (string | number)[];
 export function getEnumValues(
   enumType: SwaggerEnumType | (() => SwaggerEnumType),
 ): string[] | number[] {
-  if (typeof enumType === "function") {
+  if (typeof enumType === 'function') {
     return getEnumValues(enumType());
   }
 
@@ -17,12 +17,12 @@ export function getEnumValues(
     return enumType as string[];
   }
 
-  if (typeof enumType !== "object") {
+  if (typeof enumType !== 'object') {
     return [];
   }
 
   const numericValues = Object.values(enumType)
-    .filter((value) => typeof value === "number")
+    .filter((value) => typeof value === 'number')
     .map((value) => value.toString());
 
   return Object.keys(enumType)
@@ -30,9 +30,9 @@ export function getEnumValues(
     .map((key) => enumType[key]);
 }
 
-export function getEnumType(values: (string | number)[]): "string" | "number" {
+export function getEnumType(values: (string | number)[]): 'string' | 'number' {
   const hasString = values.filter(isString).length > 0;
-  return hasString ? "string" : "number";
+  return hasString ? 'string' : 'number';
 }
 
 export function addEnumSchema(
@@ -55,7 +55,7 @@ export function addEnumSchema(
   }
 }
 
-export const isEnumDefined = <T extends Partial<Record<"enum", unknown>>>(
+export const isEnumDefined = <T extends Partial<Record<'enum', unknown>>>(
   obj: Record<string, unknown>,
 ): obj is T => Boolean(obj.enum);
 
@@ -79,9 +79,9 @@ export function PathParam(
 
     const param = {
       name: property,
-      in: "path",
+      in: 'path',
       required: true,
-      ...omit(paramOptions, "enum"),
+      ...omit(paramOptions, 'enum'),
     };
 
     if (isEnumDefined(paramOptions)) {

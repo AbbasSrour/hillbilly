@@ -10,5 +10,4 @@ export const permissionKeys = Object.values(permissions)
   .flat()
   .map((permission) => permission.code);
 
-export type PermissionKeys =
-  (typeof permissions)[keyof typeof permissions][number]['code'];
+export type PermissionKeys = (typeof permissions)[keyof typeof permissions][number]['code'];

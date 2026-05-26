@@ -1,5 +1,5 @@
-import { Separator } from "@hillbilly/ui/core/separator";
-import type { ReactNode } from "react";
+import { Separator } from '@hillbilly/ui/core/separator';
+import type { ReactNode } from 'react';
 
 interface SectionHeaderProps {
   title: string;

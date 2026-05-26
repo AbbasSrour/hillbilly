@@ -4,8 +4,8 @@ import {
   QueryClient,
   QueryClientConfig,
   isServer,
-} from "@tanstack/react-query";
-import { cache } from "react";
+} from '@tanstack/react-query';
+import { cache } from 'react';
 
 /**
  * Creates a QueryClient with optional custom cache handlers.

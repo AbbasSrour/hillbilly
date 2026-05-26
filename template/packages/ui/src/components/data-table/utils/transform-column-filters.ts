@@ -1,4 +1,4 @@
-import { ColumnFiltersState } from "@tanstack/react-table";
+import { ColumnFiltersState } from '@tanstack/react-table';
 
 export const transformColumnFilters = (columnFilters: ColumnFiltersState) => {
   return columnFilters.reduce<Record<string, unknown>>((acc, filter) => {

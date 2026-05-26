@@ -1,18 +1,18 @@
-import { applyDecorators, type HttpException, type Type } from "@nestjs/common";
-import { ApiExtraModels, ApiProperty, getSchemaPath } from "@nestjs/swagger";
+import { applyDecorators, type HttpException, type Type } from '@nestjs/common';
+import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
-import { ErrorDto } from "@/abstract/dto/error.dto";
+import { ErrorDto } from '@/abstract/dto/error.dto';
 
-const DECORATORS_API_RESPONSE = "swagger/apiResponse";
+const DECORATORS_API_RESPONSE = 'swagger/apiResponse';
 
 const STATUS_DESCRIPTIONS: Record<number, string> = {
-  400: "Bad Request",
-  401: "Unauthorized",
-  403: "Forbidden",
-  404: "Not Found",
-  409: "Conflict",
-  422: "Unprocessable Entity",
-  500: "Internal Server Error",
+  400: 'Bad Request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not Found',
+  409: 'Conflict',
+  422: 'Unprocessable Entity',
+  500: 'Internal Server Error',
 };
 
 const errorDtoCache = new Map<string, Type<ErrorDto>>();
@@ -32,26 +32,26 @@ function getOrCreateErrorDto(ExceptionClass: Type<HttpException>): Type<ErrorDto
 
   class SpecificErrorDto extends ErrorDto {
     @ApiProperty({
-      type: "number",
+      type: 'number',
       enum: [status],
     })
     declare statusCode: number;
 
     @ApiProperty({
-      type: "string",
+      type: 'string',
       enum: [instance.message],
     })
     declare message: string;
 
     @ApiProperty({
-      type: "string",
+      type: 'string',
       enum: [error],
     })
     declare error: string;
   }
 
   // Rename the class to match the exception (critical for Swagger schema naming)
-  Object.defineProperty(SpecificErrorDto, "name", { value: className });
+  Object.defineProperty(SpecificErrorDto, 'name', { value: className });
 
   errorDtoCache.set(className, SpecificErrorDto);
   return SpecificErrorDto;
@@ -77,7 +77,7 @@ export function ApiErrorResponse(...exceptions: Type<HttpException>[]): MethodDe
           }
           statusMap.get(status)!.push(DtoClass);
         } catch (e) {
-          console.warn("Could not extract metadata", e);
+          console.warn('Could not extract metadata', e);
         }
       }
 
@@ -93,7 +93,7 @@ export function ApiErrorResponse(...exceptions: Type<HttpException>[]): MethodDe
 
         if (existingResponse) {
           const content = existingResponse.content || {};
-          const jsonContent = content["application/json"] || {};
+          const jsonContent = content['application/json'] || {};
           const schema = jsonContent.schema || {};
 
           // biome-ignore lint/suspicious/noExplicitAny: Swagger metadata is untyped
@@ -109,10 +109,10 @@ export function ApiErrorResponse(...exceptions: Type<HttpException>[]): MethodDe
 
           existingResponses[status.toString()] = {
             // Use existing description or default to a generic one
-            description: existingResponse.description || "Error",
+            description: existingResponse.description || 'Error',
             content: {
               ...content,
-              "application/json": {
+              'application/json': {
                 ...jsonContent,
                 schema: {
                   oneOf: combinedOneOf,
@@ -122,9 +122,9 @@ export function ApiErrorResponse(...exceptions: Type<HttpException>[]): MethodDe
           };
         } else {
           existingResponses[status.toString()] = {
-            description: STATUS_DESCRIPTIONS[status] || "Error",
+            description: STATUS_DESCRIPTIONS[status] || 'Error',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
                   oneOf: newSchemas,
                 },

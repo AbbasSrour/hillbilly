@@ -1,6 +1,6 @@
-import { useNavigate, useSearch } from "@tanstack/react-router";
-import type { PaginationState } from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import type { PaginationState } from '@tanstack/react-table';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 interface UsePaginationOptions {
   onPaginationChange?: (pagination: PaginationState) => void;
@@ -53,7 +53,7 @@ export const usePagination = (options: UsePaginationOptions = {}, dependencies: 
   const setPagination = useCallback(
     (updater: PaginationState | ((state: PaginationState) => PaginationState)) => {
       const currentState = { pageIndex, pageSize };
-      const newPagination = typeof updater === "function" ? updater(currentState) : updater;
+      const newPagination = typeof updater === 'function' ? updater(currentState) : updater;
 
       // Convert 0-based pageIndex back to a 1-based page for URL
       const urlPage = newPagination.pageIndex + 1;

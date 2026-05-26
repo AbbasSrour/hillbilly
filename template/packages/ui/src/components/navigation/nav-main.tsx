@@ -1,11 +1,11 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from 'lucide-react';
 
-import { useNavigation } from "@hillbilly/ui/context/navigation";
+import { useNavigation } from '@hillbilly/ui/context/navigation';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@hillbilly/ui/core/collapsible";
+} from '@hillbilly/ui/core/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,7 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@hillbilly/ui/core/sidebar";
+} from '@hillbilly/ui/core/sidebar';
 
 export function NavMain() {
   const { main } = useNavigation();

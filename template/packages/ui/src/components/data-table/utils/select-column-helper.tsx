@@ -1,31 +1,31 @@
-import { type RowData, createColumnHelper } from "@tanstack/react-table";
-import { Checkbox } from "@hillbilly/ui/core/checkbox";
-import { cn } from "@hillbilly/ui/lib/utils";
+import { type RowData, createColumnHelper } from '@tanstack/react-table';
+import { Checkbox } from '@hillbilly/ui/core/checkbox';
+import { cn } from '@hillbilly/ui/lib/utils';
 
 interface SelectColumnOptions {
   className?: string;
   checkboxClassName?: string;
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 }
 
 export function createSelectColumn<TData extends RowData>(options: SelectColumnOptions = {}) {
   const columnHelper = createColumnHelper<TData>();
 
-  const { className, checkboxClassName = "translate-y-[2px]", position = "left" } = options;
+  const { className, checkboxClassName = 'translate-y-[2px]', position = 'left' } = options;
 
   const defaultClassName = cn(
-    "sticky md:table-cell z-10",
-    position === "left" ? "left-0 rounded-tl" : "right-0 rounded-tr",
-    "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
+    'sticky md:table-cell z-10',
+    position === 'left' ? 'left-0 rounded-tl' : 'right-0 rounded-tr',
+    'bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     className,
   );
 
   return columnHelper.display({
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"

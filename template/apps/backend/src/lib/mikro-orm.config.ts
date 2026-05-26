@@ -41,14 +41,8 @@ const config: Options = {
 
   // Entity configuration
   entityRepository: ExtendedEntityRepository,
-  entities: [
-    './dist/module/**/*.entity.js',
-    './dist/module/**/entity/*.entity.js',
-  ],
-  entitiesTs: [
-    './src/module/**/*.entity.ts',
-    './src/module/**/entity/*.entity.ts',
-  ],
+  entities: ['./dist/module/**/*.entity.js', './dist/module/**/entity/*.entity.js'],
+  entitiesTs: ['./src/module/**/*.entity.ts', './src/module/**/entity/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
 
   // Extensions and tools

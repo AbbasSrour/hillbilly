@@ -1,15 +1,15 @@
-import { Type } from "@nestjs/common";
-import { UseInterceptors, applyDecorators } from "@nestjs/common";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { ApiBody, ApiConsumes, ApiExtraModels, getSchemaPath } from "@nestjs/swagger";
-import type { ReferenceObject, SchemaObject } from "@/constant/swagger.constants";
+import { Type } from '@nestjs/common';
+import { UseInterceptors, applyDecorators } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
+import type { ReferenceObject, SchemaObject } from '@/constant/swagger.constants';
 
-import { IApiFile } from "@/interface/IApiFile";
-import _ from "lodash";
-import type { Many } from "lodash";
+import { IApiFile } from '@/interface/IApiFile';
+import _ from 'lodash';
+import type { Many } from 'lodash';
 const { castArray, mapValues } = _;
 
-const PARAMTYPES_METADATA = "design:paramtypes";
+const PARAMTYPES_METADATA = 'design:paramtypes';
 
 function reverseObjectKeys(originalObject: Record<string, unknown>): Record<string, unknown> {
   const reversedObject = {};
@@ -22,7 +22,7 @@ function reverseObjectKeys(originalObject: Record<string, unknown>): Record<stri
   return reversedObject;
 }
 
-const ROUTE_ARGS_METADATA = "__routeArguments__";
+const ROUTE_ARGS_METADATA = '__routeArguments__';
 
 function explore<K extends string, V>(instance: Record<K, V>, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
@@ -42,7 +42,7 @@ function explore<K extends string, V>(instance: Record<K, V>, propertyKey: strin
   }));
 
   for (const [key, value] of Object.entries(parametersWithType)) {
-    const keyPair = key.split(":");
+    const keyPair = key.split(':');
 
     if (Number(keyPair[0]) === 3) {
       return value.type;
@@ -67,15 +67,15 @@ function ApiFileDecorator(
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
     const { isRequired = false } = options;
     const fileSchema: SchemaObject = {
-      type: "string",
-      format: "binary",
+      type: 'string',
+      format: 'binary',
     };
     const properties: Record<string, SchemaObject | ReferenceObject> = {};
 
     for (const file of files) {
       properties[file.name] = file.isArray
         ? {
-            type: "array",
+            type: 'array',
             items: fileSchema,
           }
         : fileSchema;
@@ -83,7 +83,7 @@ function ApiFileDecorator(
 
     let schema: SchemaObject = {
       properties,
-      type: "object",
+      type: 'object',
     };
     const body = explore(target, propertyKey);
 
@@ -93,7 +93,7 @@ function ApiFileDecorator(
           {
             $ref: getSchemaPath(body),
           },
-          { properties, type: "object" },
+          { properties, type: 'object' },
         ],
       };
     }
@@ -118,7 +118,7 @@ export function ApiFile(
 
   return applyDecorators(
     RegisterModels(),
-    ApiConsumes("multipart/form-data"),
+    ApiConsumes('multipart/form-data'),
     ApiFileDecorator(filesArray, options),
     ...apiFileInterceptors,
   );

@@ -14,10 +14,7 @@ import { ToolbarSkeleton } from '@hillbilly/ui/components/skeleton/toolbar-skele
 export function UsersListSkeleton() {
   return (
     <Main>
-      <PageHeader
-        title="Users List"
-        description="Manage system users and their information here."
-      >
+      <PageHeader title="Users List" description="Manage system users and their information here.">
         <ButtonSkeleton className="h-9 w-28" />
       </PageHeader>
 

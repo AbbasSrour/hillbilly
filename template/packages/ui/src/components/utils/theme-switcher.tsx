@@ -1,13 +1,13 @@
-import { Button } from "@hillbilly/ui/core/button";
+import { Button } from '@hillbilly/ui/core/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@hillbilly/ui/core/dropdown-menu";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { IconCheck, IconMoon, IconSun } from "@tabler/icons-react";
-import { useTheme } from "better-themes";
+} from '@hillbilly/ui/core/dropdown-menu';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { IconCheck, IconMoon, IconSun } from '@tabler/icons-react';
+import { useTheme } from 'better-themes';
 
 export function ThemeSwitch() {
   const { setTheme, theme } = useTheme();
@@ -22,17 +22,17 @@ export function ThemeSwitch() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setTheme('light')}>
           Light
-          <IconCheck size={14} className={cn("ml-auto", theme !== "light" && "hidden")} />
+          <IconCheck size={14} className={cn('ml-auto', theme !== 'light' && 'hidden')} />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
           Dark
-          <IconCheck size={14} className={cn("ml-auto", theme !== "dark" && "hidden")} />
+          <IconCheck size={14} className={cn('ml-auto', theme !== 'dark' && 'hidden')} />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
           System
-          <IconCheck size={14} className={cn("ml-auto", theme !== "system" && "hidden")} />
+          <IconCheck size={14} className={cn('ml-auto', theme !== 'system' && 'hidden')} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

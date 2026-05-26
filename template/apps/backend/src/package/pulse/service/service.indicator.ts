@@ -1,14 +1,14 @@
-import { Inject, Injectable, Optional } from "@nestjs/common";
-import type { ClientProxy } from "@nestjs/microservices";
-import { HealthCheckError, HealthIndicator, type HealthIndicatorResult } from "@nestjs/terminus";
-import { firstValueFrom } from "rxjs";
-import { timeout } from "rxjs/operators";
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import type { ClientProxy } from '@nestjs/microservices';
+import { HealthCheckError, HealthIndicator, type HealthIndicatorResult } from '@nestjs/terminus';
+import { firstValueFrom } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Injectable()
 export class ServiceHealthIndicator extends HealthIndicator {
   constructor(
     @Optional()
-    @Inject("NATS_SERVICE")
+    @Inject('NATS_SERVICE')
     private readonly clientProxy?: ClientProxy,
   ) {
     super();
@@ -19,7 +19,7 @@ export class ServiceHealthIndicator extends HealthIndicator {
       if (!this.clientProxy) {
         return {
           [eventName]: {
-            status: "down",
+            status: 'down',
           },
         };
       }

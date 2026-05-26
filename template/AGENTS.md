@@ -40,16 +40,16 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 
 ## Quick Commands
 
-| What                      | Command                              |
-| ------------------------- | ------------------------------------ |
-| Install deps              | `vp install`                         |
-| Run all checks            | `vp check` (or `vp check --fix`)     |
-| Run all tests             | `vp run -r test`                     |
-| Run a single test file    | `vitest run <path>` from package dir |
-| Build all packages/apps   | `vp run -r build`                    |
-| Dev mode                  | `vp run`                             |
-| Dead code / unused deps   | `knip`                               |
-| Release                   | `release-it`                         |
+| What                    | Command                              |
+| ----------------------- | ------------------------------------ |
+| Install deps            | `vp install`                         |
+| Run all checks          | `vp check` (or `vp check --fix`)     |
+| Run all tests           | `vp run -r test`                     |
+| Run a single test file  | `vitest run <path>` from package dir |
+| Build all packages/apps | `vp run -r build`                    |
+| Dev mode                | `vp run`                             |
+| Dead code / unused deps | `knip`                               |
+| Release                 | `release-it`                         |
 
 ## Package Manager
 

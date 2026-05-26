@@ -9,12 +9,7 @@ import { MiddlewareConsumer, NestModule, OnModuleInit } from '@nestjs/common';
 import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ClsModule } from 'nestjs-cls';
-import {
-  AcceptLanguageResolver,
-  HeaderResolver,
-  I18nModule,
-  QueryResolver,
-} from 'nestjs-i18n';
+import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { MaintenanceMiddleware } from '@/middleware/maintenance.middleware';
 
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -56,10 +51,7 @@ import { PulseModule } from '@/package/pulse/pulse.module';
           path: path.join(import.meta.dirname, 'i18n/locale'),
           watch: configService.isDevelopment,
         },
-        typesOutputPath: path.join(
-          import.meta.dirname,
-          './i18n/generated/i18n.generated',
-        ),
+        typesOutputPath: path.join(import.meta.dirname, './i18n/generated/i18n.generated'),
       }),
       resolvers: [
         {
@@ -117,8 +109,6 @@ export class AppModule implements NestModule, OnModuleInit {
   async onModuleInit(): Promise<void> {}
 
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(MaintenanceMiddleware, MikroOrmMiddleware)
-      .forRoutes('*path');
+    consumer.apply(MaintenanceMiddleware, MikroOrmMiddleware).forRoutes('*path');
   }
 }

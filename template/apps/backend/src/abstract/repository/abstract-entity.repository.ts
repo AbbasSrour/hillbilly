@@ -1,8 +1,8 @@
-import type { AnyEntity, EntityManager, QueryBuilder } from "@mikro-orm/sql";
-import { EntityRepository } from "@mikro-orm/sql";
+import type { AnyEntity, EntityManager, QueryBuilder } from '@mikro-orm/sql';
+import { EntityRepository } from '@mikro-orm/sql';
 
-import { PageMetaDto } from "../dto/page-meta.dto";
-import type { PageOptionsDto } from "../dto/page-options.dto";
+import { PageMetaDto } from '../dto/page-meta.dto';
+import type { PageOptionsDto } from '../dto/page-options.dto';
 
 export class ExtendedEntityRepository<T extends object> extends EntityRepository<T> {
   persist(entity: AnyEntity | AnyEntity[]): EntityManager {

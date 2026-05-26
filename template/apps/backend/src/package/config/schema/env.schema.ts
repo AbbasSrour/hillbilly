@@ -2,15 +2,12 @@ import { z } from 'zod';
 
 const baseSchema = z.object({
   // Environment
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   // Application
   DOMAIN: z.url(),
   PORT: z.coerce.number().int().min(0).max(65535).default(3000),
   FALLBACK_LANGUAGE: z.string().default('en_US'),
-  ACCESS_CONTROL_MODEL: z.string().optional(),
   API_VERSION: z.string(),
 
   // Database
@@ -61,7 +58,7 @@ const baseSchema = z.object({
 
   // Better Auth
   BETTER_AUTH_SECRET: z.string(),
-  BETTER_AUTH_URL: z.string().url(),
+  BETTER_AUTH_URL: z.url(),
 
   // Security
   TRUSTED_ORIGINS: z
@@ -101,11 +98,7 @@ export const envValidationSchema = baseSchema
   .refine(
     (data) => {
       if (data.AWS_S3_ENABLED) {
-        return (
-          data.AWS_S3_BUCKET_REGION &&
-          data.AWS_S3_API_VERSION &&
-          data.AWS_S3_BUCKET_NAME
-        );
+        return data.AWS_S3_BUCKET_REGION && data.AWS_S3_API_VERSION && data.AWS_S3_BUCKET_NAME;
       }
       return true;
     },
@@ -132,10 +125,8 @@ export const envValidationSchema = baseSchema
     {
       error: (issue) => {
         const data = issue.input as z.infer<typeof baseSchema>;
-        if (!data.NATS_HOST)
-          return 'NATS_HOST is required when NATS_ENABLED is true';
-        if (data.NATS_PORT === undefined)
-          return 'NATS_PORT is required when NATS_ENABLED is true';
+        if (!data.NATS_HOST) return 'NATS_HOST is required when NATS_ENABLED is true';
+        if (data.NATS_PORT === undefined) return 'NATS_PORT is required when NATS_ENABLED is true';
         return 'NATS configuration is invalid';
       },
     },
@@ -157,16 +148,12 @@ export const envValidationSchema = baseSchema
     {
       error: (issue) => {
         const data = issue.input as z.infer<typeof baseSchema>;
-        if (!data.SMTP_HOST)
-          return 'SMTP_HOST is required when SMTP_ENABLED is true';
-        if (data.SMTP_PORT === undefined)
-          return 'SMTP_PORT is required when SMTP_ENABLED is true';
+        if (!data.SMTP_HOST) return 'SMTP_HOST is required when SMTP_ENABLED is true';
+        if (data.SMTP_PORT === undefined) return 'SMTP_PORT is required when SMTP_ENABLED is true';
         if (data.SMTP_SECURE === undefined)
           return 'SMTP_SECURE is required when SMTP_ENABLED is true';
-        if (!data.SMTP_USER)
-          return 'SMTP_USER is required when SMTP_ENABLED is true';
-        if (!data.SMTP_PASSWORD)
-          return 'SMTP_PASSWORD is required when SMTP_ENABLED is true';
+        if (!data.SMTP_USER) return 'SMTP_USER is required when SMTP_ENABLED is true';
+        if (!data.SMTP_PASSWORD) return 'SMTP_PASSWORD is required when SMTP_ENABLED is true';
         if (!data.SMTP_DEFAULT_FROM)
           return 'SMTP_DEFAULT_FROM is required when SMTP_ENABLED is true';
         return 'SMTP configuration is invalid';
@@ -176,11 +163,7 @@ export const envValidationSchema = baseSchema
   .refine(
     (data) => {
       if (data.TWILIO_ENABLED) {
-        return (
-          data.TWILIO_ACCOUNT_SID &&
-          data.TWILIO_AUTH_TOKEN &&
-          data.TWILIO_VERIFY_SERVICE_SID
-        );
+        return data.TWILIO_ACCOUNT_SID && data.TWILIO_AUTH_TOKEN && data.TWILIO_VERIFY_SERVICE_SID;
       }
       return true;
     },

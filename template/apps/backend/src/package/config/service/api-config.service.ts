@@ -9,8 +9,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import _ from 'lodash';
-
-const { isNil } = _;
 import parse from 'parse-duration';
 
 import type { EnvironmentVariables } from '../schema/env.schema';
@@ -21,9 +19,7 @@ type Units = keyof typeof unit;
 
 @Injectable()
 export class ApiConfigService {
-  constructor(
-    private readonly configService: ConfigService<EnvironmentVariables, true>,
-  ) {}
+  constructor(private readonly configService: ConfigService<EnvironmentVariables, true>) {}
 
   get isDevelopment(): boolean {
     return this.nodeEnv === 'development';
@@ -41,7 +37,10 @@ export class ApiConfigService {
     const domain = this.getString('DOMAIN');
     try {
       const { hostname } = new URL(domain);
-      return hostname.split('.')[0]!.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      return hostname
+        .split('.')[0]!
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
     } catch {
       return domain;
     }
@@ -64,9 +63,7 @@ export class ApiConfigService {
   }
 
   get mikroOrm(): MikroOrmModuleSyncOptions {
-    const connectionType = this.getString('DB_CONNECTION_TYPE') as
-      | 'socket'
-      | 'tcp';
+    const connectionType = this.getString('DB_CONNECTION_TYPE') as 'socket' | 'tcp';
 
     const connection =
       connectionType === 'tcp'
@@ -95,14 +92,8 @@ export class ApiConfigService {
       // Entity configuration
       entityRepository: ExtendedEntityRepository,
       autoLoadEntities: false,
-      entities: [
-        './dist/module/**/*.entity.js',
-        './dist/module/**/entity/*.entity.js',
-      ],
-      entitiesTs: [
-        './src/module/**/*.entity.ts',
-        './src/module/**/entity/*.entity.ts',
-      ],
+      entities: ['./dist/module/**/*.entity.js', './dist/module/**/entity/*.entity.js'],
+      entitiesTs: ['./src/module/**/*.entity.ts', './src/module/**/entity/*.entity.ts'],
       metadataProvider: TsMorphMetadataProvider,
 
       // Extensions and tools
@@ -175,9 +166,7 @@ export class ApiConfigService {
       publicKey: this.getString('JWT_PUBLIC_KEY'),
       encryptionKey: this.getString('ENCRYPTION_KEY'),
       accessTokenExpirationTime: this.getNumber('ACCESS_TOKEN_EXPIRATION_TIME'),
-      refreshTokenExpirationTime: this.getNumber(
-        'REFRESH_TOKEN_EXPIRATION_TIME',
-      ),
+      refreshTokenExpirationTime: this.getNumber('REFRESH_TOKEN_EXPIRATION_TIME'),
     };
   }
 
@@ -219,13 +208,11 @@ export class ApiConfigService {
     return this.get('TRUSTED_ORIGINS') as string[];
   }
 
-  private get<K extends keyof EnvironmentVariables>(
-    key: K,
-  ): EnvironmentVariables[K] {
+  private get<K extends keyof EnvironmentVariables>(key: K): EnvironmentVariables[K] {
     const value = this.configService.get(key, { infer: true });
 
     // probably we should call process.exit() too to avoid locking the service
-    if (isNil(value)) {
+    if (_.isNil(value)) {
       throw new TypeError(`${String(key)} environment variable does not set`);
     }
 
@@ -242,17 +229,12 @@ export class ApiConfigService {
     throw new Error(`${String(key)} environment variable is not a number`);
   }
 
-  private getDuration<K extends keyof EnvironmentVariables>(
-    key: K,
-    format?: Units,
-  ): number {
+  private getDuration<K extends keyof EnvironmentVariables>(key: K, format?: Units): number {
     const value = this.get(key);
     const duration = parse(String(value), format as string);
 
     if (!duration) {
-      throw new Error(
-        `${String(key)} environment variable is not a valid duration`,
-      );
+      throw new Error(`${String(key)} environment variable is not a valid duration`);
     }
 
     return duration;

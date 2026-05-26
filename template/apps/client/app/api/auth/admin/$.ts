@@ -9,14 +9,12 @@ export const Route = createFileRoute('/api/auth/admin/$')({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const apiUrl =
-          env.API_URL || process.env.API_URL || 'http://localhost:4000';
+        const apiUrl = env.API_URL || process.env.API_URL || 'http://localhost:4000';
         const backendUrl = `${apiUrl}${url.pathname}${url.search}`;
 
         // Forward only specific headers
         const forwardHeaders: Record<string, string> = {
-          'content-type':
-            request.headers.get('content-type') || 'application/json',
+          'content-type': request.headers.get('content-type') || 'application/json',
         };
 
         const originHeader = request.headers.get('origin');
@@ -47,14 +45,12 @@ export const Route = createFileRoute('/api/auth/admin/$')({
       },
       POST: async ({ request }) => {
         const url = new URL(request.url);
-        const apiUrl =
-          env.API_URL || process.env.API_URL || 'http://localhost:4000';
+        const apiUrl = env.API_URL || process.env.API_URL || 'http://localhost:4000';
         const backendUrl = `${apiUrl}${url.pathname}${url.search}`;
 
         // Forward only specific headers
         const forwardHeaders: Record<string, string> = {
-          'content-type':
-            request.headers.get('content-type') || 'application/json',
+          'content-type': request.headers.get('content-type') || 'application/json',
         };
 
         const originHeader = request.headers.get('origin');

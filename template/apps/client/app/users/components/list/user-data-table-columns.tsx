@@ -11,10 +11,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { userRoleTypes } from '@/app/users/constants/user-role-types.ts';
 import { userStatusType } from '@/app/users/constants/user-status-type.ts';
-import {
-  useDeleteUser,
-  useSendEmailVerification,
-} from '@/app/users/hooks/api/users.queries.ts';
+import { useDeleteUser, useSendEmailVerification } from '@/app/users/hooks/api/users.queries.ts';
 import { userRoleFilter } from '@/app/users/utils/user-role-filter';
 import { userStatusFilter } from '@/app/users/utils/user-status-filter';
 
@@ -26,22 +23,16 @@ export const userDataTableColumns = [
   // --------------------> Name Column <-------------------- //
   columnHelper.accessor('name', {
     id: 'name',
-    header: ({ column }) => (
-      <DataTableColumnHeader title={'User'} column={column} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader title={'User'} column={column} />,
     cell: ({ cell }) => (
       <div className="flex items-center gap-3">
         <Avatar className="h-8 w-8">
           <AvatarImage src={cell.row.original.image} alt={cell.getValue()} />
-          <AvatarFallback>
-            {cell.getValue().slice(0, 2).toUpperCase()}
-          </AvatarFallback>
+          <AvatarFallback>{cell.getValue().slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <span className="font-medium text-foreground">{cell.getValue()}</span>
-          <span className="text-xs text-muted-foreground">
-            {cell.row.original.email}
-          </span>
+          <span className="text-xs text-muted-foreground">{cell.row.original.email}</span>
         </div>
       </div>
     ),
@@ -49,9 +40,7 @@ export const userDataTableColumns = [
   }),
   // --------------------> Phone Column <------------------- //
   columnHelper.accessor('phoneNumber', {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Phone Number" />,
     cell: ({ cell }) => <DataTablePhoneCell value={cell.getValue()} />,
     enableSorting: true,
     enableHiding: false,
@@ -59,9 +48,7 @@ export const userDataTableColumns = [
   // --------------------> Role Column <------------------- //
   columnHelper.accessor('role', {
     id: userRoleFilter.id,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Role" />,
     cell: ({ row }) => (
       <DataTableIconLabelCell
         value={row.original.role}
@@ -75,12 +62,8 @@ export const userDataTableColumns = [
   // --------------------> Status Column <------------------- //
   columnHelper.accessor(userStatusFilter.getValue, {
     id: userStatusFilter.id,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ cell }) => (
-      <DataTableBadgeCell value={cell.getValue()} options={userStatusType} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ cell }) => <DataTableBadgeCell value={cell.getValue()} options={userStatusType} />,
     enableHiding: true,
     enableSorting: false,
     enableColumnFilter: true,

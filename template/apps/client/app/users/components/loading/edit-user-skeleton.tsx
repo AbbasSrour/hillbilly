@@ -37,8 +37,8 @@ export function EditUserSkeleton() {
           <FormSectionHeader>
             <FormSectionTitle>Personal Information</FormSectionTitle>
             <FormSectionDescription>
-              Enter the user's basic personal information including their name,
-              email address, and contact details.
+              Enter the user's basic personal information including their name, email address, and
+              contact details.
             </FormSectionDescription>
           </FormSectionHeader>
 
@@ -74,8 +74,8 @@ export function EditUserSkeleton() {
           <FormSectionHeader>
             <FormSectionTitle>Account Information</FormSectionTitle>
             <FormSectionDescription>
-              Set up user access credentials and permissions by selecting a
-              role and creating a secure password.
+              Set up user access credentials and permissions by selecting a role and creating a
+              secure password.
             </FormSectionDescription>
           </FormSectionHeader>
 

@@ -14,8 +14,7 @@ const passwordSchema = z
     message: 'Password must contain at least one special character (!#$%&*@^)',
   })
   .regex(/^[\d!#$%&*@A-Z^a-z]*$/, {
-    message:
-      'Password can only contain letters, numbers, and these special characters: !#$%&*@^',
+    message: 'Password can only contain letters, numbers, and these special characters: !#$%&*@^',
   });
 
 const baseUserFormSchema = z.object({
@@ -28,11 +27,7 @@ const baseUserFormSchema = z.object({
   passwordConfirmation: z.string().optional(),
 });
 
-export const buildUserFormSchema = ({
-  requirePassword,
-}: {
-  requirePassword: boolean;
-}) =>
+export const buildUserFormSchema = ({ requirePassword }: { requirePassword: boolean }) =>
   baseUserFormSchema.superRefine((data, ctx) => {
     if (requirePassword && !data.password) {
       ctx.addIssue({

@@ -12,18 +12,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: 'read'
+      id-token: 'write'
 
     strategy:
       matrix:
         include:
-          - service: [[ project_name ]]-web-prod
+          - service: ticklet-web-prod
             dockerfile: apps/web/Dockerfile
-            build_arg: "NEXT_PUBLIC_API_URL=none"
-          - service: [[ project_name ]]-backend-prod
+            build_arg: 'NEXT_PUBLIC_API_URL=none'
+          - service: ticklet-backend-prod
             dockerfile: apps/backend/Dockerfile
-            build_arg: ""
+            build_arg: ''
 
     steps:
       - name: Checkout
@@ -32,7 +32,7 @@ jobs:
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: "${{ secrets.GCP_SECRET }}"
+          credentials_json: '${{ secrets.GCP_SECRET }}'
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2

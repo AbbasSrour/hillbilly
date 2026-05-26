@@ -11,12 +11,7 @@ import {
   ValidationPipe,
   Version,
 } from '@nestjs/common';
-import {
-  ApiCreatedResponse,
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '@/abstract/dto/page.dto';
 import { RoleType } from '@constant/role-type.constant';
@@ -61,11 +56,7 @@ export class UserController {
     filtersDto: UserFiltersDto,
     @AuthUser() user: UserEntity,
   ): Promise<PageDto<UserDto>> {
-    const [items, pageMetaDto] = await this.userService.getUsers(
-      pageOptionsDto,
-      filtersDto,
-      user,
-    );
+    const [items, pageMetaDto] = await this.userService.getUsers(pageOptionsDto, filtersDto, user);
 
     return items.toPageDto(pageMetaDto);
   }
@@ -91,9 +82,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @UseLanguageInterceptor()
   async admin(@AuthUser() user: UserEntity) {
-    const translation = await this.translationService.translate(
-      'admin.keywords.admin',
-    );
+    const translation = await this.translationService.translate('admin.keywords.admin');
 
     return {
       text: `${translation} ${user.name}`,
@@ -124,10 +113,7 @@ export class UserController {
     @AuthUser() user: UserEntity,
     @Body() updateCurrentUserDto: UpdateCurrentUserDto,
   ): Promise<UserDto> {
-    const updatedUser = await this.userService.updateCurrentUser(
-      user.id,
-      updateCurrentUserDto,
-    );
+    const updatedUser = await this.userService.updateCurrentUser(user.id, updateCurrentUserDto);
     return updatedUser.toDto();
   }
 

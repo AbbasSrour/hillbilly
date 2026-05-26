@@ -41,11 +41,7 @@ function CreateUserPage() {
 
   return (
     <Main>
-      <PageHeader
-        title="Create User"
-        description="Create a new user account."
-        withSeparator
-      />
+      <PageHeader title="Create User" description="Create a new user account." withSeparator />
       <UserForm />
     </Main>
   );

@@ -1,11 +1,11 @@
-import { Skeleton } from "@hillbilly/ui/core/skeleton";
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { ComponentProps } from "react";
+import { Skeleton } from '@hillbilly/ui/core/skeleton';
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { ComponentProps } from 'react';
 
-export function PaginationSkeleton({ className, ...props }: ComponentProps<"div">) {
+export function PaginationSkeleton({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
-      className={cn("flex items-center justify-between overflow-clip px-2", className)}
+      className={cn('flex items-center justify-between overflow-clip px-2', className)}
       style={{ overflowClipMargin: 1 }}
       {...props}
     >

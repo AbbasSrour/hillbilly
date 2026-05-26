@@ -34,10 +34,7 @@ import {
   type UserFormSchema,
 } from '@/app/users/components/form/user-form-schema.ts';
 import { userRoleTypes } from '@/app/users/constants/user-role-types.ts';
-import {
-  useCreateUser,
-  useUpdateUser,
-} from '@/app/users/hooks/api/users.queries.ts';
+import { useCreateUser, useUpdateUser } from '@/app/users/hooks/api/users.queries.ts';
 import {
   formToCreateUserPayload,
   formToUpdateUserPayload,
@@ -97,17 +94,14 @@ export const UserForm = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        id={formKeyFactory.users.form}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} id={formKeyFactory.users.form}>
         <FormContent>
           <FormSection layout={'vertical'}>
             <FormSectionHeader>
               <FormSectionTitle>Personal Information</FormSectionTitle>
               <FormSectionDescription>
-                Enter the user's basic personal information including their
-                name, email address, and contact details.
+                Enter the user's basic personal information including their name, email address, and
+                contact details.
               </FormSectionDescription>
             </FormSectionHeader>
 
@@ -131,8 +125,8 @@ export const UserForm = ({
             <FormSectionHeader>
               <FormSectionTitle>Account Information</FormSectionTitle>
               <FormSectionDescription>
-                Set up user access credentials and permissions by selecting a
-                role and creating a secure password.
+                Set up user access credentials and permissions by selecting a role and creating a
+                secure password.
               </FormSectionDescription>
             </FormSectionHeader>
 
@@ -227,11 +221,7 @@ const PhoneField = () => {
         <FormItem>
           <FormLabel>Phone</FormLabel>
           <FormControl>
-            <PhoneInput
-              {...field}
-              placeholder={'00 000 000'}
-              defaultCountry={'LB'}
-            />
+            <PhoneInput {...field} placeholder={'00 000 000'} defaultCountry={'LB'} />
           </FormControl>
           <FormMessage />
         </FormItem>

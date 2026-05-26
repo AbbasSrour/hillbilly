@@ -1,13 +1,13 @@
-import { useThrottledCallback } from "@tanstack/react-pacer";
-import { useNavigate, useSearch as useRouterSearch } from "@tanstack/react-router";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useThrottledCallback } from '@tanstack/react-pacer';
+import { useNavigate, useSearch as useRouterSearch } from '@tanstack/react-router';
+import { useDeferredValue, useEffect, useState } from 'react';
 
 export const useSearch = () => {
   const navigate = useNavigate();
 
   const searchParam = useRouterSearch({
     strict: false,
-    select: (state) => (state.search || "") as string,
+    select: (state) => (state.search || '') as string,
   });
   const deferredSearchParam = useDeferredValue(searchParam);
 

@@ -1,6 +1,6 @@
-import { useTopLoader } from "nextjs-toploader";
-import { useEffect } from "react";
-import { Skeleton } from "../../core/skeleton";
+import { useTopLoader } from 'nextjs-toploader';
+import { useEffect } from 'react';
+import { Skeleton } from '../../core/skeleton';
 
 export interface ListLoadingSkeletonProps {
   columns?: number;

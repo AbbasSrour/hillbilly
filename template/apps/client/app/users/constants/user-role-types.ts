@@ -1,7 +1,4 @@
-import {
-  IconShield,
-  IconUserShield,
-} from '@tabler/icons-react';
+import { IconShield, IconUserShield } from '@tabler/icons-react';
 import { Building2Icon, BuildingIcon } from 'lucide-react';
 
 export const userRoleTypes = [

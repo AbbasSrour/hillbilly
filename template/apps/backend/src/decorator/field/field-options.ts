@@ -1,4 +1,4 @@
-import { IFilterFieldOptions } from "@/decorator/field/filter-field.decorator";
+import { IFilterFieldOptions } from '@/decorator/field/filter-field.decorator';
 
 export interface IFieldOptions {
   each?: boolean;

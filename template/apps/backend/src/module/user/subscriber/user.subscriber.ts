@@ -23,8 +23,7 @@ export class UserSubscriber implements EventSubscriber<UserEntity> {
       const changedPassword = changeSet.payload.password;
 
       if (changedPassword) {
-        changeSet.entity.password =
-          GeneratorProvider.generateHash(changedPassword);
+        changeSet.entity.password = GeneratorProvider.generateHash(changedPassword);
         args.uow.recomputeSingleChangeSet(changeSet.entity);
       }
     }

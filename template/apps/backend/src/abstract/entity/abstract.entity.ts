@@ -1,11 +1,11 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-import type { Collection, Opt } from "@mikro-orm/core";
-import { PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
+import { AsyncLocalStorage } from 'node:async_hooks';
+import type { Collection, Opt } from '@mikro-orm/core';
+import { PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
 
-import type { Constructor } from "@/types/utils";
-import { v4 } from "uuid";
-import type { AbstractDto } from "../dto/abstract.dto";
-import type { AbstractTranslationEntity } from "./abstract-translation.entity";
+import type { Constructor } from '@/types/utils';
+import { v4 } from 'uuid';
+import type { AbstractDto } from '../dto/abstract.dto';
+import type { AbstractTranslationEntity } from './abstract-translation.entity';
 
 /**
  * Type definition for the entity tracking context
@@ -58,21 +58,21 @@ export abstract class AbstractEntity<
   O = unknown,
   Optional = unknown,
 > {
-  @PrimaryKey({ type: "uuid", defaultRaw: "uuid_generate_v4()", onCreate: () => v4() as Uuid })
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()', onCreate: () => v4() as Uuid })
   public readonly id!: Uuid;
 
   @Property({
-    type: "timestamp with time zone",
-    columnType: "timestamp with time zone",
-    defaultRaw: "CURRENT_TIMESTAMP",
+    type: 'timestamp with time zone',
+    columnType: 'timestamp with time zone',
+    defaultRaw: 'CURRENT_TIMESTAMP',
     onCreate: () => new Date(),
   })
   public readonly createdAt: Opt<Date> = new Date();
 
   @Property({
-    type: "timestamp with time zone",
-    columnType: "timestamp with time zone",
-    defaultRaw: "CURRENT_TIMESTAMP",
+    type: 'timestamp with time zone',
+    columnType: 'timestamp with time zone',
+    defaultRaw: 'CURRENT_TIMESTAMP',
     onCreate: () => new Date(),
     onUpdate: () => new Date(),
   })

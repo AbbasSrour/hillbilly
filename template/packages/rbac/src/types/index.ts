@@ -13,10 +13,10 @@ export type {
   InferAdditionalFields,
   RoleWithAdditionalFields,
   PermissionWithAdditionalFields,
-} from "./schema";
-export type { Role as RoleModel } from "./schema";
-export type { AdminPlugin } from "./admin-plugin";
+} from './schema';
+export type { Role as RoleModel } from './schema';
+export type { AdminPlugin } from './admin-plugin';
 
-export * from "./config";
-export * from "./api";
-export * from "./session";
+export * from './config';
+export * from './api';
+export * from './session';

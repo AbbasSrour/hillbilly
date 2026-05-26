@@ -1,7 +1,7 @@
-import { useNavigate, useSearch as useRouterSearch } from "@tanstack/react-router";
-import type { ColumnFiltersState } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef, useState } from "react";
-import type { FilterDefinitionWithHelpers } from "../components/data-table/utils/facets";
+import { useNavigate, useSearch as useRouterSearch } from '@tanstack/react-router';
+import type { ColumnFiltersState } from '@tanstack/react-table';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { FilterDefinitionWithHelpers } from '../components/data-table/utils/facets';
 
 export const useFilters = <
   TFilterDefinitions extends ReadonlyArray<
@@ -53,7 +53,7 @@ export const useFilters = <
 
   const setColumnFilters = useCallback(
     (updater: ColumnFiltersState | ((state: ColumnFiltersState) => ColumnFiltersState)) => {
-      const newFilters = typeof updater === "function" ? updater(columnFilters) : updater;
+      const newFilters = typeof updater === 'function' ? updater(columnFilters) : updater;
 
       setColumnFiltersState(newFilters);
 

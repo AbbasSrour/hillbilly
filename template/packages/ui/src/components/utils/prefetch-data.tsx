@@ -3,9 +3,9 @@ import {
   UseInfiniteQueryOptions,
   UseQueryOptions,
   dehydrate,
-} from "@tanstack/react-query";
-import { ReactNode } from "react";
-import { getQueryClient } from "../../lib/query-client-factory";
+} from '@tanstack/react-query';
+import { ReactNode } from 'react';
+import { getQueryClient } from '../../lib/query-client-factory';
 
 interface PrefetchDataProps {
   children: ReactNode;
@@ -24,7 +24,7 @@ export async function PrefetchData({ children, queries }: PrefetchDataProps) {
   if (queries) {
     await Promise.all(
       queries.map(async (query) => {
-        if ("getNextPageParam" in query && "initialPageParam" in query) {
+        if ('getNextPageParam' in query && 'initialPageParam' in query) {
           await queryClient.prefetchInfiniteQuery(query as UseInfiniteQueryOptions);
         } else {
           await queryClient.prefetchQuery(query as UseQueryOptions);

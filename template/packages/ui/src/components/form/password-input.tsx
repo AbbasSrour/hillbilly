@@ -1,17 +1,17 @@
-import { Input } from "@hillbilly/ui/core/input";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { EyeIcon, EyeOffIcon, LockIcon } from "lucide-react";
-import * as React from "react";
+import { Input } from '@hillbilly/ui/core/input';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { EyeIcon, EyeOffIcon, LockIcon } from 'lucide-react';
+import * as React from 'react';
 
-function PasswordInput({ className, ...props }: Omit<React.ComponentProps<"input">, "type">) {
+function PasswordInput({ className, ...props }: Omit<React.ComponentProps<'input'>, 'type'>) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
     <div className="relative">
       <Input
-        type={showPassword ? "text" : "password"}
+        type={showPassword ? 'text' : 'password'}
         icon={LockIcon}
-        className={cn("pr-9", className)}
+        className={cn('pr-9', className)}
         {...props}
       />
       <button
@@ -25,6 +25,6 @@ function PasswordInput({ className, ...props }: Omit<React.ComponentProps<"input
   );
 }
 
-PasswordInput.displayName = "PasswordInput";
+PasswordInput.displayName = 'PasswordInput';
 
 export { PasswordInput };

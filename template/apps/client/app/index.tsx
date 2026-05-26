@@ -10,9 +10,7 @@ export const Route = createFileRoute('/')({
       throw redirect({ to: '/auth/login' });
     }
 
-    const to = serverContext.user.organizationMember
-      ? '/org/dashboard'
-      : '/admin/dashboard';
+    const to = serverContext.user.organizationMember ? '/org/dashboard' : '/admin/dashboard';
 
     throw redirect({ to });
   },

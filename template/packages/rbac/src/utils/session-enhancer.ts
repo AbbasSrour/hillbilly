@@ -1,7 +1,7 @@
-import type { AuthContext, BetterAuthOptions } from "better-auth";
-import type { RBACPluginConfig } from "../types/config";
-import type { RBACSchemaConfig, Role as RoleModel } from "../types/schema";
-import { getRolePermissions } from "./get-role-permissions";
+import type { AuthContext, BetterAuthOptions } from 'better-auth';
+import type { RBACPluginConfig } from '../types/config';
+import type { RBACSchemaConfig, Role as RoleModel } from '../types/schema';
+import { getRolePermissions } from './get-role-permissions';
 
 /**
  * Context type for session enhancement operations.
@@ -26,7 +26,7 @@ export interface SessionUser {
  * @returns true if the role is a valid non-empty string
  */
 function isValidRole(role: unknown): role is string {
-  return typeof role === "string" && role.trim().length > 0;
+  return typeof role === 'string' && role.trim().length > 0;
 }
 
 /**
@@ -74,10 +74,10 @@ export async function getSessionPermissions(
     // biome-ignore lint/suspicious/noExplicitAny: Adapter model map is not typed
     const adapter = ctx.context.adapter as any;
     const roleModelName =
-      pluginConfig?.schema?.role?.modelName || adapter?.modelMap?.role || "role";
+      pluginConfig?.schema?.role?.modelName || adapter?.modelMap?.role || 'role';
     const role = (await ctx.context.adapter.findOne({
       model: roleModelName,
-      where: [{ field: "name", value: userRoleName }],
+      where: [{ field: 'name', value: userRoleName }],
     })) as RoleModel | null;
 
     // Role not found in database
@@ -96,9 +96,9 @@ export async function getSessionPermissions(
     // Log error using Better Auth logger if available, otherwise use console
     const logger = ctx.context.logger;
     if (logger?.error) {
-      logger.error("[RBAC] Error fetching permissions for session:", error);
+      logger.error('[RBAC] Error fetching permissions for session:', error);
     } else {
-      console.error("[RBAC] Error fetching permissions for session:", error);
+      console.error('[RBAC] Error fetching permissions for session:', error);
     }
 
     // Graceful degradation - return empty array to avoid breaking the app

@@ -1,10 +1,10 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-import { ClassField } from "@/decorator/field/class-field.decorator";
-import { PageMetaDto } from "./page-meta.dto";
+import { ClassField } from '@/decorator/field/class-field.decorator';
+import { PageMetaDto } from './page-meta.dto';
 
 export class PageDto<T> {
-  @ApiProperty({ type: "array", items: { type: "object" } })
+  @ApiProperty({ type: 'array', items: { type: 'object' } })
   readonly data: T[];
 
   @ClassField(() => PageMetaDto)

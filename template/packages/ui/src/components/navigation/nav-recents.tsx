@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@hillbilly/ui/core/dropdown-menu";
+} from '@hillbilly/ui/core/dropdown-menu';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -13,11 +13,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@hillbilly/ui/core/sidebar";
-import { useRecentsStore } from "@hillbilly/ui/store/recents";
-import * as LucideIcons from "lucide-react";
-import { ExternalLink, type LucideIcon, MoreHorizontal, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+} from '@hillbilly/ui/core/sidebar';
+import { useRecentsStore } from '@hillbilly/ui/store/recents';
+import * as LucideIcons from 'lucide-react';
+import { ExternalLink, type LucideIcon, MoreHorizontal, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 const DEFAULT_VISIBLE_RECENTS = 3;
 
@@ -67,8 +67,8 @@ export function NavRecents() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
+                side={isMobile ? 'bottom' : 'right'}
+                align={isMobile ? 'end' : 'start'}
               >
                 <DropdownMenuItem asChild>
                   <a href={item.url} target="_blank" rel="noopener noreferrer">
@@ -91,7 +91,7 @@ export function NavRecents() {
               <MoreHorizontal />
               <span>
                 {showAll
-                  ? "Show Less"
+                  ? 'Show Less'
                   : `${recentsWithIcons.length - DEFAULT_VISIBLE_RECENTS} More`}
               </span>
             </SidebarMenuButton>

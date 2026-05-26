@@ -9,10 +9,7 @@ interface NewUsersInsightProps {
   iconClassName?: string;
 }
 
-export const NewUsersInsight = ({
-  gradientClassName,
-  iconClassName,
-}: NewUsersInsightProps) => {
+export const NewUsersInsight = ({ gradientClassName, iconClassName }: NewUsersInsightProps) => {
   const { searchValue } = useSearch();
 
   const { data } = useQuery(
@@ -29,9 +26,7 @@ export const NewUsersInsight = ({
       value={`+${newUsers}`}
       subtext="Growth"
       icon={IconUser}
-      gradientClassName={
-        gradientClassName ?? 'from-emerald-500/20 to-teal-500/20'
-      }
+      gradientClassName={gradientClassName ?? 'from-emerald-500/20 to-teal-500/20'}
       iconClassName={iconClassName ?? 'text-emerald-500'}
     />
   );

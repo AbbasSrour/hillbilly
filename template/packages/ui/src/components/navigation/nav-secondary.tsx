@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { useNavigation } from "@hillbilly/ui/context/navigation";
+import { useNavigation } from '@hillbilly/ui/context/navigation';
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@hillbilly/ui/core/sidebar";
+} from '@hillbilly/ui/core/sidebar';
 
 export function NavSecondary({ ...props }: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const { secondary } = useNavigation();

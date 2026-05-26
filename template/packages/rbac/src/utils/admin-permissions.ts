@@ -1,73 +1,73 @@
 // User Management Permissions
 const userPermissions = [
   {
-    code: "user.view",
-    name: "View Users",
-    description: "View user details",
+    code: 'user.view',
+    name: 'View Users',
+    description: 'View user details',
   },
   {
-    code: "user.list",
-    name: "List Users",
-    description: "View all users in the system",
+    code: 'user.list',
+    name: 'List Users',
+    description: 'View all users in the system',
   },
   {
-    code: "user.create",
-    name: "Create User",
-    description: "Create new users",
+    code: 'user.create',
+    name: 'Create User',
+    description: 'Create new users',
   },
   {
-    code: "user.update",
-    name: "Update User",
-    description: "Update user details",
+    code: 'user.update',
+    name: 'Update User',
+    description: 'Update user details',
   },
   {
-    code: "user.delete",
-    name: "Delete User",
-    description: "Delete users",
+    code: 'user.delete',
+    name: 'Delete User',
+    description: 'Delete users',
   },
   {
-    code: "user.ban",
-    name: "Ban User",
-    description: "Ban/unban users",
+    code: 'user.ban',
+    name: 'Ban User',
+    description: 'Ban/unban users',
   },
   {
-    code: "user.impersonate",
-    name: "Impersonate User",
-    description: "Impersonate users",
+    code: 'user.impersonate',
+    name: 'Impersonate User',
+    description: 'Impersonate users',
   },
   {
-    code: "user.set-role",
-    name: "Set User Role",
-    description: "Change user roles",
+    code: 'user.set-role',
+    name: 'Set User Role',
+    description: 'Change user roles',
   },
   {
-    code: "user.set-password",
-    name: "Set User Password",
-    description: "Change user passwords",
+    code: 'user.set-password',
+    name: 'Set User Password',
+    description: 'Change user passwords',
   },
 ];
 
 // Session Management Permissions
 const sessionPermissions = [
   {
-    code: "session.view",
-    name: "View Sessions",
-    description: "View user sessions",
+    code: 'session.view',
+    name: 'View Sessions',
+    description: 'View user sessions',
   },
   {
-    code: "session.list",
-    name: "List Sessions",
-    description: "View all user sessions",
+    code: 'session.list',
+    name: 'List Sessions',
+    description: 'View all user sessions',
   },
   {
-    code: "session.revoke",
-    name: "Revoke Session",
-    description: "Revoke sessions",
+    code: 'session.revoke',
+    name: 'Revoke Session',
+    description: 'Revoke sessions',
   },
   {
-    code: "session.delete",
-    name: "Delete Session",
-    description: "Delete user sessions",
+    code: 'session.delete',
+    name: 'Delete Session',
+    description: 'Delete user sessions',
   },
 ];
 

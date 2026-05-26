@@ -1,24 +1,24 @@
 {
-	"projectName": "client",
-	"mode": "file-router",
-	"typescript": true,
-	"packageManager": "bun",
-	"tailwind": true,
-	"addOnOptions": {},
-	"git": true,
-	"version": 1,
-	"framework": "react-cra",
-	"chosenAddOns": [
-		"biome",
-		"nitro",
-		"start",
-		"compiler",
-		"shadcn",
-		"t3env",
-		"table",
-		"better-auth",
-		"tanstack-query",
-		"store",
-		"paraglide"
-	]
+  "projectName": "client",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "bun",
+  "tailwind": true,
+  "addOnOptions": {},
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "nitro",
+    "start",
+    "compiler",
+    "shadcn",
+    "t3env",
+    "table",
+    "better-auth",
+    "tanstack-query",
+    "store",
+    "paraglide"
+  ]
 }

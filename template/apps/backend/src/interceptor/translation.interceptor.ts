@@ -1,10 +1,10 @@
-import type { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
-import { Injectable } from "@nestjs/common";
-import type { Observable } from "rxjs";
-import { mergeMap } from "rxjs/operators";
+import type { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import type { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
-import type { AbstractDto } from "@/abstract/dto/abstract.dto";
-import { TranslationService } from "@/package/translation/service/translation.service";
+import type { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { TranslationService } from '@/package/translation/service/translation.service';
 
 // FIXME: add implementation
 @Injectable()

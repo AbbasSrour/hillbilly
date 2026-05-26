@@ -1,10 +1,6 @@
 import { AbstractEntity } from '@/abstract/entity/abstract.entity';
 import { UseDto } from '@/decorator/use-dto.decorator';
-import {
-  Cascade,
-  type Opt,
-  type Rel,
-} from '@mikro-orm/core';
+import { Cascade, type Opt, type Rel } from '@mikro-orm/core';
 import {
   BeforeCreate,
   BeforeUpdate,
@@ -50,16 +46,12 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Property({ type: 'timestamp with time zone', nullable: true })
   public banExpires?: Opt<Date>;
 
-  @OneToOne(
-    () => UserSettingsEntity,
-    (userSettings) => userSettings.user,
-    {
-      cascade: [Cascade.ALL],
-      deleteRule: 'cascade',
-      eager: false,
-      nullable: true,
-    },
-  )
+  @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user, {
+    cascade: [Cascade.ALL],
+    deleteRule: 'cascade',
+    eager: false,
+    nullable: true,
+  })
   public settings: Opt<Rel<UserSettingsEntity>>;
 
   @BeforeCreate()

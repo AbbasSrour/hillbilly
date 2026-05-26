@@ -1,10 +1,10 @@
-import { useDataTableContext } from "@hillbilly/ui/components/data-table/data-table-provider";
-import { Button } from "@hillbilly/ui/core/button";
-import { Input } from "@hillbilly/ui/core/input";
-import { useSearch } from "@hillbilly/ui/hooks/search";
-import { Cross2Icon } from "@radix-ui/react-icons";
-import { SearchIcon } from "lucide-react";
-import type { PropsWithChildren } from "react";
+import { useDataTableContext } from '@hillbilly/ui/components/data-table/data-table-provider';
+import { Button } from '@hillbilly/ui/core/button';
+import { Input } from '@hillbilly/ui/core/input';
+import { useSearch } from '@hillbilly/ui/hooks/search';
+import { Cross2Icon } from '@radix-ui/react-icons';
+import { SearchIcon } from 'lucide-react';
+import type { PropsWithChildren } from 'react';
 
 interface DataTableToolbarProps {
   placeholder?: string;
@@ -42,7 +42,7 @@ export const DataTableToolbarFilters = ({ children }: PropsWithChildren) => {
     rawSearchValue.length > 0;
 
   const resetFilters = () => {
-    setSearchValue("");
+    setSearchValue('');
     table.resetColumnFilters();
     table.resetSorting();
   };

@@ -17,8 +17,7 @@ export const userRoleFilter = createFilterDefinition({
   multi: false,
   getValue: (user: User) => user.role ?? '',
   toConditions: (columnFilters: ColumnFiltersState): RoleConditions => {
-    const roleFilter = columnFilters.find((filter) => filter.id === 'role')
-      ?.value as string[];
+    const roleFilter = columnFilters.find((filter) => filter.id === 'role')?.value as string[];
     const role = Array.isArray(roleFilter) ? roleFilter?.[0] : roleFilter;
     return role ? { role } : {};
   },

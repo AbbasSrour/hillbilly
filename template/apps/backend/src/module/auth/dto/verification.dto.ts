@@ -15,10 +15,7 @@ export class VerificationDto extends AbstractDto {
   @DateField()
   public readonly expiresAt: Date;
 
-  constructor(
-    verification: VerificationEntity,
-    options?: VerificationDtoOptions,
-  ) {
+  constructor(verification: VerificationEntity, options?: VerificationDtoOptions) {
     super(verification);
     this.identifier = verification.identifier;
     this.value = verification.value;

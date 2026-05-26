@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   app:
     env_file:
@@ -9,7 +9,7 @@ services:
       context: ../..
       dockerfile: apps/backend/Dockerfile
     ports:
-      - "$PORT:$PORT"
+      - '$PORT:$PORT'
     links:
       - mysql
     environment:
@@ -21,26 +21,26 @@ services:
     environment:
       ## Note: all of these environment variables can also be loaded from .env
 
-      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_DATABASE: '${DB_DATABASE}'
       # So you don't have to use root, but you can if you like
-      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_USER: '${DB_USERNAME}'
       # You can use whatever password you like
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
       # Password for root access
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
       # Good for testing, but not production
-      MYSQL_ALLOW_EMPTY_PASSWORD: "${DB_ALLOW_EMPTY_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: '${DB_ALLOW_EMPTY_PASSWORD}'
 
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       # default is:
       #- '3306:3306'
-      - "${DB_PORT}:${DB_PORT}"
+      - '${DB_PORT}:${DB_PORT}'
     expose:
       # Opens port 3306 on the container
       # default is:
       #- '3306'
-      - "${DB_PORT}"
+      - '${DB_PORT}'
       # Where our data will be persisted
     volumes:
       - mysql:/data/mysql

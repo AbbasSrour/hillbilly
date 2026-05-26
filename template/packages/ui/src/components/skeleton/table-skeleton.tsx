@@ -1,4 +1,4 @@
-import { Skeleton } from "@hillbilly/ui/core/skeleton";
+import { Skeleton } from '@hillbilly/ui/core/skeleton';
 import {
   Table,
   TableBody,
@@ -6,11 +6,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@hillbilly/ui/core/table";
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { ComponentProps } from "react";
+} from '@hillbilly/ui/core/table';
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { ComponentProps } from 'react';
 
-interface TableSkeletonProps extends ComponentProps<"div"> {
+interface TableSkeletonProps extends ComponentProps<'div'> {
   columns?: number;
   rows?: number;
   rowClassName?: string;
@@ -26,7 +26,7 @@ export function TableSkeleton({
   const rowKeys = Array.from({ length: rows }, (_, index) => `row-${index}`);
 
   return (
-    <div className={cn("rounded-md border", className)} {...props}>
+    <div className={cn('rounded-md border', className)} {...props}>
       <Table>
         <TableHeader className="sticky top-0 z-10 bg-background">
           <TableRow>

@@ -9,7 +9,7 @@ export {
   updateRoleHandler,
   deleteRoleEndpoint,
   deleteRoleHandler,
-} from "./roles";
+} from './roles';
 
 export {
   listPermissionsEndpoint,
@@ -20,10 +20,10 @@ export {
   assignPermissionHandler,
   removePermissionEndpoint,
   removePermissionHandler,
-} from "./permissions";
+} from './permissions';
 
-export { syncEndpoint, syncHandler } from "./sync";
+export { syncEndpoint, syncHandler } from './sync';
 
-export { checkPermissionEndpoint, checkPermissionHandler } from "./check-permission";
+export { checkPermissionEndpoint, checkPermissionHandler } from './check-permission';
 
-export { userPermissionsEndpoint, userPermissionsHandler } from "./user-permissions";
+export { userPermissionsEndpoint, userPermissionsHandler } from './user-permissions';

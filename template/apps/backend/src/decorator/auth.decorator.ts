@@ -1,13 +1,13 @@
-import { CanActivate, UseGuards, UseInterceptors, applyDecorators } from "@nestjs/common";
-import { ApiBearerAuth } from "@nestjs/swagger";
-import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
+import { CanActivate, UseGuards, UseInterceptors, applyDecorators } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
-import { ApiErrorResponse } from "@/decorator/api-error-response.decorator";
-import { Permissions } from "@/decorator/permission.decorator";
-import { PublicRoute } from "@/decorator/public-route.decorator";
-import { PermissionGuard } from "@/guard/permission.guard";
-import { AuthUserInterceptor } from "@/interceptor/auth-user.interceptor";
-import { UnauthorizedException } from "@/exception/unauthorized.exception";
+import { ApiErrorResponse } from '@/decorator/api-error-response.decorator';
+import { Permissions } from '@/decorator/permission.decorator';
+import { PublicRoute } from '@/decorator/public-route.decorator';
+import { PermissionGuard } from '@/guard/permission.guard';
+import { AuthUserInterceptor } from '@/interceptor/auth-user.interceptor';
+import { UnauthorizedException } from '@/exception/unauthorized.exception';
 
 // biome-ignore lint/complexity/noBannedTypes: Type from NestJs
 type NestGuard = CanActivate | Function;

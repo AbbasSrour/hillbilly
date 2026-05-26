@@ -2,13 +2,13 @@ import {
   FileUpload,
   FileUploadDropzone,
   FileUploadTrigger,
-} from "@hillbilly/ui/components/form/file-upload";
-import { Button } from "@hillbilly/ui/core/button";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { CameraIcon, Loader2Icon } from "lucide-react";
-import { type ComponentProps, type ReactNode, useEffect, useMemo } from "react";
+} from '@hillbilly/ui/components/form/file-upload';
+import { Button } from '@hillbilly/ui/core/button';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { CameraIcon, Loader2Icon } from 'lucide-react';
+import { type ComponentProps, type ReactNode, useEffect, useMemo } from 'react';
 
-type AvatarInputProps = Omit<ComponentProps<typeof FileUpload>, "children"> & {
+type AvatarInputProps = Omit<ComponentProps<typeof FileUpload>, 'children'> & {
   label: string;
   preview: ReactNode;
   uploading?: boolean;
@@ -34,7 +34,7 @@ export function AvatarInput({
   }, [previewUrl]);
 
   return (
-    <FileUpload value={value} className={cn("w-fit", className)} {...props}>
+    <FileUpload value={value} className={cn('w-fit', className)} {...props}>
       <FileUploadDropzone className="size-24 rounded-full border-0 bg-transparent p-0 hover:bg-transparent focus-visible:ring-0">
         <div className="relative size-24 overflow-hidden rounded-full border bg-muted/20">
           {previewUrl ? (

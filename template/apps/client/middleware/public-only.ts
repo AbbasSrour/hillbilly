@@ -6,9 +6,7 @@ export const publicOnly = createMiddleware()
   .middleware([sessionMiddleware])
   .server(async ({ next, context }) => {
     if (context.user) {
-      const to = context.user.organizationMember
-        ? '/org/dashboard'
-        : '/admin/dashboard';
+      const to = context.user.organizationMember ? '/org/dashboard' : '/admin/dashboard';
       throw redirect({ to });
     }
 

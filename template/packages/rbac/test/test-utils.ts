@@ -1,4 +1,4 @@
-import { vi, type Mock } from "vitest";
+import { vi, type Mock } from 'vitest';
 
 export type AdapterArgs = {
   model: string;
@@ -67,7 +67,7 @@ export function createMockAdapter(): MockAdapter {
 export function createMockContext(
   adapter: MockAdapter,
   options: {
-    session?: MockContext["context"]["session"];
+    session?: MockContext['context']['session'];
     body?: Record<string, unknown>;
     query?: Record<string, unknown>;
     params?: Record<string, string>;
@@ -80,8 +80,8 @@ export function createMockContext(
         options.session === undefined
           ? {
               user: {
-                id: "user_id",
-                role: "admin",
+                id: 'user_id',
+                role: 'admin',
               },
             }
           : options.session,

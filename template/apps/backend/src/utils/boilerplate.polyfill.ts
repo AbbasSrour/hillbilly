@@ -1,22 +1,22 @@
-import "source-map-support/register.js";
-import "reflect-metadata";
+import 'source-map-support/register.js';
+import 'reflect-metadata';
 
-import { Collection } from "@mikro-orm/core";
-import { QueryBuilder } from "@mikro-orm/sql";
+import { Collection } from '@mikro-orm/core';
+import { QueryBuilder } from '@mikro-orm/sql';
 
-import { AbstractDto } from "@/abstract/dto/abstract.dto";
-import { CreateTranslationDto } from "@/abstract/dto/create-translation.dto";
-import { PageMetaDto } from "@/abstract/dto/page-meta.dto";
-import { PageOptionsDto } from "@/abstract/dto/page-options.dto";
-import { PageDto } from "@/abstract/dto/page.dto";
-import { AbstractEntity } from "@/abstract/entity/abstract.entity";
-import type { LanguageCode } from "@/constant/language-code.constant";
+import { AbstractDto } from '@/abstract/dto/abstract.dto';
+import { CreateTranslationDto } from '@/abstract/dto/create-translation.dto';
+import { PageMetaDto } from '@/abstract/dto/page-meta.dto';
+import { PageOptionsDto } from '@/abstract/dto/page-options.dto';
+import { PageDto } from '@/abstract/dto/page.dto';
+import { AbstractEntity } from '@/abstract/entity/abstract.entity';
+import type { LanguageCode } from '@/constant/language-code.constant';
 import {
   FILTER_OPERATION_KEY,
   FilterMetadata,
   FilterOperationType,
-} from "@/decorator/field/filter-field.decorator";
-import _ from "lodash";
+} from '@/decorator/field/filter-field.decorator';
+import _ from 'lodash';
 const { compact, isArray, isNil, map } = _;
 
 // ------------------------------------------------ Global -----------------------------------------------------------//
@@ -47,7 +47,7 @@ Array.prototype.toDtos = function <Entity extends AbstractEntity<Dto>, Dto exten
 };
 
 Array.prototype.getByLanguage = function (languageCode: LanguageCode): string {
-  return this.find((translation) => languageCode === translation.languageCode)?.text || "";
+  return this.find((translation) => languageCode === translation.languageCode)?.text || '';
 };
 
 Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto, options?: unknown) {
@@ -55,13 +55,13 @@ Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto, options?: unknow
 };
 
 // ------------------------------------------------ ORM --------------------------------------------------------------//
-declare module "@mikro-orm/core" {
+declare module '@mikro-orm/core' {
   interface Collection<T> {
     toDtos<Dto extends AbstractDto>(this: Collection<T>, options?: unknown): Dto[];
   }
 }
 
-declare module "@mikro-orm/sql" {
+declare module '@mikro-orm/sql' {
   interface QueryBuilder<Entity> {
     searchByString(
       this: QueryBuilder<Entity>,
@@ -127,8 +127,8 @@ QueryBuilder.prototype.paginate = async function (
     qb.state.orderBy.some(
       (prop) =>
         prop &&
-        typeof prop === "object" &&
-        Object.values(prop)?.some((value) => value === "ASC" || value === "DESC"),
+        typeof prop === 'object' &&
+        Object.values(prop)?.some((value) => value === 'ASC' || value === 'DESC'),
     );
 
   if (pageOptionsDto.sort && !hasExistingOrderBy) {
@@ -154,7 +154,7 @@ QueryBuilder.prototype.filter = function (filters: Record<string, unknown> | obj
 
   const conditions: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(filters)) {
-    if (isNil(value) || value === "") {
+    if (isNil(value) || value === '') {
       continue;
     }
 
@@ -176,21 +176,21 @@ QueryBuilder.prototype.filter = function (filters: Record<string, unknown> | obj
           conditions[filterKey] = { $ne: value };
           break;
         case FilterOperationType.CONTAINS:
-          if (typeof value === "string") {
+          if (typeof value === 'string') {
             conditions[filterKey] = { $ilike: `%${value}%` };
           } else {
             conditions[filterKey] = value;
           }
           break;
         case FilterOperationType.STARTS_WITH:
-          if (typeof value === "string") {
+          if (typeof value === 'string') {
             conditions[filterKey] = { $ilike: `${value}%` };
           } else {
             conditions[filterKey] = value;
           }
           break;
         case FilterOperationType.ENDS_WITH:
-          if (typeof value === "string") {
+          if (typeof value === 'string') {
             conditions[filterKey] = { $ilike: `%${value}` };
           } else {
             conditions[filterKey] = value;
@@ -228,7 +228,7 @@ QueryBuilder.prototype.filter = function (filters: Record<string, unknown> | obj
           conditions[filterKey] = value;
       }
     } else {
-      if (typeof value === "string") {
+      if (typeof value === 'string') {
         conditions[filterKey] = { $ilike: `%${value}%` };
       } else {
         conditions[filterKey] = value;

@@ -1,6 +1,6 @@
-import type { AuthSession } from "@/types/auth";
-import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
-import type { Request } from "express";
+import type { AuthSession } from '@/types/auth';
+import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
+import type { Request } from 'express';
 
 export const Session = createParamDecorator(
   (_data: unknown, context: ExecutionContext): AuthSession | undefined => {
@@ -8,7 +8,7 @@ export const Session = createParamDecorator(
 
     const session = request.session;
 
-    if (session?.user?.[Symbol.for("isPublic")]) {
+    if (session?.user?.[Symbol.for('isPublic')]) {
       return;
     }
 

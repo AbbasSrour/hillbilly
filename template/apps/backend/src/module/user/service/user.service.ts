@@ -1,12 +1,5 @@
-import {
-  type FilterQuery,
-  MikroORM,
-  wrap,
-} from '@mikro-orm/core';
-import {
-  EnsureRequestContext,
-  Transactional,
-} from '@mikro-orm/decorators/legacy';
+import { type FilterQuery, MikroORM, wrap } from '@mikro-orm/core';
+import { EnsureRequestContext, Transactional } from '@mikro-orm/decorators/legacy';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
@@ -41,9 +34,7 @@ export class UserService {
     private readonly _orm: MikroORM,
   ) {}
 
-  public async findOne(
-    findData: FilterQuery<UserEntity>,
-  ): Promise<UserEntity | null> {
+  public async findOne(findData: FilterQuery<UserEntity>): Promise<UserEntity | null> {
     return await this.userRepository.findOne(findData, {
       populate: ['role', 'settings'],
     });
@@ -51,10 +42,7 @@ export class UserService {
 
   @Transactional()
   @EnsureRequestContext()
-  public async createUser(
-    createUserDto: CreateUserDto,
-    file?: IFile,
-  ): Promise<UserEntity> {
+  public async createUser(createUserDto: CreateUserDto, file?: IFile): Promise<UserEntity> {
     const { ...userDto } = createUserDto;
 
     // @ts-ignore
@@ -101,10 +89,7 @@ export class UserService {
     // }
 
     if (pageOptionsDto.q) {
-      queryBuilder.searchByString(pageOptionsDto.q, [
-        'user.name',
-        'user.email',
-      ]);
+      queryBuilder.searchByString(pageOptionsDto.q, ['user.name', 'user.email']);
     }
 
     queryBuilder.filter(filters);
@@ -130,10 +115,7 @@ export class UserService {
 
   @Transactional()
   @EnsureRequestContext()
-  public async updateUser(
-    userId: Uuid,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UserEntity> {
+  public async updateUser(userId: Uuid, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const user = await this.userRepository.findOneOrFail(userId, {
       populate: ['settings'],
     });
@@ -169,20 +151,14 @@ export class UserService {
       populate: ['settings'],
     });
 
-    if (
-      updateCurrentUserDto.email &&
-      updateCurrentUserDto.email !== user.email
-    ) {
+    if (updateCurrentUserDto.email && updateCurrentUserDto.email !== user.email) {
       user.email = updateCurrentUserDto.email;
       if (user.settings) {
         user.emailVerified = false;
       }
     }
 
-    if (
-      updateCurrentUserDto.phoneNumber &&
-      updateCurrentUserDto.phoneNumber !== user.phoneNumber
-    ) {
+    if (updateCurrentUserDto.phoneNumber && updateCurrentUserDto.phoneNumber !== user.phoneNumber) {
       user.phoneNumber = updateCurrentUserDto.phoneNumber;
       if (user.settings) {
         user.phoneNumberVerified = false;
@@ -230,10 +206,7 @@ export class UserService {
     await this.userRepository.flush();
   }
 
-  public createSettings(
-    userId: Uuid,
-    createSettingsDto: CreateSettingsDto,
-  ): UserSettingsEntity {
+  public createSettings(userId: Uuid, createSettingsDto: CreateSettingsDto): UserSettingsEntity {
     const userSettingsEntity = this.userSettingsRepository.create({
       ...createSettingsDto,
       user: userId,
@@ -244,10 +217,7 @@ export class UserService {
     return userSettingsEntity;
   }
 
-  public async updateSettings(
-    userId: Uuid,
-    updateSettingsDto: CreateSettingsDto,
-  ) {
+  public async updateSettings(userId: Uuid, updateSettingsDto: CreateSettingsDto) {
     const userSettingsEntity = await this.userSettingsRepository.findOne({
       user: userId,
     });

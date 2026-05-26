@@ -1,6 +1,6 @@
-import { Global, Module } from "@nestjs/common";
+import { Global, Module } from '@nestjs/common';
 
-import { ValidatorService } from "./service/validator.service";
+import { ValidatorService } from './service/validator.service';
 
 @Global()
 @Module({

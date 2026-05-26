@@ -1,4 +1,4 @@
-import { IsPhoneNumber as isPhoneNumber, type ValidationOptions } from "class-validator";
+import { IsPhoneNumber as isPhoneNumber, type ValidationOptions } from 'class-validator';
 
 export function IsPhoneNumber(
   validationOptions?: ValidationOptions & {
@@ -6,7 +6,7 @@ export function IsPhoneNumber(
   },
 ): PropertyDecorator {
   return isPhoneNumber(validationOptions?.region, {
-    message: "error.phoneNumber",
+    message: 'error.phoneNumber',
     ...validationOptions,
   });
 }

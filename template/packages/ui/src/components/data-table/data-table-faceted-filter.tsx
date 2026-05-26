@@ -1,5 +1,5 @@
-import { Badge } from "@hillbilly/ui/core/badge";
-import { Button } from "@hillbilly/ui/core/button";
+import { Badge } from '@hillbilly/ui/core/badge';
+import { Button } from '@hillbilly/ui/core/button';
 import {
   Command,
   CommandEmpty,
@@ -8,13 +8,13 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@hillbilly/ui/core/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@hillbilly/ui/core/popover";
-import { Separator } from "@hillbilly/ui/core/separator";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import type * as React from "react";
-import { useDataTableContext } from "./data-table-provider";
+} from '@hillbilly/ui/core/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@hillbilly/ui/core/popover';
+import { Separator } from '@hillbilly/ui/core/separator';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import type * as React from 'react';
+import { useDataTableContext } from './data-table-provider';
 
 interface Option {
   label: string;
@@ -78,7 +78,7 @@ export function DataTableFacetedFilter<TData>({
         <Command
           filter={(value, search, keywords) => {
             const searchValue = keywords
-              ? `${value} ${keywords?.map((val) => val.toLowerCase()).join(" ")}`
+              ? `${value} ${keywords?.map((val) => val.toLowerCase()).join(' ')}`
               : value;
             if (searchValue.includes(search)) return 1;
             return 0;
@@ -107,13 +107,13 @@ export function DataTableFacetedFilter<TData>({
                   >
                     <div
                       className={cn(
-                        "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
+                        'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
                         isSelected
-                          ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible",
+                          ? 'bg-primary text-primary-foreground'
+                          : 'opacity-50 [&_svg]:invisible',
                       )}
                     >
-                      <CheckIcon className={cn("h-4 w-4 text-white")} />
+                      <CheckIcon className={cn('h-4 w-4 text-white')} />
                     </div>
                     {option.icon && <option.icon className="text-muted-foreground mr-2 h-4 w-4" />}
                     <span>{option.label}</span>

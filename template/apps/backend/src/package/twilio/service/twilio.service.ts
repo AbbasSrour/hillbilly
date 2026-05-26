@@ -28,12 +28,10 @@ export class TwilioService {
 
   async sendOtp(phone: string): Promise<void> {
     try {
-      await this.client.verify.v2
-        .services(this.verifyServiceSid)
-        .verifications.create({
-          to: phone,
-          channel: 'sms',
-        });
+      await this.client.verify.v2.services(this.verifyServiceSid).verifications.create({
+        to: phone,
+        channel: 'sms',
+      });
     } catch (error) {
       if (error.code === TwilioErrorCode.MAX_SEND_ATTEMPTS_REACHED) {
         throw new OtpMaxAttemptsException();
@@ -81,9 +79,7 @@ export class TwilioService {
       case 'expired':
         throw new OtpExpiredException();
       default:
-        throw new OtpVerificationFailedException(
-          `Unexpected verification status: ${status}`,
-        );
+        throw new OtpVerificationFailedException(`Unexpected verification status: ${status}`);
     }
   }
 }

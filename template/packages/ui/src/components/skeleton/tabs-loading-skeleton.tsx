@@ -1,6 +1,6 @@
-import { useTopLoader } from "nextjs-toploader";
-import { useEffect } from "react";
-import { Skeleton } from "../../core/skeleton";
+import { useTopLoader } from 'nextjs-toploader';
+import { useEffect } from 'react';
+import { Skeleton } from '../../core/skeleton';
 
 export interface TabsLoadingSkeletonProps {
   columns?: number;
@@ -18,7 +18,7 @@ export function TabsLoadingSkeleton({
   showSearch = true,
   showAction = true,
   showPagination = true,
-  tabLabels = ["Tab 1", "Tab 2"],
+  tabLabels = ['Tab 1', 'Tab 2'],
   activeTabIndex = 0,
 }: TabsLoadingSkeletonProps) {
   const topLoader = useTopLoader();
@@ -35,7 +35,7 @@ export function TabsLoadingSkeleton({
         {tabLabels.map((label, index) => (
           <div
             key={label}
-            className={`justify-start w-full px-4 py-2 text-left h-fit flex-initial ${index === activeTabIndex ? "bg-muted text-foreground" : ""}`}
+            className={`justify-start w-full px-4 py-2 text-left h-fit flex-initial ${index === activeTabIndex ? 'bg-muted text-foreground' : ''}`}
           >
             <Skeleton className="h-4 w-20" />
           </div>

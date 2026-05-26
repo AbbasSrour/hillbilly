@@ -1,8 +1,4 @@
-import {
-  queryOptions,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createUserServerFn,
   deleteUserServerFn,
@@ -104,9 +100,7 @@ export const userQueries = {
             }),
             ...(params?.sort && {
               sortBy: params.sort,
-              sortDirection: ((params.order ?? 'ASC').toLowerCase() as
-                | 'asc'
-                | 'desc'),
+              sortDirection: (params.order ?? 'ASC').toLowerCase() as 'asc' | 'desc',
             }),
           },
         });

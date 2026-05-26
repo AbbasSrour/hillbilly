@@ -1,4 +1,4 @@
-import { useNavigation } from "@hillbilly/ui/context/navigation";
+import { useNavigation } from '@hillbilly/ui/context/navigation';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,10 +6,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@hillbilly/ui/core/breadcrumb";
-import { HomeIcon } from "lucide-react";
-import { Link, useLocation } from "@tanstack/react-router";
-import { Fragment } from "react";
+} from '@hillbilly/ui/core/breadcrumb';
+import { HomeIcon } from 'lucide-react';
+import { Link, useLocation } from '@tanstack/react-router';
+import { Fragment } from 'react';
 
 export const PageBreadcrumbs = () => {
   const { main } = useNavigation();
@@ -26,8 +26,8 @@ export const PageBreadcrumbs = () => {
 
           if (matchingSubItems.length > 0) {
             crumbs.push({
-              title: matchingSubItems[0]?.title || "",
-              url: matchingSubItems[0]?.url || "",
+              title: matchingSubItems[0]?.title || '',
+              url: matchingSubItems[0]?.url || '',
             });
           }
         }

@@ -13,9 +13,7 @@ type UseUserFacetsValueArgs = {
   columnFilters: ColumnFiltersState;
 };
 
-export const useUserFacetsValue = ({
-  columnFilters,
-}: UseUserFacetsValueArgs) => {
+export const useUserFacetsValue = ({ columnFilters }: UseUserFacetsValueArgs) => {
   const { searchValue } = useSearch();
   const statusConditions = userStatusFilter.toConditions(columnFilters);
   const roleConditions = userRoleFilter.toConditions(columnFilters);
@@ -37,9 +35,7 @@ export const useUserFacetsValue = ({
     ],
   });
 
-  const facetedUniqueValuesReady = facetQueries.every(
-    (query) => !query.isPending,
-  );
+  const facetedUniqueValuesReady = facetQueries.every((query) => !query.isPending);
 
   const facetCountsMap = useMemo(
     () =>
@@ -65,20 +61,10 @@ export const useUserFacetsValue = ({
     [facetCountsMap],
   );
 
-  const getCoreFacetedUniqueValues = useMemo(
-    () => getFacetedUniqueValues<User>(),
-    [],
-  );
+  const getCoreFacetedUniqueValues = useMemo(() => getFacetedUniqueValues<User>(), []);
 
   return useCallback(
-    () =>
-      facetedUniqueValuesReady
-        ? getServerFacetedUniqueValues
-        : getCoreFacetedUniqueValues,
-    [
-      facetedUniqueValuesReady,
-      getServerFacetedUniqueValues,
-      getCoreFacetedUniqueValues,
-    ],
+    () => (facetedUniqueValuesReady ? getServerFacetedUniqueValues : getCoreFacetedUniqueValues),
+    [facetedUniqueValuesReady, getServerFacetedUniqueValues, getCoreFacetedUniqueValues],
   );
 };

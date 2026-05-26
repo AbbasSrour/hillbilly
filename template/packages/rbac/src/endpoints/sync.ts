@@ -1,12 +1,12 @@
-import type { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from "better-auth";
-import { createAuthEndpoint } from "better-auth/api";
-import type { PermissionDefinition, RBACPluginConfig, Role } from "../types";
-import type { AdminPlugin } from "../types/admin-plugin";
+import type { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from 'better-auth';
+import { createAuthEndpoint } from 'better-auth/api';
+import type { PermissionDefinition, RBACPluginConfig, Role } from '../types';
+import type { AdminPlugin } from '../types/admin-plugin';
 
-const path = "/rbac/sync" as const;
+const path = '/rbac/sync' as const;
 
 const config = {
-  method: "POST",
+  method: 'POST',
 } satisfies EndpointOptions;
 
 export const syncHandler = async (
@@ -15,7 +15,7 @@ export const syncHandler = async (
   staticRoles: Record<string, string[]>,
 ) => {
   const rbacConfig = pluginConfig;
-  const adminPlugin = ctx.context.getPlugin("admin") as unknown as AdminPlugin | undefined;
+  const adminPlugin = ctx.context.getPlugin('admin') as unknown as AdminPlugin | undefined;
 
   // Track sync stats
   let permissionsCreated = 0;
@@ -25,13 +25,13 @@ export const syncHandler = async (
   let mappingsSynced = 0;
   let mappingsSkipped = 0;
 
-  const permissionModelName = rbacConfig.schema?.permission?.modelName || "permission";
-  const roleModelName = rbacConfig.schema?.role?.modelName || "role";
+  const permissionModelName = rbacConfig.schema?.permission?.modelName || 'permission';
+  const roleModelName = rbacConfig.schema?.role?.modelName || 'role';
 
   const ensurePermission = async (perm: PermissionDefinition) => {
     const exists = await ctx.context.adapter.findOne({
       model: permissionModelName,
-      where: [{ field: "code", value: perm.code }],
+      where: [{ field: 'code', value: perm.code }],
     });
 
     if (!exists) {
@@ -74,7 +74,7 @@ export const syncHandler = async (
       // Create or update role
       let role = (await ctx.context.adapter.findOne({
         model: roleModelName,
-        where: [{ field: "name", value: roleName }],
+        where: [{ field: 'name', value: roleName }],
       })) as Role | null;
 
       if (!role) {
@@ -132,7 +132,7 @@ export const syncHandler = async (
           const roleEntity = await em.findOne(
             roleEntityName,
             { id: role.id },
-            { populate: ["permissions"] },
+            { populate: ['permissions'] },
           );
 
           if (!roleEntity) {

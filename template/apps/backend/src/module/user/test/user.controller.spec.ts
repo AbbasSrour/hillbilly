@@ -93,11 +93,7 @@ describe('UserController', () => {
       const result = await controller.getUsers(pageOptions, filters, mockUser);
 
       // Assert
-      expect(mockUserService.getUsers).toHaveBeenCalledWith(
-        pageOptions,
-        filters,
-        mockUser,
-      );
+      expect(mockUserService.getUsers).toHaveBeenCalledWith(pageOptions, filters, mockUser);
       expect(mockItems.toPageDto).toHaveBeenCalledWith(mockPageMeta);
       expect(result).toEqual([{ id: '1' }]);
     });
@@ -114,9 +110,7 @@ describe('UserController', () => {
       const mockCreatedUser = {
         id: '123',
         ...(dto as any),
-        toDto: vi
-          .fn()
-          .mockReturnValue({ id: '123', email: 'test@example.com' }),
+        toDto: vi.fn().mockReturnValue({ id: '123', email: 'test@example.com' }),
       };
       mockUserService.createUser.mockResolvedValue(mockCreatedUser);
 
@@ -136,9 +130,7 @@ describe('UserController', () => {
       const mockUserById = {
         id: userId,
         email: 'test@example.com',
-        toDto: vi
-          .fn()
-          .mockReturnValue({ id: userId, email: 'test@example.com' }),
+        toDto: vi.fn().mockReturnValue({ id: userId, email: 'test@example.com' }),
       };
       mockUserService.getUser.mockResolvedValue(mockUserById);
 
@@ -159,9 +151,7 @@ describe('UserController', () => {
       const mockUpdatedUser = {
         id: userId,
         email: 'updated@example.com',
-        toDto: vi
-          .fn()
-          .mockReturnValue({ id: userId, email: 'updated@example.com' }),
+        toDto: vi.fn().mockReturnValue({ id: userId, email: 'updated@example.com' }),
       };
       mockUserService.updateUser.mockResolvedValue(mockUpdatedUser);
 

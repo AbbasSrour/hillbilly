@@ -1,7 +1,7 @@
 /**
  * Shared Zod schemas for endpoint validation
  */
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Common pagination query schema
@@ -10,14 +10,14 @@ export const paginationQuerySchema = z.object({
   limit: z.string().optional(),
   offset: z.string().optional(),
   sortBy: z.string().optional(),
-  sortDirection: z.enum(["asc", "desc"]).optional(),
+  sortDirection: z.enum(['asc', 'desc']).optional(),
 });
 
 /**
  * Create role request schema
  */
 export const createRoleSchema = z.object({
-  name: z.string().min(1, "Role name is required"),
+  name: z.string().min(1, 'Role name is required'),
   description: z.string().optional(),
   permissionIds: z.array(z.string()).optional(),
 });

@@ -2,8 +2,8 @@ import {
   type MenuAction,
   type MenuActionSection,
   useNavigation,
-} from "@hillbilly/ui/context/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@hillbilly/ui/core/avatar";
+} from '@hillbilly/ui/context/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@hillbilly/ui/core/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,25 +12,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@hillbilly/ui/core/dropdown-menu";
+} from '@hillbilly/ui/core/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@hillbilly/ui/core/sidebar";
-import { ChevronsUpDown } from "lucide-react";
-import { Fragment, useRef } from "react";
+} from '@hillbilly/ui/core/sidebar';
+import { ChevronsUpDown } from 'lucide-react';
+import { Fragment, useRef } from 'react';
 
 const gradientClasses = [
-  "from-purple-500 to-pink-500",
-  "from-cyan-500 to-blue-500",
-  "from-green-400 to-cyan-500",
-  "from-yellow-400 to-orange-500",
-  "from-pink-500 to-rose-500",
-  "from-indigo-500 to-purple-500",
-  "from-emerald-500 to-teal-500",
-  "from-orange-500 to-red-500",
+  'from-purple-500 to-pink-500',
+  'from-cyan-500 to-blue-500',
+  'from-green-400 to-cyan-500',
+  'from-yellow-400 to-orange-500',
+  'from-pink-500 to-rose-500',
+  'from-indigo-500 to-purple-500',
+  'from-emerald-500 to-teal-500',
+  'from-orange-500 to-red-500',
 ];
 
 export function NavUser() {
@@ -40,14 +40,14 @@ export function NavUser() {
   const fallbackValue = useRef(() => {
     if (avatarFallback?.images && avatarFallback.images.length > 0) {
       return {
-        type: "image" as const,
+        type: 'image' as const,
         value: avatarFallback.images[Math.floor(Math.random() * avatarFallback.images.length)],
       };
     }
 
     const gradients = avatarFallback?.gradients || gradientClasses;
     return {
-      type: "gradient" as const,
+      type: 'gradient' as const,
       value: gradients[Math.floor(Math.random() * gradients.length)],
     };
   }).current();
@@ -66,24 +66,24 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar || ""} alt={user.name} />
+                <AvatarImage src={user.avatar || ''} alt={user.name} />
                 <AvatarFallback
                   className={
-                    fallbackValue.type === "gradient"
+                    fallbackValue.type === 'gradient'
                       ? `rounded-lg text-white bg-gradient-to-br ${fallbackValue.value}`
-                      : "rounded-lg"
+                      : 'rounded-lg'
                   }
                   style={
-                    fallbackValue.type === "image"
+                    fallbackValue.type === 'image'
                       ? {
                           backgroundImage: `url(${fallbackValue.value})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
                         }
                       : undefined
                   }
                 >
-                  {fallbackValue.type === "gradient" && user.name.slice(0, 2).toUpperCase()}
+                  {fallbackValue.type === 'gradient' && user.name.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -95,31 +95,31 @@ export function NavUser() {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar || ""} alt={user.name} />
+                  <AvatarImage src={user.avatar || ''} alt={user.name} />
                   <AvatarFallback
                     className={
-                      fallbackValue.type === "gradient"
+                      fallbackValue.type === 'gradient'
                         ? `rounded-lg text-white bg-gradient-to-br ${fallbackValue.value}`
-                        : "rounded-lg"
+                        : 'rounded-lg'
                     }
                     style={
-                      fallbackValue.type === "image"
+                      fallbackValue.type === 'image'
                         ? {
                             backgroundImage: `url(${fallbackValue.value})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
                           }
                         : undefined
                     }
                   >
-                    {fallbackValue.type === "gradient" && `${user.name.slice(0, 2).toUpperCase()}`}
+                    {fallbackValue.type === 'gradient' && `${user.name.slice(0, 2).toUpperCase()}`}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -142,7 +142,7 @@ function ActionList({ actions = [] }: { actions?: MenuActionSection[] | MenuActi
     return null;
   }
 
-  if (actions?.[0] && "key" in actions[0]) {
+  if (actions?.[0] && 'key' in actions[0]) {
     const sections = actions as MenuActionSection[];
 
     return (

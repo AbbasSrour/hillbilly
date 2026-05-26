@@ -1,8 +1,8 @@
-import { Param, ParseUUIDPipe, type PipeTransform, type Type } from "@nestjs/common";
+import { Param, ParseUUIDPipe, type PipeTransform, type Type } from '@nestjs/common';
 
 export function UUIDParam(
   property: string,
   ...pipes: Array<Type<PipeTransform> | PipeTransform>
 ): ParameterDecorator {
-  return Param(property, new ParseUUIDPipe({ version: "4" }), ...pipes);
+  return Param(property, new ParseUUIDPipe({ version: '4' }), ...pipes);
 }

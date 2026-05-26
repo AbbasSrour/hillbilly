@@ -18,11 +18,7 @@ import {
 export function CreateUserSkeleton() {
   return (
     <Main>
-      <PageHeader
-        title="Create User"
-        description="Create a new user account."
-        withSeparator
-      >
+      <PageHeader title="Create User" description="Create a new user account." withSeparator>
         <ButtonSkeleton className="h-8 w-28" />
       </PageHeader>
 
@@ -31,8 +27,8 @@ export function CreateUserSkeleton() {
           <FormSectionHeader>
             <FormSectionTitle>Personal Information</FormSectionTitle>
             <FormSectionDescription>
-              Enter the user's basic personal information including their name,
-              email address, and contact details.
+              Enter the user's basic personal information including their name, email address, and
+              contact details.
             </FormSectionDescription>
           </FormSectionHeader>
 
@@ -68,8 +64,8 @@ export function CreateUserSkeleton() {
           <FormSectionHeader>
             <FormSectionTitle>Account Information</FormSectionTitle>
             <FormSectionDescription>
-              Set up user access credentials and permissions by selecting a
-              role and creating a secure password.
+              Set up user access credentials and permissions by selecting a role and creating a
+              secure password.
             </FormSectionDescription>
           </FormSectionHeader>
 

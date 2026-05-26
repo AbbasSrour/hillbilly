@@ -1,13 +1,13 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiPropertyOptions } from "@nestjs/swagger";
-import { IsUrl, NotEquals } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiPropertyOptions } from '@nestjs/swagger';
+import { IsUrl, NotEquals } from 'class-validator';
 
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IStringFieldOptions, StringField } from "./string-field.decorator";
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IStringFieldOptions, StringField } from './string-field.decorator';
 
 export function URLField(
-  options: Omit<ApiPropertyOptions, "type"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   const decorators = [StringField(options), IsUrl({}, { each: true })];
 
@@ -21,7 +21,7 @@ export function URLField(
 }
 
 export function URLFieldOptional(
-  options: Omit<ApiPropertyOptions, "type"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), URLField({ required: false, ...options }));
 }

@@ -1,10 +1,5 @@
 import { SessionEntity } from '@/module/auth/entity/session.entity';
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { ContextProvider } from '@/provider/context.provider';
 
 // TODO this needs more work

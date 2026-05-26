@@ -1,5 +1,5 @@
-import type { PermissionKeys } from "@hillbilly/ui/types/permission-keys";
-import { createContext, type PropsWithChildren, useContext } from "react";
+import type { PermissionKeys } from '@hillbilly/ui/types/permission-keys';
+import { createContext, type PropsWithChildren, useContext } from 'react';
 
 export interface PermissionContext {
   permissions: PermissionKeys[];
@@ -14,7 +14,7 @@ const PermissionContext = createContext<PermissionContext>({
 export const usePermission = () => {
   const context = useContext(PermissionContext);
   if (!context) {
-    throw new Error("usePermission must be used within a PermissionProvider");
+    throw new Error('usePermission must be used within a PermissionProvider');
   }
   return context;
 };

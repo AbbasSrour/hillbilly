@@ -1,7 +1,7 @@
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { TablerIcon } from "@tabler/icons-react";
-import type { Row } from "@tanstack/react-table";
-import { Button } from "@hillbilly/ui/core/button";
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { TablerIcon } from '@tabler/icons-react';
+import type { Row } from '@tanstack/react-table';
+import { Button } from '@hillbilly/ui/core/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@hillbilly/ui/core/dropdown-menu";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { LucideIcon } from "lucide-react";
-import { Fragment } from "react";
+} from '@hillbilly/ui/core/dropdown-menu';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { LucideIcon } from 'lucide-react';
+import { Fragment } from 'react';
 
 // TODO make the permission typed
 interface DataTableRowAction {
@@ -21,7 +21,7 @@ interface DataTableRowAction {
   onClick: () => void;
   disabled?: boolean;
   permission?: string;
-  theme?: "default" | "destructive";
+  theme?: 'default' | 'destructive';
 }
 
 interface DataTableRowActionsProps<TData> {
@@ -66,13 +66,13 @@ function RowAction({ action }: { action: DataTableRowAction }) {
     <DropdownMenuItem
       key={action.label}
       onClick={action.onClick}
-      className={cn(action.theme === "destructive" && "text-destructive")}
+      className={cn(action.theme === 'destructive' && 'text-destructive')}
     >
       {action.label}
 
       {Icon && (
         <DropdownMenuShortcut>
-          <Icon size={16} className={cn(action.theme === "destructive" && "text-destructive")} />
+          <Icon size={16} className={cn(action.theme === 'destructive' && 'text-destructive')} />
         </DropdownMenuShortcut>
       )}
     </DropdownMenuItem>

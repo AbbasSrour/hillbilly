@@ -1,17 +1,15 @@
 {
   "name": "ticklet",
   "version": "0.0.0",
-  "description": "",
   "private": true,
-  "type": "module",
-  "packageManager": "bun@1.3.14",
+  "description": "",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
-  "//": "TODO: Remove the postinstall Swagger patch when @nestjs/swagger publishes v12 with official Nest 12 support.",
+  "type": "module",
   "scripts": {
-    "postinstall": "node patches/patch-better-auth-mikro-orm.cjs && node patches/patch-nest-start.cjs",
+    "postinstall": "node apps/backend/patches/patch-better-auth-mikro-orm.cjs && node apps/backend/patches/patch-nest-start.cjs",
     "ready": "vp check && vp run -r test && vp run -r build",
     "dev": "vp run dev",
     "build": "vp run build",
@@ -36,8 +34,6 @@
     "vite-plus": "catalog:"
   },
   "overrides": {
-    "vite": "catalog:",
-    "vitest": "catalog:",
     "@nestjs/cli": "12.0.0-alpha.6",
     "@nestjs/common": "12.0.0-alpha.5",
     "@nestjs/core": "12.0.0-alpha.5",
@@ -45,7 +41,9 @@
     "@nestjs/platform-express": "12.0.0-alpha.5",
     "@nestjs/schematics": "12.0.0-alpha.9",
     "@nestjs/swagger": "12.0.0-alpha.2",
-    "@nestjs/testing": "12.0.0-alpha.5"
+    "@nestjs/testing": "12.0.0-alpha.5",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "config": {
     "commitizen": {
@@ -55,6 +53,8 @@
   "engines": {
     "node": ">=22.12.0"
   },
+  "packageManager": "bun@1.3.14",
+  "//": "TODO: Remove the postinstall Swagger patch when @nestjs/swagger publishes v12 with official Nest 12 support.",
   "catalog": {
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vitest": "npm:@voidzero-dev/vite-plus-test@latest",

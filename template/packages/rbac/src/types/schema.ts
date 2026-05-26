@@ -5,7 +5,7 @@
 /**
  * Supported field types for additional fields
  */
-export type FieldType = "string" | "number" | "boolean" | "date";
+export type FieldType = 'string' | 'number' | 'boolean' | 'date';
 
 /**
  * Field attributes for defining additional fields on RBAC tables
@@ -123,13 +123,13 @@ export interface UserWithRole {
 /**
  * Infer TypeScript type from FieldType
  */
-export type InferFieldType<T extends FieldType> = T extends "string"
+export type InferFieldType<T extends FieldType> = T extends 'string'
   ? string
-  : T extends "number"
+  : T extends 'number'
     ? number
-    : T extends "boolean"
+    : T extends 'boolean'
       ? boolean
-      : T extends "date"
+      : T extends 'date'
         ? Date
         : never;
 
@@ -141,9 +141,9 @@ export type InferAdditionalFields<T extends TableSchemaConfig | undefined> = T e
 }
   ? F extends Record<string, FieldAttribute>
     ? {
-        [K in keyof F]: F[K]["required"] extends true
-          ? InferFieldType<F[K]["type"]>
-          : InferFieldType<F[K]["type"]> | undefined;
+        [K in keyof F]: F[K]['required'] extends true
+          ? InferFieldType<F[K]['type']>
+          : InferFieldType<F[K]['type']> | undefined;
       }
     : object
   : object;

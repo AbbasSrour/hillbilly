@@ -1,6 +1,6 @@
-import { Button, Section, Text } from "@react-email/components";
-import { render, toPlainText } from "@react-email/render";
-import { EmailLayout } from "./components/email-layout";
+import { Button, Section, Text } from '@react-email/components';
+import { render, toPlainText } from '@react-email/render';
+import { EmailLayout } from './components/email-layout';
 
 export interface WelcomeEmailProps {
   appName: string;
@@ -9,7 +9,7 @@ export interface WelcomeEmailProps {
 }
 
 export default function WelcomeEmail({ appName, name, dashboardUrl }: WelcomeEmailProps) {
-  const recipientName = name?.trim() || "there";
+  const recipientName = name?.trim() || 'there';
 
   return (
     <EmailLayout

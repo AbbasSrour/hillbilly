@@ -1,15 +1,15 @@
-import { Transform } from "class-transformer";
-import _ from "lodash";
+import { Transform } from 'class-transformer';
+import _ from 'lodash';
 const { isArray, map, trim } = _;
 
 const cleanString = (str: string) => {
   return trim(
     str
-      .replace(/^\uFEFF/, "") // Remove BOM at the start
+      .replace(/^\uFEFF/, '') // Remove BOM at the start
       // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
-      .replace(/[\u200B-\u200D\uFEFF]/g, "") // Remove zero-width characters
+      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width characters
       .trim()
-      .replaceAll(/\s\s+/g, " "),
+      .replaceAll(/\s\s+/g, ' '),
   );
 };
 

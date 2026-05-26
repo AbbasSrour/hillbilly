@@ -3,13 +3,7 @@ import { EmailInput } from '@hillbilly/ui/components/form/email-input';
 import { PasswordInput } from '@hillbilly/ui/components/form/password-input';
 import { Button } from '@hillbilly/ui/core/button';
 import { Checkbox } from '@hillbilly/ui/core/checkbox';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@hillbilly/ui/core/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@hillbilly/ui/core/form';
 import { Label } from '@hillbilly/ui/core/label';
 import { useNavigate } from '@tanstack/react-router';
 import { useId } from 'react';

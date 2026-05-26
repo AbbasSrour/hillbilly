@@ -1,12 +1,12 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@hillbilly/ui/core/popover";
+import { Popover, PopoverContent, PopoverTrigger } from '@hillbilly/ui/core/popover';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@hillbilly/ui/core/tooltip";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { ReactNode, useEffect, useRef, useState } from "react";
+} from '@hillbilly/ui/core/tooltip';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -16,8 +16,8 @@ interface Props {
 
 export default function DataTableTextCell({
   children,
-  className = "",
-  contentClassName = "",
+  className = '',
+  contentClassName = '',
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isOverflown, setIsOverflown] = useState(false);
@@ -33,7 +33,7 @@ export default function DataTableTextCell({
 
   if (!isOverflown)
     return (
-      <div ref={ref} className={cn("truncate", className)}>
+      <div ref={ref} className={cn('truncate', className)}>
         {children}
       </div>
     );
@@ -44,7 +44,7 @@ export default function DataTableTextCell({
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div ref={ref} className={cn("truncate", className)}>
+              <div ref={ref} className={cn('truncate', className)}>
                 {children}
               </div>
             </TooltipTrigger>
@@ -57,11 +57,11 @@ export default function DataTableTextCell({
       <div className="sm:hidden">
         <Popover>
           <PopoverTrigger asChild>
-            <div ref={ref} className={cn("truncate", className)}>
+            <div ref={ref} className={cn('truncate', className)}>
               {children}
             </div>
           </PopoverTrigger>
-          <PopoverContent className={cn("w-fit", contentClassName)}>
+          <PopoverContent className={cn('w-fit', contentClassName)}>
             <p>{children}</p>
           </PopoverContent>
         </Popover>

@@ -1,4 +1,4 @@
-import { type ReactNode, createContext, useContext } from "react";
+import { type ReactNode, createContext, useContext } from 'react';
 
 export interface ProjectConfigOptions {
   logoSmall: string;
@@ -10,7 +10,7 @@ export const ProjectContext = createContext<ProjectConfigOptions | null>(null);
 export function useProjectContext() {
   const context = useContext(ProjectContext);
   if (!context) {
-    throw new Error("useProject must be used within a ProjectProvider");
+    throw new Error('useProject must be used within a ProjectProvider');
   }
 
   return context;

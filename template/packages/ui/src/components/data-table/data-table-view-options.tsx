@@ -1,15 +1,15 @@
-import { useDataTableContext } from "@hillbilly/ui/components/data-table/data-table-provider";
-import { Button } from "@hillbilly/ui/core/button";
+import { useDataTableContext } from '@hillbilly/ui/components/data-table/data-table-provider';
+import { Button } from '@hillbilly/ui/core/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@hillbilly/ui/core/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { useMemo } from "react";
+} from '@hillbilly/ui/core/dropdown-menu';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { useMemo } from 'react';
 
 export function DataTableViewOptions() {
   const table = useDataTableContext();
@@ -18,7 +18,7 @@ export function DataTableViewOptions() {
     () =>
       table
         .getAllColumns()
-        .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide()),
+        .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide()),
     [table],
   );
 

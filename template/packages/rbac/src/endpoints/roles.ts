@@ -1,22 +1,22 @@
-import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from "better-auth";
-import { APIError, createAuthEndpoint, sessionMiddleware } from "better-auth/api";
+import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from 'better-auth';
+import { APIError, createAuthEndpoint, sessionMiddleware } from 'better-auth/api';
 import {
   createRoleSchema,
   deleteRoleSchema,
   getRoleQuerySchema,
   paginationQuerySchema,
   updateRoleWithIdSchema,
-} from "../schemas";
-import type { RBACPluginConfig } from "../types/config";
-import type { Role } from "../types";
-import type { RBACSchemaConfig } from "../types/schema";
-import type { Permission, Role as RoleModel } from "../types/schema";
-import { isStaticRole } from "../utils";
-import { getRolePermissions } from "../utils";
+} from '../schemas';
+import type { RBACPluginConfig } from '../types/config';
+import type { Role } from '../types';
+import type { RBACSchemaConfig } from '../types/schema';
+import type { Permission, Role as RoleModel } from '../types/schema';
+import { isStaticRole } from '../utils';
+import { getRolePermissions } from '../utils';
 
-const listRolesPath = "/rbac/roles" as const;
+const listRolesPath = '/rbac/roles' as const;
 const listRolesConfig = {
-  method: "GET",
+  method: 'GET',
   use: [sessionMiddleware],
   query: paginationQuerySchema,
 } satisfies EndpointOptions;
@@ -35,16 +35,16 @@ export const listRolesHandler =
     const offset = query.offset ? Number.parseInt(query.offset) : 0;
 
     // Count total
-    const rolesCount = await ctx.context.adapter.count({ model: "role" });
+    const rolesCount = await ctx.context.adapter.count({ model: 'role' });
 
     // Get roles
     const roles = (await ctx.context.adapter.findMany({
-      model: "role",
+      model: 'role',
       limit,
       offset,
       sortBy: {
-        field: query.sortBy || "name",
-        direction: query.sortDirection || "asc",
+        field: query.sortBy || 'name',
+        direction: query.sortDirection || 'asc',
       },
     })) as RoleModel[];
 
@@ -75,9 +75,9 @@ export const listRolesEndpoint = (
   );
 };
 
-const getRolePath = "/rbac/role" as const;
+const getRolePath = '/rbac/role' as const;
 const getRoleConfig = {
-  method: "GET",
+  method: 'GET',
   use: [sessionMiddleware],
   query: getRoleQuerySchema,
 } satisfies EndpointOptions;
@@ -88,16 +88,16 @@ export const getRoleHandler =
     ctx: EndpointContext<typeof getRolePath, typeof getRoleConfig, AuthContext<BetterAuthOptions>>,
   ) => {
     const query = ctx.query;
-    const roleId = query.roleId || "";
+    const roleId = query.roleId || '';
 
     const role = (await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     })) as RoleModel | null;
 
     if (!role) {
-      throw new APIError("NOT_FOUND", {
-        message: "Role not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Role not found',
       });
     }
 
@@ -120,9 +120,9 @@ export const getRoleEndpoint = (
   return createAuthEndpoint(getRolePath, getRoleConfig, getRoleHandler(staticRoles, pluginConfig));
 };
 
-const createRolePath = "/rbac/roles" as const;
+const createRolePath = '/rbac/roles' as const;
 const createRoleConfig = {
-  method: "POST",
+  method: 'POST',
   use: [sessionMiddleware],
   body: createRoleSchema,
 } satisfies EndpointOptions;
@@ -138,13 +138,13 @@ export const createRoleHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
-    if (session.user.role !== "admin") {
-      throw new APIError("FORBIDDEN", {
-        message: "Admin access required",
+    if (session.user.role !== 'admin') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Admin access required',
       });
     }
 
@@ -152,25 +152,25 @@ export const createRoleHandler =
 
     // Check if role name conflicts with static roles
     if (isStaticRole(name, staticRoles)) {
-      throw new APIError("BAD_REQUEST", {
-        message: "Cannot create role with same name as static role",
+      throw new APIError('BAD_REQUEST', {
+        message: 'Cannot create role with same name as static role',
       });
     }
 
     // Check for duplicate name
     const existing = await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "name", value: name }],
+      model: 'role',
+      where: [{ field: 'name', value: name }],
     });
     if (existing) {
-      throw new APIError("CONFLICT", {
-        message: "Role with this name already exists",
+      throw new APIError('CONFLICT', {
+        message: 'Role with this name already exists',
       });
     }
 
     // Create role in database
     const role = (await ctx.context.adapter.create({
-      model: "role",
+      model: 'role',
       data: { name, description },
     })) as RoleModel;
 
@@ -180,13 +180,13 @@ export const createRoleHandler =
       for (const permissionId of permissionIds) {
         // Verify permission exists
         const perm = (await ctx.context.adapter.findOne({
-          model: "permission",
-          where: [{ field: "id", value: permissionId }],
+          model: 'permission',
+          where: [{ field: 'id', value: permissionId }],
         })) as Permission | null;
 
         if (perm) {
           await ctx.context.adapter.create({
-            model: "rolePermission",
+            model: 'rolePermission',
             data: { roleId: role.id, permissionId },
           });
           permissions.push(perm);
@@ -207,9 +207,9 @@ export const createRoleEndpoint = (staticRoles: Record<string, string[]>) => {
   return createAuthEndpoint(createRolePath, createRoleConfig, createRoleHandler(staticRoles));
 };
 
-const updateRolePath = "/rbac/role" as const;
+const updateRolePath = '/rbac/role' as const;
 const updateRoleConfig = {
-  method: "PUT",
+  method: 'PUT',
   use: [sessionMiddleware],
   body: updateRoleWithIdSchema,
 } satisfies EndpointOptions;
@@ -225,32 +225,32 @@ export const updateRoleHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
-    if (session.user.role !== "admin") {
-      throw new APIError("FORBIDDEN", {
-        message: "Admin access required",
+    if (session.user.role !== 'admin') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Admin access required',
       });
     }
 
     const { roleId, name, description, permissionIds } = ctx.body;
 
     const role = (await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     })) as RoleModel | null;
 
     if (!role) {
-      throw new APIError("NOT_FOUND", {
-        message: "Role not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Role not found',
       });
     }
 
     if (isStaticRole(role.name, staticRoles)) {
-      throw new APIError("FORBIDDEN", {
-        message: "Cannot modify static role from Admin plugin",
+      throw new APIError('FORBIDDEN', {
+        message: 'Cannot modify static role from Admin plugin',
       });
     }
 
@@ -258,26 +258,26 @@ export const updateRoleHandler =
     if (name && name !== role.name) {
       // Check if the new name is a static role
       if (isStaticRole(name, staticRoles)) {
-        throw new APIError("BAD_REQUEST", {
-          message: "Cannot rename role to a static role name",
+        throw new APIError('BAD_REQUEST', {
+          message: 'Cannot rename role to a static role name',
         });
       }
 
       const existing = await ctx.context.adapter.findOne({
-        model: "role",
-        where: [{ field: "name", value: name }],
+        model: 'role',
+        where: [{ field: 'name', value: name }],
       });
       if (existing) {
-        throw new APIError("CONFLICT", {
-          message: "Role with this name already exists",
+        throw new APIError('CONFLICT', {
+          message: 'Role with this name already exists',
         });
       }
     }
 
     // Update role
     const updatedRole = (await ctx.context.adapter.update({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
       update: {
         name: name || role.name,
         description,
@@ -289,21 +289,21 @@ export const updateRoleHandler =
     if (permissionIds !== undefined) {
       // Remove existing
       await ctx.context.adapter.deleteMany({
-        model: "rolePermission",
-        where: [{ field: "roleId", value: roleId }],
+        model: 'rolePermission',
+        where: [{ field: 'roleId', value: roleId }],
       });
 
       // Add new
       for (const permissionId of permissionIds) {
         // Verify permission exists
         const perm = await ctx.context.adapter.findOne({
-          model: "permission",
-          where: [{ field: "id", value: permissionId }],
+          model: 'permission',
+          where: [{ field: 'id', value: permissionId }],
         });
 
         if (perm) {
           await ctx.context.adapter.create({
-            model: "rolePermission",
+            model: 'rolePermission',
             data: { roleId, permissionId },
           });
         }
@@ -333,9 +333,9 @@ export const updateRoleEndpoint = (
   );
 };
 
-const deleteRolePath = "/rbac/role" as const;
+const deleteRolePath = '/rbac/role' as const;
 const deleteRoleConfig = {
-  method: "DELETE",
+  method: 'DELETE',
   use: [sessionMiddleware],
   body: deleteRoleSchema,
 } satisfies EndpointOptions;
@@ -351,38 +351,38 @@ export const deleteRoleHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
-    if (session.user.role !== "admin") {
-      throw new APIError("FORBIDDEN", {
-        message: "Admin access required",
+    if (session.user.role !== 'admin') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Admin access required',
       });
     }
 
     const { roleId } = ctx.body;
 
     const role = (await ctx.context.adapter.findOne({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     })) as RoleModel | null;
 
     if (!role) {
-      throw new APIError("NOT_FOUND", {
-        message: "Role not found",
+      throw new APIError('NOT_FOUND', {
+        message: 'Role not found',
       });
     }
 
     if (isStaticRole(role.name, staticRoles)) {
-      throw new APIError("FORBIDDEN", {
-        message: "Cannot delete static role from Admin plugin",
+      throw new APIError('FORBIDDEN', {
+        message: 'Cannot delete static role from Admin plugin',
       });
     }
 
     await ctx.context.adapter.delete({
-      model: "role",
-      where: [{ field: "id", value: roleId }],
+      model: 'role',
+      where: [{ field: 'id', value: roleId }],
     });
 
     return ctx.json({ success: true });

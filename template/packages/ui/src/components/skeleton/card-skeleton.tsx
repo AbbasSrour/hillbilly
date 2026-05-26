@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader } from "@hillbilly/ui/core/card";
-import { Skeleton } from "@hillbilly/ui/core/skeleton";
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { ComponentProps } from "react";
+import { Card, CardContent, CardHeader } from '@hillbilly/ui/core/card';
+import { Skeleton } from '@hillbilly/ui/core/skeleton';
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { ComponentProps } from 'react';
 
-export function CardSkeleton({ className, ...props }: ComponentProps<"div">) {
+export function CardSkeleton({ className, ...props }: ComponentProps<'div'>) {
   return (
     <Card
       className={cn(
-        "relative overflow-hidden border border-border bg-card shadow-none transition-colors",
+        'relative overflow-hidden border border-border bg-card shadow-none transition-colors',
         className,
       )}
       {...props}

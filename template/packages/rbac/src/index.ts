@@ -6,9 +6,9 @@
 // Server code should import from '@hillbilly/rbac/server'
 
 // Export schema utilities (can be used by both client and server)
-export { baseSchema, buildSchema, schema } from "./schema";
+export { baseSchema, buildSchema, schema } from './schema';
 // Export all shared types
-export * from "./types/index";
-export * from "./utils/access-control";
+export * from './types/index';
+export * from './utils/access-control';
 // Export shared utilities
-export * from "./utils/admin-permissions";
+export * from './utils/admin-permissions';

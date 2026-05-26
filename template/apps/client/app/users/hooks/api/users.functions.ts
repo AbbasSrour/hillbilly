@@ -5,10 +5,7 @@ import { authClient } from '@/lib/auth.ts';
 // ---------------------------------------> List Users <----------------------------------------------------------//
 export type ListUsersInput = Parameters<typeof authClient.admin.listUsers>[0];
 
-export const listUsersFn = async (
-  params: ListUsersInput,
-  headers?: Headers,
-) => {
+export const listUsersFn = async (params: ListUsersInput, headers?: Headers) => {
   const res = await authClient.admin.listUsers({
     ...params,
     fetchOptions: {
@@ -54,10 +51,7 @@ export const getUserServerFn = createIsomorphicFn()
 // ---------------------------------------> Create User <----------------------------------------------------------//
 export type CreateUserInput = Parameters<typeof authClient.admin.createUser>[0];
 
-export const createUserFn = async (
-  params: CreateUserInput,
-  headers?: Headers,
-) => {
+export const createUserFn = async (params: CreateUserInput, headers?: Headers) => {
   const res = await authClient.admin.createUser({
     ...params,
     fetchOptions: {
@@ -74,17 +68,12 @@ export const createUserFn = async (
 
 export const createUserServerFn = createIsomorphicFn()
   .client((params: CreateUserInput) => createUserFn(params))
-  .server((params: CreateUserInput) =>
-    createUserFn(params, getRequestHeaders()),
-  );
+  .server((params: CreateUserInput) => createUserFn(params, getRequestHeaders()));
 
 // ---------------------------------------> Update User <----------------------------------------------------------//
 export type UpdateUserInput = Parameters<typeof authClient.admin.updateUser>[0];
 
-export const updateUserFn = async (
-  params: UpdateUserInput,
-  headers?: Headers,
-) => {
+export const updateUserFn = async (params: UpdateUserInput, headers?: Headers) => {
   const res = await authClient.admin.updateUser({
     ...params,
     fetchOptions: {
@@ -102,17 +91,12 @@ export const updateUserFn = async (
 
 export const updateUserServerFn = createIsomorphicFn()
   .client(async (params) => updateUserFn(params))
-  .server(async (params: UpdateUserInput) =>
-    updateUserFn(params, getRequestHeaders()),
-  );
+  .server(async (params: UpdateUserInput) => updateUserFn(params, getRequestHeaders()));
 
 // ---------------------------------------> Delete User <----------------------------------------------------------//
 export type DeleteUserInput = Parameters<typeof authClient.admin.removeUser>[0];
 
-export const deleteUserFn = async (
-  params: DeleteUserInput,
-  headers?: Headers,
-) => {
+export const deleteUserFn = async (params: DeleteUserInput, headers?: Headers) => {
   const res = await authClient.admin.removeUser({
     ...params,
     fetchOptions: {
@@ -130,14 +114,10 @@ export const deleteUserFn = async (
 
 export const deleteUserServerFn = createIsomorphicFn()
   .client((params: DeleteUserInput) => deleteUserFn(params))
-  .server((params: DeleteUserInput) =>
-    deleteUserFn(params, getRequestHeaders()),
-  );
+  .server((params: DeleteUserInput) => deleteUserFn(params, getRequestHeaders()));
 
 // ---------------------------------------> Send Verification Email <----------------------------------------------------------//
-export type SendVerificationEmailInput = Parameters<
-  typeof authClient.sendVerificationEmail
->[0];
+export type SendVerificationEmailInput = Parameters<typeof authClient.sendVerificationEmail>[0];
 
 export const sendVerificationEmailFn = async (
   params: SendVerificationEmailInput,
@@ -159,9 +139,7 @@ export const sendVerificationEmailFn = async (
 };
 
 export const sendVerificationEmailServerFn = createIsomorphicFn()
-  .client((params: SendVerificationEmailInput) =>
-    sendVerificationEmailFn(params),
-  )
+  .client((params: SendVerificationEmailInput) => sendVerificationEmailFn(params))
   .server((params: SendVerificationEmailInput) =>
     sendVerificationEmailFn(params, getRequestHeaders()),
   );

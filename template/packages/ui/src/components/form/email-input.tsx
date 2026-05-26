@@ -1,11 +1,11 @@
-import { Input } from "@hillbilly/ui/core/input";
-import { MailIcon } from "lucide-react";
-import type * as React from "react";
+import { Input } from '@hillbilly/ui/core/input';
+import { MailIcon } from 'lucide-react';
+import type * as React from 'react';
 
-function EmailInput({ className, ...props }: React.ComponentProps<"input">) {
+function EmailInput({ className, ...props }: React.ComponentProps<'input'>) {
   return <Input type="email" icon={MailIcon} className={className} {...props} />;
 }
 
-EmailInput.displayName = "EmailInput";
+EmailInput.displayName = 'EmailInput';
 
 export { EmailInput };

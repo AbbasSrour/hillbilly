@@ -1,5 +1,5 @@
-import type { AuthContext, BetterAuthOptions } from "better-auth";
-import type { Permission, RBACPluginConfig, RBACSchemaConfig } from "../types";
+import type { AuthContext, BetterAuthOptions } from 'better-auth';
+import type { Permission, RBACPluginConfig, RBACSchemaConfig } from '../types';
 
 /**
  * Fetches permissions for a list of role IDs
@@ -28,7 +28,7 @@ export const getRolePermissions = async (
       // Fallback: log warning and return empty
       const logger = ctx.context.logger;
       if (logger?.warn) {
-        logger.warn("[RBAC] MikroORM instance not available in adapter");
+        logger.warn('[RBAC] MikroORM instance not available in adapter');
       }
       return {};
     }
@@ -38,13 +38,13 @@ export const getRolePermissions = async (
     // Get the actual entity name from the adapter's model map
     // Default to the Better Auth model name 'role' if not mapped
     const roleEntityName =
-      pluginConfig?.schema?.role?.modelName || adapter.modelMap?.role || "role";
+      pluginConfig?.schema?.role?.modelName || adapter.modelMap?.role || 'role';
 
     // Fetch roles with their permissions populated using the actual entity name
     const roles = await em.find(
       roleEntityName,
       { id: { $in: roleIds } },
-      { populate: ["permissions"] },
+      { populate: ['permissions'] },
     );
 
     // Build the result map
@@ -58,7 +58,7 @@ export const getRolePermissions = async (
   } catch (error) {
     const logger = ctx.context.logger;
     if (logger?.error) {
-      logger.error("[RBAC] Error fetching role permissions:", error);
+      logger.error('[RBAC] Error fetching role permissions:', error);
     }
     return {};
   }

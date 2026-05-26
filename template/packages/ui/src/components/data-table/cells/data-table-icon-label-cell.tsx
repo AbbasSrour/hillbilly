@@ -1,5 +1,5 @@
-import { cn } from "@hillbilly/ui/lib/utils";
-import type { ComponentType, ReactNode } from "react";
+import { cn } from '@hillbilly/ui/lib/utils';
+import type { ComponentType, ReactNode } from 'react';
 
 export interface IconLabelOption {
   value: string;
@@ -39,7 +39,7 @@ export function DataTableIconLabelCell({
   iconClassName,
   labelClassName,
   capitalize = true,
-  fallback = "-",
+  fallback = '-',
 }: DataTableIconLabelCellProps) {
   if (!value) {
     return <span className="text-muted-foreground">{fallback}</span>;
@@ -47,18 +47,18 @@ export function DataTableIconLabelCell({
 
   const option = options.find((opt) => opt.value === value);
   const Icon = option?.icon ?? DefaultIcon;
-  const label = option?.label ?? value.toLowerCase().replace(/_/g, " ");
+  const label = option?.label ?? value.toLowerCase().replace(/_/g, ' ');
 
   return (
-    <div className={cn("flex items-center gap-x-2", className)}>
+    <div className={cn('flex items-center gap-x-2', className)}>
       {Icon && (
         <Icon
           size={iconSize}
-          className={cn("text-muted-foreground", option?.iconClassName, iconClassName)}
+          className={cn('text-muted-foreground', option?.iconClassName, iconClassName)}
         />
       )}
       <span
-        className={cn("text-sm", capitalize && "capitalize", option?.className, labelClassName)}
+        className={cn('text-sm', capitalize && 'capitalize', option?.className, labelClassName)}
       >
         {label}
       </span>

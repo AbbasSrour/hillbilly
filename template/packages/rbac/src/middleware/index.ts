@@ -1,12 +1,12 @@
-import { APIError, createAuthMiddleware, sessionMiddleware } from "better-auth/api";
-import type { Role as RoleModel } from "../types/schema";
+import { APIError, createAuthMiddleware, sessionMiddleware } from 'better-auth/api';
+import type { Role as RoleModel } from '../types/schema';
 import {
   type EnhancedSessionUser,
   hasPermissions,
   userHasAllPermissions,
   userHasAnyPermission,
-} from "../types/session";
-import { getRolePermissions } from "../utils/get-role-permissions";
+} from '../types/session';
+import { getRolePermissions } from '../utils/get-role-permissions';
 
 // ============================================================================
 // Types
@@ -19,7 +19,7 @@ export interface PermissionMiddlewareOptions {
   /** Custom error message when permission check fails */
   message?: string;
   /** Permission check mode: 'all' requires all permissions, 'any' requires at least one */
-  mode?: "all" | "any";
+  mode?: 'all' | 'any';
 }
 
 /**
@@ -51,7 +51,7 @@ export interface RoleAndPermissionOptions {
   /** Permission(s) the user must have */
   permissions?: string | string[];
   /** Permission check mode */
-  permissionMode?: "all" | "any";
+  permissionMode?: 'all' | 'any';
   /** Custom error message */
   message?: string;
   /** Use session permissions instead of database lookup */
@@ -69,8 +69,8 @@ function assertSession(session: unknown): asserts session is {
   user: { id: string; role?: string; permissions?: string[] };
 } {
   if (!session) {
-    throw new APIError("UNAUTHORIZED", {
-      message: "Authentication required",
+    throw new APIError('UNAUTHORIZED', {
+      message: 'Authentication required',
     });
   }
 }
@@ -81,9 +81,9 @@ function assertSession(session: unknown): asserts session is {
 function checkPermissionsSatisfied(
   userPermissions: string[],
   requiredPermissions: string[],
-  mode: "all" | "any",
+  mode: 'all' | 'any',
 ): boolean {
-  return mode === "all"
+  return mode === 'all'
     ? requiredPermissions.every((p) => userPermissions.includes(p))
     : requiredPermissions.some((p) => userPermissions.includes(p));
 }
@@ -92,7 +92,7 @@ function checkPermissionsSatisfied(
  * Generates default error message for permission failures
  */
 function getPermissionErrorMessage(permissions: string[]): string {
-  return `Missing required permission(s): ${permissions.join(", ")}`;
+  return `Missing required permission(s): ${permissions.join(', ')}`;
 }
 
 /**
@@ -110,13 +110,13 @@ async function fetchUserPermissionsFromDatabase(
   roleName: string,
 ): Promise<string[]> {
   const role = (await ctx.context.adapter.findOne({
-    model: "role",
-    where: [{ field: "name", value: roleName }],
+    model: 'role',
+    where: [{ field: 'name', value: roleName }],
   })) as RoleModel | null;
 
   if (!role) {
-    throw new APIError("FORBIDDEN", {
-      message: "User role not found",
+    throw new APIError('FORBIDDEN', {
+      message: 'User role not found',
     });
   }
 
@@ -181,7 +181,7 @@ export const requirePermission = (
   options?: PermissionMiddlewareOptions,
 ) => {
   const permissions = Array.isArray(permission) ? permission : [permission];
-  const mode = options?.mode ?? "all";
+  const mode = options?.mode ?? 'all';
   const message = options?.message ?? getPermissionErrorMessage(permissions);
 
   return createAuthMiddleware(async (ctx) => {
@@ -191,15 +191,15 @@ export const requirePermission = (
     const userRoleName = session.user.role;
 
     if (!userRoleName) {
-      throw new APIError("FORBIDDEN", {
-        message: "User has no role assigned",
+      throw new APIError('FORBIDDEN', {
+        message: 'User has no role assigned',
       });
     }
 
     const userPermCodes = await fetchUserPermissionsFromDatabase(ctx, userRoleName);
 
     if (!checkPermissionsSatisfied(userPermCodes, permissions, mode)) {
-      throw new APIError("FORBIDDEN", { message });
+      throw new APIError('FORBIDDEN', { message });
     }
 
     // Attach fetched permissions to context for downstream use
@@ -233,8 +233,8 @@ export const requirePermission = (
  */
 export const requireAllPermissions = (
   permissions: string[],
-  options?: Omit<PermissionMiddlewareOptions, "mode">,
-) => requirePermission(permissions, { ...options, mode: "all" });
+  options?: Omit<PermissionMiddlewareOptions, 'mode'>,
+) => requirePermission(permissions, { ...options, mode: 'all' });
 
 /**
  * Middleware factory that requires ANY of the specified permissions.
@@ -254,8 +254,8 @@ export const requireAllPermissions = (
  */
 export const requireAnyPermission = (
   permissions: string[],
-  options?: Omit<PermissionMiddlewareOptions, "mode">,
-) => requirePermission(permissions, { ...options, mode: "any" });
+  options?: Omit<PermissionMiddlewareOptions, 'mode'>,
+) => requirePermission(permissions, { ...options, mode: 'any' });
 
 /**
  * Middleware factory that requires the user to have a specific role.
@@ -282,7 +282,7 @@ export const requireAnyPermission = (
  */
 export const requireRole = (role: string | string[], options?: RoleMiddlewareOptions) => {
   const allowedRoles = Array.isArray(role) ? role : [role];
-  const message = options?.message ?? `Required role(s): ${allowedRoles.join(", ")}`;
+  const message = options?.message ?? `Required role(s): ${allowedRoles.join(', ')}`;
 
   return createAuthMiddleware(async (ctx) => {
     const session = ctx.context.session;
@@ -291,7 +291,7 @@ export const requireRole = (role: string | string[], options?: RoleMiddlewareOpt
     const userRole = session.user.role;
 
     if (!userRole || !allowedRoles.includes(userRole)) {
-      throw new APIError("FORBIDDEN", { message });
+      throw new APIError('FORBIDDEN', { message });
     }
 
     return { context: ctx.context };
@@ -314,8 +314,8 @@ export const requireRole = (role: string | string[], options?: RoleMiddlewareOpt
  * ```
  */
 export const requireAdmin = (options?: RoleMiddlewareOptions) =>
-  requireRole("admin", {
-    message: options?.message ?? "Admin access required",
+  requireRole('admin', {
+    message: options?.message ?? 'Admin access required',
   });
 
 /**
@@ -350,7 +350,7 @@ export const requireSessionPermission = (
   options?: SessionPermissionMiddlewareOptions,
 ) => {
   const permissions = Array.isArray(permission) ? permission : [permission];
-  const mode = options?.mode ?? "all";
+  const mode = options?.mode ?? 'all';
   const message = options?.message ?? getPermissionErrorMessage(permissions);
   const fallbackToDatabase = options?.fallbackToDatabase ?? false;
 
@@ -367,7 +367,7 @@ export const requireSessionPermission = (
         const userPermCodes = await fetchUserPermissionsFromDatabase(ctx, session.user.role);
 
         if (!checkPermissionsSatisfied(userPermCodes, permissions, mode)) {
-          throw new APIError("FORBIDDEN", { message });
+          throw new APIError('FORBIDDEN', { message });
         }
 
         return {
@@ -381,19 +381,19 @@ export const requireSessionPermission = (
         };
       }
 
-      throw new APIError("FORBIDDEN", {
-        message: "Session permissions not available. Ensure session enhancement is enabled.",
+      throw new APIError('FORBIDDEN', {
+        message: 'Session permissions not available. Ensure session enhancement is enabled.',
       });
     }
 
     // Check permissions based on mode using existing helpers
     const hasRequiredPermission =
-      mode === "all"
+      mode === 'all'
         ? userHasAllPermissions(user, permissions)
         : userHasAnyPermission(user, permissions);
 
     if (!hasRequiredPermission) {
-      throw new APIError("FORBIDDEN", { message });
+      throw new APIError('FORBIDDEN', { message });
     }
 
     return { context: ctx.context };
@@ -410,8 +410,8 @@ export const requireSessionPermission = (
  */
 export const requireAllSessionPermissions = (
   permissions: string[],
-  options?: Omit<SessionPermissionMiddlewareOptions, "mode">,
-) => requireSessionPermission(permissions, { ...options, mode: "all" });
+  options?: Omit<SessionPermissionMiddlewareOptions, 'mode'>,
+) => requireSessionPermission(permissions, { ...options, mode: 'all' });
 
 /**
  * Middleware factory that uses pre-loaded permissions and requires ANY of the specified permissions.
@@ -423,8 +423,8 @@ export const requireAllSessionPermissions = (
  */
 export const requireAnySessionPermission = (
   permissions: string[],
-  options?: Omit<SessionPermissionMiddlewareOptions, "mode">,
-) => requireSessionPermission(permissions, { ...options, mode: "any" });
+  options?: Omit<SessionPermissionMiddlewareOptions, 'mode'>,
+) => requireSessionPermission(permissions, { ...options, mode: 'any' });
 
 // ============================================================================
 // Advanced Middleware
@@ -470,7 +470,7 @@ export const requireRoleAndPermission = (options: RoleAndPermissionOptions) => {
       ? options.permissions
       : [options.permissions]
     : [];
-  const permissionMode = options.permissionMode ?? "all";
+  const permissionMode = options.permissionMode ?? 'all';
   const useSessionPermissions = options.useSessionPermissions ?? false;
 
   return createAuthMiddleware(async (ctx) => {
@@ -482,8 +482,8 @@ export const requireRoleAndPermission = (options: RoleAndPermissionOptions) => {
     // Check role if specified
     if (roles.length > 0) {
       if (!userRole || !roles.includes(userRole)) {
-        throw new APIError("FORBIDDEN", {
-          message: options.message ?? `Required role(s): ${roles.join(", ")}`,
+        throw new APIError('FORBIDDEN', {
+          message: options.message ?? `Required role(s): ${roles.join(', ')}`,
         });
       }
     }
@@ -495,22 +495,22 @@ export const requireRoleAndPermission = (options: RoleAndPermissionOptions) => {
       if (useSessionPermissions) {
         const user = session.user as unknown as EnhancedSessionUser | undefined;
         if (!user || !hasPermissions(user)) {
-          throw new APIError("FORBIDDEN", {
-            message: "Session permissions not available. Ensure session enhancement is enabled.",
+          throw new APIError('FORBIDDEN', {
+            message: 'Session permissions not available. Ensure session enhancement is enabled.',
           });
         }
         userPermCodes = user.permissions;
       } else {
         if (!userRole) {
-          throw new APIError("FORBIDDEN", {
-            message: "User has no role assigned",
+          throw new APIError('FORBIDDEN', {
+            message: 'User has no role assigned',
           });
         }
         userPermCodes = await fetchUserPermissionsFromDatabase(ctx, userRole);
       }
 
       if (!checkPermissionsSatisfied(userPermCodes, permissions, permissionMode)) {
-        throw new APIError("FORBIDDEN", {
+        throw new APIError('FORBIDDEN', {
           message: options.message ?? getPermissionErrorMessage(permissions),
         });
       }
@@ -568,7 +568,7 @@ export const requireDynamicPermission = (
     useSessionPermissions?: boolean;
   },
 ) => {
-  const mode = options?.mode ?? "all";
+  const mode = options?.mode ?? 'all';
   const useSessionPermissions = options?.useSessionPermissions ?? false;
   const fallbackToDatabase = options?.fallbackToDatabase ?? false;
 
@@ -596,8 +596,8 @@ export const requireDynamicPermission = (
         if (fallbackToDatabase && session.user.role) {
           userPermCodes = await fetchUserPermissionsFromDatabase(ctx, session.user.role);
         } else {
-          throw new APIError("FORBIDDEN", {
-            message: "Session permissions not available. Ensure session enhancement is enabled.",
+          throw new APIError('FORBIDDEN', {
+            message: 'Session permissions not available. Ensure session enhancement is enabled.',
           });
         }
       } else {
@@ -606,15 +606,15 @@ export const requireDynamicPermission = (
     } else {
       const userRole = session.user.role;
       if (!userRole) {
-        throw new APIError("FORBIDDEN", {
-          message: "User has no role assigned",
+        throw new APIError('FORBIDDEN', {
+          message: 'User has no role assigned',
         });
       }
       userPermCodes = await fetchUserPermissionsFromDatabase(ctx, userRole);
     }
 
     if (!checkPermissionsSatisfied(userPermCodes, permissions, mode)) {
-      throw new APIError("FORBIDDEN", { message });
+      throw new APIError('FORBIDDEN', { message });
     }
 
     return {

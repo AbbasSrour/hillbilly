@@ -1,4 +1,4 @@
-import { Button } from "@hillbilly/ui/core/button";
+import { Button } from '@hillbilly/ui/core/button';
 import {
   Command,
   CommandEmpty,
@@ -6,17 +6,17 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@hillbilly/ui/core/command";
-import { Drawer, DrawerContent, DrawerTrigger } from "@hillbilly/ui/core/drawer";
-import { Popover, PopoverContent, PopoverTrigger } from "@hillbilly/ui/core/popover";
-import { Skeleton } from "@hillbilly/ui/core/skeleton";
-import { useIsMobile } from "@hillbilly/ui/hooks/is-mobile";
-import { CommandLoading } from "cmdk";
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-import { type ComponentPropsWithoutRef, type RefObject, useEffect, useRef } from "react";
-import { useIntersection } from "react-use";
-import { cn } from "../../lib/utils";
+} from '@hillbilly/ui/core/command';
+import { Drawer, DrawerContent, DrawerTrigger } from '@hillbilly/ui/core/drawer';
+import { Popover, PopoverContent, PopoverTrigger } from '@hillbilly/ui/core/popover';
+import { Skeleton } from '@hillbilly/ui/core/skeleton';
+import { useIsMobile } from '@hillbilly/ui/hooks/is-mobile';
+import { CommandLoading } from 'cmdk';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
+import { type ComponentPropsWithoutRef, type RefObject, useEffect, useRef } from 'react';
+import { useIntersection } from 'react-use';
+import { cn } from '../../lib/utils';
 
 export type ComboboxOption = {
   icon?: React.ReactNode;
@@ -44,11 +44,11 @@ export function Combobox({
   options,
   value,
   onChange,
-  placeholder = "Select an option...",
-  emptyMessage = "No option found.",
+  placeholder = 'Select an option...',
+  emptyMessage = 'No option found.',
   triggerProps,
   contentProps,
-  searchPlaceholder = "Search...",
+  searchPlaceholder = 'Search...',
   disabled = false,
   isLoading,
   onScrollEnd,
@@ -63,16 +63,16 @@ export function Combobox({
 
   useEffect(() => {
     const updateTriggerWidth = () => {
-      if (triggerRef.current && "offsetWidth" in triggerRef.current) {
+      if (triggerRef.current && 'offsetWidth' in triggerRef.current) {
         setTriggerWidth(triggerRef.current.offsetWidth);
       }
     };
 
     updateTriggerWidth();
-    window.addEventListener("resize", updateTriggerWidth);
+    window.addEventListener('resize', updateTriggerWidth);
 
     return () => {
-      window.removeEventListener("resize", updateTriggerWidth);
+      window.removeEventListener('resize', updateTriggerWidth);
     };
   }, []);
 
@@ -95,7 +95,7 @@ export function Combobox({
         </PopoverTrigger>
         <PopoverContent
           {...contentProps}
-          className={cn("p-0", contentProps?.className)}
+          className={cn('p-0', contentProps?.className)}
           align="start"
           style={{ width: triggerWidth ? `${triggerWidth}px` : undefined }}
         >
@@ -146,7 +146,7 @@ export function Combobox({
   );
 }
 
-interface OptionsListProps extends Omit<ComponentPropsWithoutRef<typeof Command>, "onChange"> {
+interface OptionsListProps extends Omit<ComponentPropsWithoutRef<typeof Command>, 'onChange'> {
   options: ComboboxOption[];
   value: string;
   onChange: (value: string) => void;
@@ -175,7 +175,7 @@ function OptionsList({
 
   const intersection = useIntersection(observerRef as RefObject<HTMLDivElement>, {
     root: null,
-    rootMargin: "0px",
+    rootMargin: '0px',
     threshold: 1,
   });
 
@@ -200,7 +200,7 @@ function OptionsList({
               key={option.value}
               value={option.value}
               onSelect={(currentValue) => {
-                onChange(currentValue === value ? "" : currentValue);
+                onChange(currentValue === value ? '' : currentValue);
                 setOpen(false);
               }}
             >
@@ -209,7 +209,7 @@ function OptionsList({
                 {option.label}
               </div>
               <Check
-                className={cn("ml-auto", value === option.value ? "opacity-100" : "opacity-0")}
+                className={cn('ml-auto', value === option.value ? 'opacity-100' : 'opacity-0')}
               />
             </CommandItem>
           ))}
@@ -261,7 +261,7 @@ const TriggerButton = React.forwardRef<HTMLButtonElement, TriggerButtonProps>(
         // biome-ignore lint/a11y/useSemanticElements: I prefer to keep the role as combobox
         role="combobox"
         aria-expanded={open}
-        className={cn("w-full justify-between capitalize", props.className)}
+        className={cn('w-full justify-between capitalize', props.className)}
         disabled={disabled}
       >
         <div className="flex items-center gap-2">

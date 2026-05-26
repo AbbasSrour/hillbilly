@@ -10,10 +10,7 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import {
-  ExpressAdapter,
-  NestExpressApplication,
-} from '@nestjs/platform-express';
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigModule } from '@config/config.module';
 import { ApiConfigService } from '@config/service/api-config.service';
 import { TranslationService } from '@/package/translation/service/translation.service';
@@ -31,14 +28,10 @@ import { AppModule } from './app.module';
 setupInstrumentation();
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-    new ExpressAdapter(),
-    {
-      cors: true,
-      bodyParser: false,
-    },
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), {
+    cors: true,
+    bodyParser: false,
+  });
 
   app.enableVersioning({
     type: VersioningType.URI,
@@ -73,9 +66,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(reflector),
-    new TranslationInterceptor(
-      app.select(TranslationModule).get(TranslationService),
-    ),
+    new TranslationInterceptor(app.select(TranslationModule).get(TranslationService)),
   );
 
   app.useGlobalPipes(

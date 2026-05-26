@@ -1,5 +1,5 @@
-import type { BetterAuthClientPlugin, BetterFetchOption } from "better-auth/client";
-import type { rbac } from "./server";
+import type { BetterAuthClientPlugin, BetterFetchOption } from 'better-auth/client';
+import type { rbac } from './server';
 import type {
   CheckPermissionResponse,
   PermissionListResponse,
@@ -8,7 +8,7 @@ import type {
   RoleResponse,
   SyncResponse,
   UserPermissionsResponse,
-} from "./types";
+} from './types';
 
 // ============================================================================
 // Type Inference Utility
@@ -60,7 +60,7 @@ export function inferRbacAdditionalFields<
   Auth extends { options?: { plugins?: unknown[] } } | undefined = undefined,
 >(): Auth extends { options: { plugins: infer P } }
   ? P extends Array<infer Plugin>
-    ? Plugin extends { id: "rbac"; schema: infer S }
+    ? Plugin extends { id: 'rbac'; schema: infer S }
       ? S extends RBACSchemaConfig
         ? S
         : RBACSchemaConfig
@@ -85,7 +85,7 @@ export interface PaginationQuery {
   limit?: number;
   offset?: number;
   sortBy?: string;
-  sortDirection?: "asc" | "desc";
+  sortDirection?: 'asc' | 'desc';
 }
 
 /**
@@ -156,16 +156,16 @@ export interface CheckPermissionInput {
 // ============================================================================
 
 function buildQueryString(query?: PaginationQuery): string {
-  if (!query) return "";
+  if (!query) return '';
 
   const params = new URLSearchParams();
-  if (query.limit !== undefined) params.set("limit", String(query.limit));
-  if (query.offset !== undefined) params.set("offset", String(query.offset));
-  if (query.sortBy) params.set("sortBy", query.sortBy);
-  if (query.sortDirection) params.set("sortDirection", query.sortDirection);
+  if (query.limit !== undefined) params.set('limit', String(query.limit));
+  if (query.offset !== undefined) params.set('offset', String(query.offset));
+  if (query.sortBy) params.set('sortBy', query.sortBy);
+  if (query.sortDirection) params.set('sortDirection', query.sortDirection);
 
   const str = params.toString();
-  return str ? `?${str}` : "";
+  return str ? `?${str}` : '';
 }
 
 // ============================================================================
@@ -240,7 +240,7 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
   _options?: RBACClientOptions<S>,
 ) => {
   return {
-    id: "rbac",
+    id: 'rbac',
     $InferServerPlugin: {} as ReturnType<typeof rbac>,
     getActions: ($fetch) => ({
       rbac: {
@@ -249,8 +249,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Requires admin access
          */
         sync: async (fetchOptions?: BetterFetchOption) => {
-          return await $fetch<SyncResponse>("/rbac/sync", {
-            method: "POST",
+          return await $fetch<SyncResponse>('/rbac/sync', {
+            method: 'POST',
             ...fetchOptions,
           });
         },
@@ -261,7 +261,7 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
         listRoles: async (query?: PaginationQuery, fetchOptions?: BetterFetchOption) => {
           const queryString = buildQueryString(query);
           return await $fetch<RoleListResponse>(`/rbac/roles${queryString}`, {
-            method: "GET",
+            method: 'GET',
             ...fetchOptions,
           });
         },
@@ -272,7 +272,7 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
         getRole: async (data: GetRoleInput, fetchOptions?: BetterFetchOption) => {
           const params = new URLSearchParams({ roleId: data.roleId });
           return await $fetch<RoleResponse>(`/rbac/role?${params.toString()}`, {
-            method: "GET",
+            method: 'GET',
             ...fetchOptions,
           });
         },
@@ -282,8 +282,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Requires admin access
          */
         createRole: async (data: CreateRoleInput, fetchOptions?: BetterFetchOption) => {
-          return await $fetch<RoleResponse>("/rbac/roles", {
-            method: "POST",
+          return await $fetch<RoleResponse>('/rbac/roles', {
+            method: 'POST',
             body: data,
             ...fetchOptions,
           });
@@ -294,8 +294,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Requires admin access
          */
         updateRole: async (data: UpdateRoleInput, fetchOptions?: BetterFetchOption) => {
-          return await $fetch<RoleResponse>("/rbac/role", {
-            method: "PUT",
+          return await $fetch<RoleResponse>('/rbac/role', {
+            method: 'PUT',
             body: data,
             ...fetchOptions,
           });
@@ -306,8 +306,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Requires admin access
          */
         deleteRole: async (data: DeleteRoleInput, fetchOptions?: BetterFetchOption) => {
-          return await $fetch<{ success: boolean }>("/rbac/role", {
-            method: "DELETE",
+          return await $fetch<{ success: boolean }>('/rbac/role', {
+            method: 'DELETE',
             body: data,
             ...fetchOptions,
           });
@@ -319,7 +319,7 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
         listPermissions: async (query?: PaginationQuery, fetchOptions?: BetterFetchOption) => {
           const queryString = buildQueryString(query);
           return await $fetch<PermissionListResponse>(`/rbac/permissions${queryString}`, {
-            method: "GET",
+            method: 'GET',
             ...fetchOptions,
           });
         },
@@ -335,7 +335,7 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
           return await $fetch<PermissionListResponse>(
             `/rbac/role-permissions?${params.toString()}`,
             {
-              method: "GET",
+              method: 'GET',
               ...fetchOptions,
             },
           );
@@ -347,9 +347,9 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          */
         assignPermission: async (data: AssignPermissionInput, fetchOptions?: BetterFetchOption) => {
           return await $fetch<{ success: boolean; message?: string }>(
-            "/rbac/role-permissions/assign",
+            '/rbac/role-permissions/assign',
             {
-              method: "POST",
+              method: 'POST',
               body: data,
               ...fetchOptions,
             },
@@ -361,8 +361,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Requires admin access
          */
         removePermission: async (data: RemovePermissionInput, fetchOptions?: BetterFetchOption) => {
-          return await $fetch<{ success: boolean }>("/rbac/role-permissions/remove", {
-            method: "POST",
+          return await $fetch<{ success: boolean }>('/rbac/role-permissions/remove', {
+            method: 'POST',
             body: data,
             ...fetchOptions,
           });
@@ -373,8 +373,8 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Returns true only if user has ALL specified permissions
          */
         checkPermission: async (data: CheckPermissionInput, fetchOptions?: BetterFetchOption) => {
-          return await $fetch<CheckPermissionResponse>("/rbac/check-permission", {
-            method: "POST",
+          return await $fetch<CheckPermissionResponse>('/rbac/check-permission', {
+            method: 'POST',
             body: data,
             ...fetchOptions,
           });
@@ -384,21 +384,21 @@ export const rbacClient = <S extends RBACSchemaConfig = RBACSchemaConfig>(
          * Get the current user's role and permissions
          */
         getUserPermissions: async (fetchOptions?: BetterFetchOption) => {
-          return await $fetch<UserPermissionsResponse>("/rbac/user-permissions", {
-            method: "GET",
+          return await $fetch<UserPermissionsResponse>('/rbac/user-permissions', {
+            method: 'GET',
             ...fetchOptions,
           });
         },
       },
     }),
     pathMethods: {
-      "/rbac/roles": "GET",
-      "/rbac/role": ["GET", "PUT", "DELETE"] as unknown as "GET",
-      "/rbac/permissions": "GET",
-      "/rbac/role-permissions": "GET",
-      "/rbac/role-permissions/assign": "POST",
-      "/rbac/role-permissions/remove": "POST",
-      "/rbac/user-permissions": "GET",
+      '/rbac/roles': 'GET',
+      '/rbac/role': ['GET', 'PUT', 'DELETE'] as unknown as 'GET',
+      '/rbac/permissions': 'GET',
+      '/rbac/role-permissions': 'GET',
+      '/rbac/role-permissions/assign': 'POST',
+      '/rbac/role-permissions/remove': 'POST',
+      '/rbac/user-permissions': 'GET',
     },
   } satisfies BetterAuthClientPlugin;
 };
@@ -415,7 +415,7 @@ export type {
   RoleResponse,
   SyncResponse,
   UserPermissionsResponse,
-} from "./types/api";
+} from './types/api';
 
 // Re-export schema types
-export type { RBACSchemaConfig } from "./types/schema";
+export type { RBACSchemaConfig } from './types/schema';

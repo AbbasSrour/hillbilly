@@ -1,60 +1,60 @@
-import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from "better-auth";
-import { APIError, createAuthEndpoint, sessionMiddleware } from "better-auth/api";
-import type { RBACPluginConfig } from "../types/config";
-import type { Permission, RBACSchemaConfig, Role as RoleModel } from "../types/schema";
-import { getRolePermissions } from "../utils";
+import { AuthContext, BetterAuthOptions, EndpointContext, EndpointOptions } from 'better-auth';
+import { APIError, createAuthEndpoint, sessionMiddleware } from 'better-auth/api';
+import type { RBACPluginConfig } from '../types/config';
+import type { Permission, RBACSchemaConfig, Role as RoleModel } from '../types/schema';
+import { getRolePermissions } from '../utils';
 
-const userPermissionsPath = "/rbac/user-permissions" as const;
+const userPermissionsPath = '/rbac/user-permissions' as const;
 const userPermissionsConfig = (permissionCodes?: string[]) => {
   const permissionCodeSchema = {
-    type: "string",
+    type: 'string',
     ...(permissionCodes && permissionCodes.length > 0 ? { enum: permissionCodes } : {}),
   } as const;
 
   const permissionSchema = {
-    type: "object",
+    type: 'object',
     properties: {
-      id: { type: "string" },
-      name: { type: "string" },
+      id: { type: 'string' },
+      name: { type: 'string' },
       code: permissionCodeSchema,
-      description: { type: "string", nullable: true },
+      description: { type: 'string', nullable: true },
     },
-    required: ["id", "name", "code"],
+    required: ['id', 'name', 'code'],
     additionalProperties: true,
   } as const;
 
   return {
-    method: "GET",
+    method: 'GET',
     use: [sessionMiddleware],
     metadata: {
       openapi: {
         responses: {
           200: {
-            description: "User permissions",
+            description: 'User permissions',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  type: "object",
+                  type: 'object',
                   properties: {
                     role: {
                       anyOf: [
                         {
-                          type: "object",
+                          type: 'object',
                           properties: {
-                            id: { type: "string" },
-                            name: { type: "string" },
+                            id: { type: 'string' },
+                            name: { type: 'string' },
                           },
-                          required: ["id", "name"],
+                          required: ['id', 'name'],
                         },
-                        { type: "null" },
+                        { type: 'null' },
                       ],
                     },
                     permissions: {
-                      type: "array",
+                      type: 'array',
                       items: permissionSchema,
                     },
                   },
-                  required: ["role", "permissions"],
+                  required: ['role', 'permissions'],
                 },
               },
             },
@@ -78,8 +78,8 @@ export const userPermissionsHandler =
   ) => {
     const session = ctx.context.session;
     if (!session) {
-      throw new APIError("UNAUTHORIZED", {
-        message: "Session required",
+      throw new APIError('UNAUTHORIZED', {
+        message: 'Session required',
       });
     }
 
@@ -90,8 +90,8 @@ export const userPermissionsHandler =
     if (userRoleName) {
       // Find the role entity
       role = (await ctx.context.adapter.findOne({
-        model: "role",
-        where: [{ field: "name", value: userRoleName }],
+        model: 'role',
+        where: [{ field: 'name', value: userRoleName }],
       })) as RoleModel | null;
 
       if (role) {

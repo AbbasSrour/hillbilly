@@ -8,8 +8,8 @@ import {
   Section,
   Tailwind,
   Text,
-} from "@react-email/components";
-import type { ReactNode } from "react";
+} from '@react-email/components';
+import type { ReactNode } from 'react';
 
 export interface EmailLayoutProps {
   appName: string;

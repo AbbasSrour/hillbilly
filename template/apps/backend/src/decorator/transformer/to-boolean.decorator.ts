@@ -1,4 +1,4 @@
-import { Transform } from "class-transformer";
+import { Transform } from 'class-transformer';
 
 /**
  * A property decorator that transforms a string value ('true' or 'false') into its respective boolean representation.
@@ -10,11 +10,11 @@ export function ToBoolean(): PropertyDecorator {
   return Transform(
     (params) => {
       switch (params.value) {
-        case "true": {
+        case 'true': {
           return true;
         }
 
-        case "false": {
+        case 'false': {
           return false;
         }
 

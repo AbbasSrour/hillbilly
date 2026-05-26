@@ -1,7 +1,7 @@
-import { usePermission } from "@hillbilly/ui/context/permission";
-import { useRecentsStore } from "@hillbilly/ui/store/recents";
-import { useRouterState } from "@tanstack/react-router";
-import type { LucideIcon } from "lucide-react";
+import { usePermission } from '@hillbilly/ui/context/permission';
+import { useRecentsStore } from '@hillbilly/ui/store/recents';
+import { useRouterState } from '@tanstack/react-router';
+import type { LucideIcon } from 'lucide-react';
 import {
   createContext,
   type PropsWithChildren,
@@ -10,7 +10,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-} from "react";
+} from 'react';
 
 export interface NavigationItem<T extends string = string> {
   title: string;
@@ -56,7 +56,7 @@ export interface NavigationContext<T extends string = string> {
 }
 
 export const NavigationContext = createContext<NavigationContext>({
-  homepage: "/",
+  homepage: '/',
   main: [],
   secondary: [],
   enableRecents: false,
@@ -64,7 +64,7 @@ export const NavigationContext = createContext<NavigationContext>({
 
 export const useNavigation = () => {
   if (!NavigationContext) {
-    throw new Error("useNavigation must be used within a NavigationProvider");
+    throw new Error('useNavigation must be used within a NavigationProvider');
   }
 
   const context = useContext(NavigationContext);
@@ -144,7 +144,7 @@ export const NavigationProvider = ({
           return item;
         }
 
-        const urlPattern = item.url.replace(/\/:[^/]+/g, "/[^/]+");
+        const urlPattern = item.url.replace(/\/:[^/]+/g, '/[^/]+');
         const regex = new RegExp(`^${urlPattern}$`);
         if (regex.test(currentPath)) {
           return item;
@@ -160,7 +160,7 @@ export const NavigationProvider = ({
               };
             }
 
-            const subUrlPattern = subItem.url.replace(/\/:[^/]+/g, "/[^/]+");
+            const subUrlPattern = subItem.url.replace(/\/:[^/]+/g, '/[^/]+');
             const subRegex = new RegExp(`^${subUrlPattern}$`);
             if (subRegex.test(currentPath)) {
               return {
@@ -179,12 +179,12 @@ export const NavigationProvider = ({
     const allItems = [...main, ...secondary];
     const matchedItem = findMatchingItem(allItems, pathname);
     if (matchedItem) {
-      const pageTitle = document.title.split("|")[0]?.trim() || matchedItem.title;
+      const pageTitle = document.title.split('|')[0]?.trim() || matchedItem.title;
 
       useRecentsStore.getState().addRecent({
         name: pageTitle,
         url: pathname,
-        icon: matchedItem.icon.displayName || "File",
+        icon: matchedItem.icon.displayName || 'File',
       });
     }
   }, [pathname, main, secondary, enableRecents]);

@@ -1,16 +1,16 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
-import { Transform, Type } from "class-transformer";
-import { IsString, MaxLength, MinLength, NotEquals } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
+import { IsString, MaxLength, MinLength, NotEquals } from 'class-validator';
 
-import { Trim } from "@/decorator/transformer/trim.decorator";
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { ToLowerCase } from "../transformer/to-lowercase.decorator";
-import { ToUpperCase } from "../transformer/to-uppercase.decorator";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import type { IFieldOptions } from "./field-options";
-import { FilterField, FilterOperationType } from "./filter-field.decorator";
+import { Trim } from '@/decorator/transformer/trim.decorator';
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { ToLowerCase } from '../transformer/to-lowercase.decorator';
+import { ToUpperCase } from '../transformer/to-uppercase.decorator';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import type { IFieldOptions } from './field-options';
+import { FilterField, FilterOperationType } from './filter-field.decorator';
 
 export interface IStringFieldOptions extends IFieldOptions {
   minLength?: number;
@@ -21,7 +21,7 @@ export interface IStringFieldOptions extends IFieldOptions {
 }
 
 export function StringField(
-  options: Omit<ApiPropertyOptions, "type"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   const decorators = [
     Type(() => String),
@@ -73,12 +73,12 @@ export function StringField(
 }
 
 export function StringFieldOptional(
-  options: Omit<ApiPropertyOptions, "type" | "required"> & IStringFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & IStringFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(
     // TODO move to separate transformer
     Transform((params) => {
-      return !params.value && typeof params.value === "string" && params.value.length === 0
+      return !params.value && typeof params.value === 'string' && params.value.length === 0
         ? undefined
         : params.value;
     }),

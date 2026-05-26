@@ -1,5 +1,5 @@
-import { Separator } from "@hillbilly/ui/core/separator";
-import type { PropsWithChildren, ReactNode } from "react";
+import { Separator } from '@hillbilly/ui/core/separator';
+import type { PropsWithChildren, ReactNode } from 'react';
 
 interface PageHeaderProps {
   title?: ReactNode;
@@ -15,7 +15,7 @@ export const PageHeader = ({
 }: PropsWithChildren<PageHeaderProps>) => {
   return (
     <div className="flex flex-wrap items-center justify-between space-y-2">
-      <div className={"flex flex-col gap-1"}>
+      <div className={'flex flex-col gap-1'}>
         <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
         <p className="text-muted-foreground">{description}</p>
       </div>

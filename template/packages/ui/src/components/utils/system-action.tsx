@@ -1,7 +1,7 @@
-import type { PermissionKeys } from "@hillbilly/ui/types/permission-keys";
-import { usePermission } from "@hillbilly/ui/context/permission";
-import { Button } from "@hillbilly/ui/core/button";
-import type { ComponentProps } from "react";
+import type { PermissionKeys } from '@hillbilly/ui/types/permission-keys';
+import { usePermission } from '@hillbilly/ui/context/permission';
+import { Button } from '@hillbilly/ui/core/button';
+import type { ComponentProps } from 'react';
 
 interface SystemActionProps extends ComponentProps<typeof Button> {
   permission?: PermissionKeys;
@@ -23,15 +23,15 @@ export const SystemAction = ({
 
   const getTooltip = () => {
     if (loading) {
-      return "Loading...";
+      return 'Loading...';
     }
 
     if (error) {
-      return "An error occurred. Please try again.";
+      return 'An error occurred. Please try again.';
     }
 
     if (!hasPermission) {
-      return "You do not have permission to perform this action";
+      return 'You do not have permission to perform this action';
     }
 
     return tooltip;

@@ -37,9 +37,7 @@ export const AdminsManagersInsight = ({
       value={total.toLocaleString()}
       subtext={`${admins} Admins, ${managers} Managers`}
       icon={IconShield}
-      gradientClassName={
-        gradientClassName ?? 'from-amber-500/20 to-orange-500/20'
-      }
+      gradientClassName={gradientClassName ?? 'from-amber-500/20 to-orange-500/20'}
       iconClassName={iconClassName ?? 'text-amber-500'}
     />
   );

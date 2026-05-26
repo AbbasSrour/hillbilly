@@ -1,6 +1,6 @@
-import { type Row, type RowData, flexRender } from "@tanstack/react-table";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useDataTableContext } from "@hillbilly/ui/components/data-table/data-table-provider";
+import { type Row, type RowData, flexRender } from '@tanstack/react-table';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useDataTableContext } from '@hillbilly/ui/components/data-table/data-table-provider';
 import {
   Table,
   TableBody,
@@ -8,9 +8,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@hillbilly/ui/core/table";
-import { cn } from "@hillbilly/ui/lib/utils";
-import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+} from '@hillbilly/ui/core/table';
+import { cn } from '@hillbilly/ui/lib/utils';
+import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 interface DataTableProps<TData extends RowData> {
   onRowClick?: (row: Row<TData>, event: MouseEvent<HTMLTableRowElement>) => void;
@@ -27,9 +27,9 @@ const getColumnClassName = (
 ) => {
   if (columnIndex === targetIndex) {
     return cn(
-      "drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] lg:drop-shadow-none",
-      "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
-      "sticky md:table-cell",
+      'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] lg:drop-shadow-none',
+      'bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
+      'sticky md:table-cell',
       originalClassName,
     );
   }
@@ -46,7 +46,7 @@ export function DataTable<TData extends RowData>({
 }: DataTableProps<TData>) {
   const table = useDataTableContext<TData>();
 
-  const hasSelectColumn = table.getAllColumns().some((column) => column.id === "select");
+  const hasSelectColumn = table.getAllColumns().some((column) => column.id === 'select');
 
   // Refs for virtualization
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -142,14 +142,14 @@ export function DataTable<TData extends RowData>({
 
   const containerStyle = {
     height: containerHeight
-      ? typeof containerHeight === "number"
+      ? typeof containerHeight === 'number'
         ? `${containerHeight}px`
         : containerHeight
       : enableVirtualization
-        ? "100%"
-        : "auto",
-    overflow: "auto" as const,
-    position: "relative" as const,
+        ? '100%'
+        : 'auto',
+    overflow: 'auto' as const,
+    position: 'relative' as const,
   };
 
   return (
@@ -194,9 +194,9 @@ export function DataTable<TData extends RowData>({
                   return (
                     <TableRow
                       key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className={cn("group/row", {
-                        "cursor-pointer": onRowClick,
+                      data-state={row.getIsSelected() && 'selected'}
+                      className={cn('group/row', {
+                        'cursor-pointer': onRowClick,
                       })}
                       onDoubleClick={(event) => {
                         onRowClick?.(row, event);
@@ -235,9 +235,9 @@ export function DataTable<TData extends RowData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={cn("group/row", {
-                    "cursor-pointer": onRowClick,
+                  data-state={row.getIsSelected() && 'selected'}
+                  className={cn('group/row', {
+                    'cursor-pointer': onRowClick,
                   })}
                   onDoubleClick={(event) => {
                     onRowClick?.(row, event);

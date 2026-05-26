@@ -1,14 +1,14 @@
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import * as RPNInput from "react-phone-number-input";
-import flags from "react-phone-number-input/flags";
+import { CheckIcon, ChevronsUpDown } from 'lucide-react';
+import * as RPNInput from 'react-phone-number-input';
+import flags from 'react-phone-number-input/flags';
 
 import {
   type ComponentProps,
   type ComponentRef,
   type ForwardRefExoticComponent,
   forwardRef,
-} from "react";
-import { Button } from "../../core/button";
+} from 'react';
+import { Button } from '../../core/button';
 import {
   Command,
   CommandEmpty,
@@ -16,14 +16,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../../core/command";
-import { Input } from "../../core/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../../core/popover";
-import { ScrollArea } from "../../core/scroll-area";
-import { cn } from "../../lib/utils";
+} from '../../core/command';
+import { Input } from '../../core/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../../core/popover';
+import { ScrollArea } from '../../core/scroll-area';
+import { cn } from '../../lib/utils';
 
-type PhoneInputProps = Omit<ComponentProps<"input">, "onChange" | "value" | "ref"> &
-  Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
+type PhoneInputProps = Omit<ComponentProps<'input'>, 'onChange' | 'value' | 'ref'> &
+  Omit<RPNInput.Props<typeof RPNInput.default>, 'onChange'> & {
     onChange?: (value: RPNInput.Value) => void;
   };
 
@@ -34,7 +34,7 @@ const PhoneInput: ForwardRefExoticComponent<PhoneInputProps> = forwardRef<
   return (
     <RPNInput.default
       ref={ref}
-      className={cn("flex w-full", className)}
+      className={cn('flex w-full', className)}
       flagComponent={FlagComponent}
       countrySelectComponent={CountrySelect}
       inputComponent={InputComponent}
@@ -48,24 +48,24 @@ const PhoneInput: ForwardRefExoticComponent<PhoneInputProps> = forwardRef<
        *
        * @param {E164Number | undefined} value - The entered value
        */
-      onChange={(value) => onChange?.(value || ("" as RPNInput.Value))}
+      onChange={(value) => onChange?.(value || ('' as RPNInput.Value))}
       {...props}
     />
   );
 });
-PhoneInput.displayName = "PhoneInput";
+PhoneInput.displayName = 'PhoneInput';
 
-const InputComponent = forwardRef<HTMLInputElement, ComponentProps<"input">>(
+const InputComponent = forwardRef<HTMLInputElement, ComponentProps<'input'>>(
   ({ className, ...props }, ref) => (
     <Input
-      className={cn("rounded-e-md rounded-s-none w-full", className)}
-      containerClassName={"w-full"}
+      className={cn('rounded-e-md rounded-s-none w-full', className)}
+      containerClassName={'w-full'}
       {...props}
       ref={ref}
     />
   ),
 );
-InputComponent.displayName = "InputComponent";
+InputComponent.displayName = 'InputComponent';
 
 type CountryEntry = { label: string; value: RPNInput.Country | undefined };
 
@@ -93,7 +93,7 @@ const CountrySelect = ({
         >
           <FlagComponent country={selectedCountry} countryName={selectedCountry} />
           <ChevronsUpDown
-            className={cn("-mr-2 size-4 opacity-50", disabled ? "hidden" : "opacity-100")}
+            className={cn('-mr-2 size-4 opacity-50', disabled ? 'hidden' : 'opacity-100')}
           />
         </Button>
       </PopoverTrigger>
@@ -141,7 +141,7 @@ const CountrySelectOption = ({
       <span className="flex-1 text-sm">{countryName}</span>
       <span className="text-sm text-foreground/50">{`+${RPNInput.getCountryCallingCode(country)}`}</span>
       <CheckIcon
-        className={`ml-auto size-4 ${country === selectedCountry ? "opacity-100" : "opacity-0"}`}
+        className={`ml-auto size-4 ${country === selectedCountry ? 'opacity-100' : 'opacity-0'}`}
       />
     </CommandItem>
   );
@@ -152,8 +152,8 @@ const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
 
   return (
     <span
-      className={cn("flex h-4 w-6 overflow-hidden rounded-sm bg-foreground/20 [&_svg]:size-full", {
-        "bg-transparent": Flag,
+      className={cn('flex h-4 w-6 overflow-hidden rounded-sm bg-foreground/20 [&_svg]:size-full', {
+        'bg-transparent': Flag,
       })}
     >
       {Flag && <Flag title={countryName} />}

@@ -4,19 +4,13 @@ import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import { RequireField } from '@/types/utils';
 import { getSwaggerOptions } from '@/utils/swagger.helper';
 import { Type } from 'class-transformer';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  NotEquals,
-  ValidateNested,
-} from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, NotEquals, ValidateNested } from 'class-validator';
 import { IsNullable } from '../validator/is-nullable.decorator';
 import { IsUndefinable } from '../validator/is-undefinable.decorator';
 import { IFieldOptions } from './field-options';
 
 export function TranslationsField(
-  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> &
-    IFieldOptions,
+  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> & IFieldOptions,
 ): PropertyDecorator {
   const decorators = [
     ArrayMinSize(supportedLanguageCount),
@@ -46,11 +40,7 @@ export function TranslationsField(
 }
 
 export function TranslationsFieldOptional(
-  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> &
-    IFieldOptions,
+  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> & IFieldOptions,
 ): PropertyDecorator {
-  return applyDecorators(
-    IsUndefinable(),
-    TranslationsField({ required: false, ...options }),
-  );
+  return applyDecorators(IsUndefinable(), TranslationsField({ required: false, ...options }));
 }

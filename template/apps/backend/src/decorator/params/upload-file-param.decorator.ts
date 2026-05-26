@@ -1,5 +1,5 @@
-import { PipeTransform, Type, UploadedFile } from "@nestjs/common";
-import { DECORATORS } from "@/constant/swagger.constants";
+import { PipeTransform, Type, UploadedFile } from '@nestjs/common';
+import { DECORATORS } from '@/constant/swagger.constants';
 
 // TODO needs more work, this adds openapi docs for uploading files
 export interface ApiFileParamOptions {
@@ -16,7 +16,7 @@ export interface ApiFileParamOptions {
  * @param pipes - Optional transformation pipes
  */
 export function UploadFileParam(
-  options: ApiFileParamOptions = { name: "file" },
+  options: ApiFileParamOptions = { name: 'file' },
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
   return (target: object, key: string | symbol, parameterIndex: number) => {
@@ -29,12 +29,12 @@ export function UploadFileParam(
     // Create the parameter schema for swagger
     const param = {
       name: options.name,
-      in: "formData", // This will be transformed to requestBody in OpenAPI 3.0
+      in: 'formData', // This will be transformed to requestBody in OpenAPI 3.0
       required: options.required ?? false,
       description: options.description,
       schema: {
-        type: "string",
-        format: "binary",
+        type: 'string',
+        format: 'binary',
       },
     };
 
@@ -47,8 +47,8 @@ export function UploadFileParam(
     // Define the request body content type
     const existingBody = Reflect.getMetadata(DECORATORS.API_PRODUCES, method) || [];
 
-    if (!existingBody.includes("multipart/variation-data")) {
-      Reflect.defineMetadata(DECORATORS.API_CONSUMES, ["multipart/variation-data"], method);
+    if (!existingBody.includes('multipart/variation-data')) {
+      Reflect.defineMetadata(DECORATORS.API_CONSUMES, ['multipart/variation-data'], method);
     }
   };
 }
@@ -73,14 +73,14 @@ export function UploadFilesParam(
     // Create the parameter schema for swagger
     const param = {
       name: options.name,
-      in: "formData", // This will be transformed to requestBody in OpenAPI 3.0
+      in: 'formData', // This will be transformed to requestBody in OpenAPI 3.0
       required: options.required ?? false,
       description: options.description,
       schema: {
-        type: "array",
+        type: 'array',
         items: {
-          type: "string",
-          format: "binary",
+          type: 'string',
+          format: 'binary',
         },
       },
     };
@@ -94,8 +94,8 @@ export function UploadFilesParam(
     // Define the request body content type
     const existingBody = Reflect.getMetadata(DECORATORS.API_PRODUCES, method) || [];
 
-    if (!existingBody.includes("multipart/variation-data")) {
-      Reflect.defineMetadata(DECORATORS.API_CONSUMES, ["multipart/variation-data"], method);
+    if (!existingBody.includes('multipart/variation-data')) {
+      Reflect.defineMetadata(DECORATORS.API_CONSUMES, ['multipart/variation-data'], method);
     }
   };
 }

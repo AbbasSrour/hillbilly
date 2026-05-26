@@ -1,5 +1,5 @@
-import type { RowData, Table } from "@tanstack/react-table";
-import { type ReactNode, createContext, useContext } from "react";
+import type { RowData, Table } from '@tanstack/react-table';
+import { type ReactNode, createContext, useContext } from 'react';
 
 export type DataTableContext<T extends RowData> = Table<T>;
 
@@ -23,7 +23,7 @@ export const DataTableProvider = <D extends RowData>({
 export const useDataTableContext = <T extends RowData>() => {
   const context = useContext(DataTableContext) as DataTableContext<T>;
   if (!context) {
-    throw new Error("useDatableContext must be used within a DataTableProvider");
+    throw new Error('useDatableContext must be used within a DataTableProvider');
   }
 
   return context;

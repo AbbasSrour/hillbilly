@@ -1,8 +1,5 @@
 import type { UserFormSchema } from '@/app/users/components/form/user-form-schema.ts';
-import type {
-  CreateUserInput,
-  UpdateUserInput,
-} from '@/app/users/hooks/api/users.functions.ts';
+import type { CreateUserInput, UpdateUserInput } from '@/app/users/hooks/api/users.functions.ts';
 import type { UserWithPhoneNumber, UserWithRole } from 'better-auth/plugins';
 
 export const userToFormValues = (
@@ -22,9 +19,7 @@ export const userToFormValues = (
   };
 };
 
-export const formToCreateUserPayload = (
-  values: UserFormSchema,
-): CreateUserInput => {
+export const formToCreateUserPayload = (values: UserFormSchema): CreateUserInput => {
   const phoneNumber = values.phoneNumber?.trim();
   const name = `${values.firstName} ${values.lastName}`.trim();
 

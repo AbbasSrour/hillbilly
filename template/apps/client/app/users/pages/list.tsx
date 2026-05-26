@@ -62,12 +62,8 @@ export const Route = createFileRoute('/admin/users/')({
 
     await Promise.all([
       context.queryClient.ensureQueryData(baseListQuery),
-      ...insightQueries.map((query) =>
-        context.queryClient.ensureQueryData(query),
-      ),
-      ...facetQueries.map((query) =>
-        context.queryClient.ensureQueryData(query),
-      ),
+      ...insightQueries.map((query) => context.queryClient.ensureQueryData(query)),
+      ...facetQueries.map((query) => context.queryClient.ensureQueryData(query)),
     ]);
   },
   head: () => ({
@@ -95,10 +91,7 @@ export const Route = createFileRoute('/admin/users/')({
 function UserListPage() {
   return (
     <Main>
-      <PageHeader
-        title="Users List"
-        description="Manage system users and their information here."
-      >
+      <PageHeader title="Users List" description="Manage system users and their information here.">
         <Link to="/admin/users/create">
           <Button className="space-x-1">
             <span>Add User</span>

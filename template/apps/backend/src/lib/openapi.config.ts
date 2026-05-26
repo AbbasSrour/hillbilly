@@ -22,10 +22,7 @@ export async function setupOpenapi(app: INestApplication) {
     .addBearerAuth()
     .setVersion(apiConfig.appConfig.apiVersion);
 
-  const apiDocument = SwaggerModule.createDocument(
-    app,
-    documentBuilder.build(),
-  );
+  const apiDocument = SwaggerModule.createDocument(app, documentBuilder.build());
   const authDocument = await authService.instance.api.generateOpenAPISchema();
 
   // Merge NestJS and Better Auth schemas using openapi-merge
@@ -45,10 +42,7 @@ export async function setupOpenapi(app: INestApplication) {
       ...mergeResult.output,
       openapi: '3.1.0',
     };
-    const outputPath = path.resolve(
-      import.meta.dirname,
-      '../../../../packages/sdk/openapi.json',
-    );
+    const outputPath = path.resolve(import.meta.dirname, '../../../../packages/sdk/openapi.json');
 
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, JSON.stringify(mergedSchema, null, 2));
@@ -92,10 +86,7 @@ export async function setupOpenapi(app: INestApplication) {
       clientGeneratorOptions: {
         enabled: isDevelopment,
         type: 'typescript-axios',
-        openApiFilePath: path.resolve(
-          import.meta.dirname,
-          '../../../../packages/sdk/openapi.json',
-        ),
+        openApiFilePath: path.resolve(import.meta.dirname, '../../../../packages/sdk/openapi.json'),
         openApiToolsFilePath: path.resolve(
           import.meta.dirname,
           '../../../../packages/sdk/openapitools.json',

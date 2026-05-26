@@ -1,15 +1,15 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiPropertyOptions } from "@nestjs/swagger";
-import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsInt, IsNumber, IsPositive, Max, Min, NotEquals } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { ApiPropertyOptions } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsInt, IsNumber, IsPositive, Max, Min, NotEquals } from 'class-validator';
 
-import { getSwaggerOptions } from "@/utils/swagger.helper";
-import { ToArray } from "../transformer/to-array.decorator";
-import { IsNullable } from "../validator/is-nullable.decorator";
-import { IsUndefinable } from "../validator/is-undefinable.decorator";
-import { IFieldOptions } from "./field-options";
-import { FilterField, FilterOperationType } from "./filter-field.decorator";
+import { getSwaggerOptions } from '@/utils/swagger.helper';
+import { ToArray } from '../transformer/to-array.decorator';
+import { IsNullable } from '../validator/is-nullable.decorator';
+import { IsUndefinable } from '../validator/is-undefinable.decorator';
+import { IFieldOptions } from './field-options';
+import { FilterField, FilterOperationType } from './filter-field.decorator';
 
 interface INumberFieldOptions extends IFieldOptions {
   min?: number;
@@ -19,7 +19,7 @@ interface INumberFieldOptions extends IFieldOptions {
 }
 
 export function NumberField(
-  options: Omit<ApiPropertyOptions, "type"> & INumberFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type'> & INumberFieldOptions = {},
 ): PropertyDecorator {
   const decorators = [
     Type(() => Number),
@@ -55,11 +55,11 @@ export function NumberField(
     decorators.push(IsNumber({}, { each: options.each }));
   }
 
-  if (typeof options.min === "number") {
+  if (typeof options.min === 'number') {
     decorators.push(Min(options.min, { each: options.each }));
   }
 
-  if (typeof options.max === "number") {
+  if (typeof options.max === 'number') {
     decorators.push(Max(options.max, { each: options.each }));
   }
 
@@ -71,7 +71,7 @@ export function NumberField(
 }
 
 export function NumberFieldOptional(
-  options: Omit<ApiPropertyOptions, "type" | "required"> & INumberFieldOptions = {},
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> & INumberFieldOptions = {},
 ): PropertyDecorator {
   return applyDecorators(IsUndefinable(), NumberField({ required: false, ...options }));
 }
