@@ -77,7 +77,7 @@ describe("scan", () => {
 
     expect(result.files.map((file) => `${file.status}:${file.projectPath}`)).toEqual([
       "modified:modified.txt",
-      "added:extra.txt",
+      "stale:extra.txt",
     ]);
   });
 

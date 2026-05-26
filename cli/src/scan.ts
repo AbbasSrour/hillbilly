@@ -28,7 +28,7 @@ export interface SyncFile {
   /** Full path to the corresponding file in the hillbilly template */
   templatePath: string;
   /** Status of this file relative to the template */
-  status: "modified" | "added" | "deleted";
+  status: "modified" | "added" | "deleted" | "stale";
   /** Parsed hunks (for modified files) — each hunk is independently stageable */
   hunks?: DiffHunk[];
   /** Full unified diff */
@@ -242,7 +242,7 @@ export async function scan(
   const files: SyncFile[] = [];
   const seenPaths = new Set<string>();
 
-  async function addSyncFile(relativePath: string): Promise<void> {
+  async function addSyncFile(relativePath: string, options: { manifestTracked?: boolean } = {}): Promise<void> {
     if (seenPaths.has(relativePath)) return;
     seenPaths.add(relativePath);
 
@@ -294,7 +294,12 @@ export async function scan(
       });
     } else {
       const projectContent = await readFile(filePath, "utf-8");
-      files.push({ projectPath: relativePath, templatePath, status: "added", projectContent });
+      files.push({
+        projectPath: relativePath,
+        templatePath,
+        status: options.manifestTracked ? "stale" : "added",
+        projectContent,
+      });
     }
   }
 
@@ -308,7 +313,7 @@ export async function scan(
   // 2. Also check manifest-tracked files (project-added files not in template)
   for (const relativePath of trackedSyncPaths(manifest)) {
     if (!seenPaths.has(relativePath)) {
-      await addSyncFile(relativePath);
+      await addSyncFile(relativePath, { manifestTracked: true });
     }
   }
 

@@ -72,6 +72,9 @@ export async function pushChanges(
 
         await writeFile(file.templatePath, newContent, "utf-8");
         result.written.push(file.templatePath);
+      } else if (file.status === "stale") {
+        // Stale files are pruned from the project, not pushed to the template.
+        continue;
       }
     } catch (error) {
       result.failed.push({

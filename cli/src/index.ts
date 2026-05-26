@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
 import { existsSync } from "node:fs";
-import { chmod, mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, readdir, rename, unlink, writeFile } from "node:fs/promises";
 import { relative, resolve, join } from "node:path";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
@@ -166,15 +166,25 @@ sync
   .option("-r, --vcs-ref <ref>", "Template git ref to pull", "HEAD")
   .option("--recopy", "Use copier recopy instead of update when the old _commit is unavailable")
   .action(async (options: { project: string; vcsRef: string; recopy?: boolean }) => {
+    const projectRoot = resolveProjectRoot(options.project);
+    const manifestPath = syncManifestPath(projectRoot);
+    const manifestBackup = existsSync(manifestPath) ? await readFile(manifestPath) : null;
     const copierCommand = options.recopy ? "recopy" : "update";
     console.log(
-      `Running copier ${copierCommand} --vcs-ref ${options.vcsRef} in ${options.project}...`,
+      `Running copier ${copierCommand} --vcs-ref ${options.vcsRef} in ${projectRoot}...`,
     );
     const proc = Bun.spawn(["copier", copierCommand, "--vcs-ref", options.vcsRef], {
-      cwd: options.project,
+      cwd: projectRoot,
       stdio: ["inherit", "inherit", "inherit"],
     });
     const exitCode = await proc.exited;
+
+    if (manifestBackup) {
+      await writeFile(manifestPath, manifestBackup);
+      console.log(`Restored project sync manifest: ${manifestPath}`);
+    } else if (existsSync(manifestPath)) {
+      await unlink(manifestPath);
+    }
 
     if (exitCode !== 0 && !options.recopy) {
       console.error(`

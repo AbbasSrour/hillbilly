@@ -77,3 +77,14 @@ export async function setSyncFileState(
   await writeSyncManifest(projectRoot, next);
   return next;
 }
+
+export async function removeSyncFiles(projectRoot: string, paths: string[]): Promise<SyncManifest> {
+  const manifest = await readSyncManifest(projectRoot);
+  const normalizedPaths = new Set(paths.map((path) => normalizeProjectPath(projectRoot, path)));
+  const next: SyncManifest = {
+    version: 1,
+    files: manifest.files.filter((file) => !normalizedPaths.has(file.path)),
+  };
+  await writeSyncManifest(projectRoot, next);
+  return next;
+}

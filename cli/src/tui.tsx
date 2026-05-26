@@ -10,13 +10,14 @@ import {
 import type { CliRenderer, ThemeTokenStyle } from "@opentui/core";
 import { createRoot } from "@opentui/react";
 import { existsSync } from "node:fs";
+import { rm } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
 import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
-import { setSyncFileState } from "./manifest.js";
+import { removeSyncFiles, setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 
 // ---------------------------------------------------------------------------
@@ -347,6 +348,7 @@ function stagedCountForFile(staged: Map<string, Set<number>>, file: SyncFile): s
 
 function toggleStagedHunks(state: State, file: SyncFile | undefined): State {
   if (!file) return state;
+  if (file.status === "stale") return state;
   const hunkCount = file.hunks?.length ?? 0;
   if (hunkCount === 0 && file.status === "added") {
     // For added files, toggle the whole file
@@ -513,6 +515,36 @@ async function doUnmarkSelected(
   }
 }
 
+async function doPruneSelected(
+  file: SyncFile | undefined,
+  setResult: React.Dispatch<React.SetStateAction<ScanResult>>,
+  setState: React.Dispatch<React.SetStateAction<State>>,
+): Promise<void> {
+  if (!file || file.status !== "stale") return;
+
+  try {
+    await rm(resolve(currentScanResult.projectRoot, file.projectPath), { force: true });
+    await removeSyncFiles(currentScanResult.projectRoot, [file.projectPath]);
+    const next = refreshScanRef ? await refreshScanRef() : currentScanResult;
+    setResult(next);
+    setState((prev) => ({
+      ...prev,
+      selectedFileIndex: Math.min(prev.selectedFileIndex, Math.max(next.files.length - 1, 0)),
+      selectedHunkIndex: 0,
+      stagedHunks: new Map([...prev.stagedHunks].filter(([path]) => path !== file.projectPath)),
+      pushStatus: "idle",
+      pushMessage: "",
+      statusMessage: `Pruned ${file.projectPath}`,
+    }));
+  } catch (err: unknown) {
+    setState((prev) => ({
+      ...prev,
+      pushStatus: "error",
+      pushMessage: err instanceof Error ? err.message : String(err),
+    }));
+  }
+}
+
 // ---------------------------------------------------------------------------
 // SyncTui Component
 // ---------------------------------------------------------------------------
@@ -625,6 +657,10 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             void doUnmarkSelected(file, setResult, setState);
             return prev;
 
+          case "d":
+            void doPruneSelected(file, setResult, setState);
+            return prev;
+
           case "t": {
             const idx = THEME_NAMES.indexOf(prev.themeName);
             const nextTheme = THEME_NAMES[(idx + 1) % THEME_NAMES.length]!;
@@ -714,8 +750,8 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
       >
         <text fg={palette.TEXT}>
           Hillbilly Sync | {result.files.length} file{result.files.length !== 1 ? "s" : ""} changed
-          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav q quit u
-          unmark t theme s split b colors g signs l lines
+          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav q quit d
+          prune u unmark t theme s split b colors g signs l lines
         </text>
       </box>
 
@@ -730,7 +766,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                 ? palette.SUCCESS
                 : file.status === "deleted"
                   ? palette.ERROR
-                  : palette.WARNING;
+                  : file.status === "stale"
+                    ? palette.ERROR
+                    : palette.WARNING;
             const count = stagedCountForFile(state.stagedHunks, file);
             return (
               <box
@@ -743,7 +781,13 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               >
                 <text fg={palette.TEXT}>{isSelected ? "> " : "  "}</text>
                 <text fg={statusColor}>
-                  {file.status === "added" ? "A" : file.status === "deleted" ? "D" : "M"}
+                  {file.status === "added"
+                    ? "A"
+                    : file.status === "deleted"
+                      ? "D"
+                      : file.status === "stale"
+                        ? "S"
+                        : "M"}
                 </text>
                 <text fg={palette.TEXT}> {truncatePath(file.projectPath, 22)}</text>
                 {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
@@ -775,6 +819,18 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               <text fg={palette.ERROR}>Deleted file</text>
               <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
               <text fg={palette.TEXT}>Stage this file to delete it from the template.</text>
+            </box>
+          )}
+
+          {selectedFile?.status === "stale" && (
+            <box paddingY={0} paddingX={1} flexDirection="column">
+              <text fg={palette.ERROR}>Stale tracked file</text>
+              <text fg={palette.TEXT}> {selectedFile.projectPath}</text>
+              <text fg={palette.TEXT}>
+                This file is tracked but no longer exists in the template.
+              </text>
+              <text fg={palette.TEXT}>[d] delete from project and remove manifest entry</text>
+              <text fg={palette.TEXT}>[u] keep project file but mark untracked</text>
             </box>
           )}
 
@@ -863,7 +919,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         {state.pushStatus === "idle" && (
           <text fg={palette.TEXT}>
             [Space] stage/unstage [Tab] switch panel [r] refresh [t] theme [Enter] push staged [q]
-            quit [u] unmark [s] split/unified [b] colors [g] signs [l] lines
+            quit [d] prune stale [u] unmark [s] split/unified [b] colors [g] signs [l] lines
             {state.statusMessage ? ` | ${state.statusMessage}` : ""}
           </text>
         )}
