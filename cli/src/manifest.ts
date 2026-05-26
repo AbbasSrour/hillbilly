@@ -45,7 +45,10 @@ export async function readSyncManifest(projectRoot: string): Promise<SyncManifes
   };
 }
 
-export async function writeSyncManifest(projectRoot: string, manifest: SyncManifest): Promise<void> {
+export async function writeSyncManifest(
+  projectRoot: string,
+  manifest: SyncManifest,
+): Promise<void> {
   const path = syncManifestPath(projectRoot);
   await mkdir(dirname(path), { recursive: true });
   const normalized: SyncManifest = {

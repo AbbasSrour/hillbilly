@@ -1,7 +1,7 @@
 /// <reference types="bun" />
 import { readFile, readdir } from "node:fs/promises";
-import { resolve, relative, join, sep } from "node:path";
-import { existsSync, statSync } from "node:fs";
+import { resolve, relative, join } from "node:path";
+import { existsSync } from "node:fs";
 import { createPatch } from "diff";
 import { parse as parseYaml } from "yaml";
 import { resolveProjectRoot, resolveTemplateRoot } from "./config.js";
@@ -38,6 +38,8 @@ export interface SyncFile {
 }
 
 export interface ScanResult {
+  /** Root of the generated project */
+  projectRoot: string;
   /** Root of the hillbilly template directory */
   templateRoot: string;
   /** All syncable files found */
@@ -48,33 +50,52 @@ export interface ScanResult {
 // Template walker
 // ---------------------------------------------------------------------------
 
-const EXCLUDED_DIRS = new Set([
-  "node_modules",
-  "dist",
-  ".git",
-  "coverage",
-  ".turbo",
-  ".vite",
-  "i18n/generated",
-  "paraglide",
-]);
-
-const EXCLUDED_PATTERNS = [
-  /\.log$/,
-  /\.env(\.example)?$/, // .env and .env.* — but we keep .env.example? No, exclude all .env
-  /\.gitkeep$/,
-  /\.DS_Store$/,
-  /\.copier-answers\.yml$/, // only exists in project, not template
-];
-
 function shouldExclude(filePath: string): boolean {
-  const parts = filePath.split(sep);
+  const normalized = filePath.replaceAll("\\", "/");
+  const parts = normalized.split("/");
+
+  // Directory name exclusions
   for (const part of parts) {
-    if (EXCLUDED_DIRS.has(part)) return true;
+    if (
+      part === "node_modules" ||
+      part === "dist" ||
+      part === ".git" ||
+      part === "coverage" ||
+      part === ".turbo" ||
+      part === ".vite" ||
+      part === "bin" ||
+      part === "paraglide"
+    ) {
+      return true;
+    }
   }
-  for (const pattern of EXCLUDED_PATTERNS) {
-    if (pattern.test(filePath)) return true;
+
+  // Generated i18n output can exist at any package/app depth.
+  if (parts.some((part, index) => part === "i18n" && parts[index + 1] === "generated")) {
+    return true;
   }
+
+  // Inlang manages these files itself; settings.json is the source of truth we sync.
+  if (
+    (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
+    !normalized.endsWith("project.inlang/settings.json")
+  ) {
+    return true;
+  }
+
+  // File pattern exclusions
+  const base = parts[parts.length - 1] ?? "";
+  if (
+    base.endsWith(".log") ||
+    /^\.env(\..*)?$/.test(base) ||
+    base === ".gitkeep" ||
+    base === ".DS_Store" ||
+    base === ".copier-answers.yml" ||
+    base === ".copier-answers.yml.jinja"
+  ) {
+    return true;
+  }
+
   return false;
 }
 
@@ -161,7 +182,7 @@ function parseHunks(unifiedDiff: string): DiffHunk[] {
   let newLines = 0;
 
   // Regex: @@ -oldStart,oldLines +newStart,newLines @@
-  const hunkHeader = /^@@\s+-(\d+)(?:(\d+))?\s+\+(\d+)(?:(\d+))?\s+@@/;
+  const hunkHeader = /^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s+@@/;
 
   for (const line of lines) {
     const match = hunkHeader.exec(line);
@@ -293,7 +314,7 @@ export async function scan(
   // 3. Always include the manifest itself
   await addSyncFile(SYNC_MANIFEST_NAME);
 
-  return { templateRoot, files };
+  return { projectRoot: resolvedProjectRoot, templateRoot, files };
 }
 
 /**
@@ -318,11 +339,18 @@ export function applyStagedHunks(
     const newLines: string[] = [];
     const hunkBody = hunkLines.slice(1); // skip @@ header
 
-    for (const line of hunkBody) {
+    for (let idx = 0; idx < hunkBody.length; idx++) {
+      const line = hunkBody[idx]!;
+      if (line === "" && idx === hunkBody.length - 1) {
+        continue;
+      }
+
       if (line.startsWith("+") || line === "+") {
         newLines.push(line.slice(1)); // added line
       } else if (line.startsWith("-") || line === "-") {
         // removed line — skip it
+      } else if (line.startsWith("\\")) {
+        // Diff metadata, e.g. "\ No newline at end of file" — skip it.
       } else {
         // context line
         newLines.push(line.startsWith(" ") ? line.slice(1) : line);

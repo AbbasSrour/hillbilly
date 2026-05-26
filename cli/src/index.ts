@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
 import { existsSync } from "node:fs";
-import { chmod, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
@@ -15,6 +15,16 @@ import {
 import { readSyncManifest, setSyncFileState, syncManifestPath } from "./manifest.js";
 
 const program = new Command();
+
+const RUNTIME_ASSET_PATTERN =
+  /^(parser\.worker\.js|tree-sitter-.*\.wasm|highlights-.*\.scm|injections-.*\.scm)$/;
+
+async function atomicCopyFile(source: string, dest: string, mode?: number): Promise<void> {
+  const tmp = `${dest}.tmp`;
+  await writeFile(tmp, await readFile(source));
+  if (mode !== undefined) await chmod(tmp, mode);
+  await rename(tmp, dest);
+}
 
 function fishCompletion(): string {
   return String.raw`# Fish completions for hillbilly
@@ -86,7 +96,7 @@ sync
       return;
     }
 
-    await launchTui(result);
+    await launchTui(result, () => scan(options.project, { template: options.template }));
   });
 
 sync
@@ -216,13 +226,21 @@ program
 
     // Write to a temp file then atomically rename — handles the case
     // where the destination binary is currently executing (ETXTBSY on copyFile).
-    const tmpBinary = `${destBinary}.tmp`;
-    await writeFile(tmpBinary, await readFile(sourceBinary));
-    await chmod(tmpBinary, 0o755);
-    await rename(tmpBinary, destBinary);
+    await atomicCopyFile(sourceBinary, destBinary, 0o755);
+
+    const sourceBinDir = join(templateRoot, "bin");
+    const copiedAssets: string[] = [];
+    for (const entry of await readdir(sourceBinDir)) {
+      if (!RUNTIME_ASSET_PATTERN.test(entry)) continue;
+      const sourceAsset = join(sourceBinDir, entry);
+      const destAsset = join(destDir, entry);
+      await atomicCopyFile(sourceAsset, destAsset);
+      copiedAssets.push(destAsset);
+    }
 
     console.log(`Upgraded hillbilly binary from ${sourceBinary}`);
     console.log(`  → ${destBinary}`);
+    for (const asset of copiedAssets) console.log(`  → ${asset}`);
   });
 
 // ---------------------------------------------------------------------------

@@ -59,10 +59,10 @@ Interactively push template-owned changes from your project back to the Hillbill
 hillbilly sync push [--project <path>] [--template <path>]
 ```
 
-| Option          | Default | Description                                      |
-| --------------- | ------- | ------------------------------------------------ |
-| `-p, --project` | `$PWD`  | Path to the generated project                    |
-| `-t, --template` | —      | Path to the Hillbilly repo or template directory |
+| Option           | Default | Description                                      |
+| ---------------- | ------- | ------------------------------------------------ |
+| `-p, --project`  | `$PWD`  | Path to the generated project                    |
+| `-t, --template` | —       | Path to the Hillbilly repo or template directory |
 
 This command opens a two-panel terminal UI:
 
@@ -73,27 +73,27 @@ This command opens a two-panel terminal UI:
 
 The scanner detects two kinds of changes:
 
-| Status   | Description                                                    |
-| -------- | -------------------------------------------------------------- |
-| Modified | File exists in both project and template, but content differs  |
-| Added    | File is tracked but doesn't exist in the template yet          |
+| Status   | Description                                                   |
+| -------- | ------------------------------------------------------------- |
+| Modified | File exists in both project and template, but content differs |
+| Added    | File is tracked but doesn't exist in the template yet         |
 
 For modified files, the diff is parsed into **hunks** — individual change blocks you can stage independently. This means you can push only the specific changes you want, not the entire file. For added files, the entire file content is pushed.
 
 #### Keyboard Controls
 
-| Key            | Context         | Action                                          |
-| -------------- | --------------- | ----------------------------------------------- |
-| `j` / `↓`      | File list       | Move down one file                              |
-| `k` / `↑`      | File list       | Move up one file                                |
-| `j` / `↓`      | Diff panel      | Move down one hunk                              |
-| `k` / `↑`      | Diff panel      | Move up one hunk                                |
-| `Tab`          | Any             | Switch focus between file list and diff panel   |
-| `Space`        | File list       | Stage / unstage all hunks for the selected file |
-| `Space`        | Diff panel      | Stage / unstage the selected hunk               |
-| `Enter`        | Any             | Push all staged changes to the template         |
-| `q`            | Any             | Quit (discards staging)                         |
-| `Ctrl+C`       | Any             | Quit (discards staging)                         |
+| Key       | Context    | Action                                          |
+| --------- | ---------- | ----------------------------------------------- |
+| `j` / `↓` | File list  | Move down one file                              |
+| `k` / `↑` | File list  | Move up one file                                |
+| `j` / `↓` | Diff panel | Move down one hunk                              |
+| `k` / `↑` | Diff panel | Move up one hunk                                |
+| `Tab`     | Any        | Switch focus between file list and diff panel   |
+| `Space`   | File list  | Stage / unstage all hunks for the selected file |
+| `Space`   | Diff panel | Stage / unstage the selected hunk               |
+| `Enter`   | Any        | Push all staged changes to the template         |
+| `q`       | Any        | Quit (discards staging)                         |
+| `Ctrl+C`  | Any        | Quit (discards staging)                         |
 
 #### Push Behavior
 
@@ -112,9 +112,9 @@ Pull template updates downstream into your generated project by running `copier 
 hillbilly sync pull [--project <path>]
 ```
 
-| Option             | Default          | Description                          |
-| ------------------ | ---------------- | ------------------------------------ |
-| `-p, --project`    | `$PWD`           | Path to the generated project        |
+| Option          | Default | Description                   |
+| --------------- | ------- | ----------------------------- |
+| `-p, --project` | `$PWD`  | Path to the generated project |
 
 This is a convenience wrapper around `copier update`. It runs the standard Copier update flow in your project directory, applying template changes to your generated project. Use this after someone has pushed template improvements.
 

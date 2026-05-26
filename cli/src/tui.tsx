@@ -1,11 +1,22 @@
 /** @jsxImportSource @opentui/react */
-import { createCliRenderer, type KeyEvent } from "@opentui/core";
-import type { CliRenderer } from "@opentui/core";
+import {
+  createCliRenderer,
+  type KeyEvent,
+  SyntaxStyle,
+  TreeSitterClient,
+  getDataPaths,
+  pathToFiletype,
+} from "@opentui/core";
+import type { CliRenderer, ThemeTokenStyle } from "@opentui/core";
 import { createRoot } from "@opentui/react";
+import { existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { useState, useEffect } from "react";
-import type { SyncFile, ScanResult } from "./scan.js";
+import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
+import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
+import { setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 
 // ---------------------------------------------------------------------------
@@ -21,6 +32,10 @@ interface State {
   pushMessage: string;
   statusMessage: string;
   themeName: string;
+  diffView: "unified" | "split";
+  diffLineColors: boolean;
+  diffSigns: boolean;
+  showLineNumbers: boolean;
 }
 
 function makeInitialState(): State {
@@ -33,6 +48,10 @@ function makeInitialState(): State {
     pushMessage: "",
     statusMessage: "",
     themeName: DEFAULT_THEME,
+    diffView: "unified",
+    diffLineColors: true,
+    diffSigns: true,
+    showLineNumbers: true,
   };
 }
 
@@ -43,8 +62,259 @@ function makeInitialState(): State {
 let setStateRef: React.Dispatch<React.SetStateAction<State>> | null = null;
 let quitResolver: (() => void) | null = null;
 let currentFiles: SyncFile[] = [];
+let currentScanResult: ScanResult;
 let _renderer: CliRenderer | null = null;
 let refreshScanRef: (() => Promise<ScanResult>) | null = null;
+let _treeSitterClient: TreeSitterClient | null = null;
+
+// Cache SyntaxStyle per palette to avoid recreating
+const _syntaxStyleCache = new Map<string, SyntaxStyle>();
+function paletteToSyntaxStyle(palette: Palette): SyntaxStyle {
+  const cacheKey = palette.BG + palette.TEXT + palette.SYNTAX_COMMENT;
+  const cached = _syntaxStyleCache.get(cacheKey);
+  if (cached) return cached;
+
+  const tokens: ThemeTokenStyle[] = [
+    { scope: ["comment"], style: { foreground: palette.SYNTAX_COMMENT, italic: true } },
+    {
+      scope: [
+        "keyword",
+        "keyword.control",
+        "keyword.operator",
+        "conditional",
+        "repeat",
+        "exception",
+        "include",
+      ],
+      style: { foreground: palette.SYNTAX_KEYWORD },
+    },
+    {
+      scope: ["function", "function.builtin", "method", "constructor"],
+      style: { foreground: palette.SYNTAX_FUNCTION },
+    },
+    { scope: ["string", "string.special"], style: { foreground: palette.SYNTAX_STRING } },
+    {
+      scope: ["number", "boolean", "constant.builtin"],
+      style: { foreground: palette.SYNTAX_NUMBER },
+    },
+    { scope: ["type", "type.builtin", "property"], style: { foreground: palette.SYNTAX_TYPE } },
+    { scope: ["operator"], style: { foreground: palette.SYNTAX_OPERATOR } },
+    {
+      scope: ["punctuation", "punctuation.bracket", "punctuation.delimiter", "punctuation.special"],
+      style: { foreground: palette.SYNTAX_PUNCTUATION },
+    },
+    { scope: ["variable", "variable.parameter"], style: { foreground: palette.TEXT } },
+  ];
+
+  const style = SyntaxStyle.fromTheme(tokens);
+  _syntaxStyleCache.set(cacheKey, style);
+  return style;
+}
+
+// Build a mini unified diff string for a single hunk
+function hunkDiffForFile(file: SyncFile, hunk: DiffHunk): string {
+  return `--- ${file.projectPath}\n+++ ${file.projectPath}\n${hunk.text}\n`;
+}
+
+function hunkDiffHeight(hunk: DiffHunk, view: "unified" | "split"): number {
+  const lines = hunk.text
+    .split("\n")
+    .slice(1)
+    .filter((line) => line !== "");
+  if (view === "unified") return Math.max(1, lines.length);
+
+  let height = 0;
+  for (let i = 0; i < lines.length; ) {
+    const line = lines[i]!;
+    if (line.startsWith(" ") || line.startsWith("\\")) {
+      height++;
+      i++;
+      continue;
+    }
+
+    let removed = 0;
+    let added = 0;
+    while (i < lines.length && !lines[i]!.startsWith(" ")) {
+      if (lines[i]!.startsWith("-")) removed++;
+      else if (lines[i]!.startsWith("+")) added++;
+      i++;
+    }
+    height += Math.max(removed, added, 1);
+  }
+
+  return Math.max(1, height);
+}
+
+function resolveTreeSitterWorkerPath(): string | null {
+  const candidates = [
+    resolve(dirname(process.execPath), "parser.worker.js"),
+    resolve(process.cwd(), "bin/parser.worker.js"),
+    resolve(process.cwd(), "node_modules/@opentui/core/parser.worker.js"),
+    resolve(import.meta.dirname, "../node_modules/@opentui/core/parser.worker.js"),
+  ];
+
+  return candidates.find((path) => existsSync(path)) ?? null;
+}
+
+function getSharedTreeSitterClient(): TreeSitterClient | null {
+  if (_treeSitterClient) return _treeSitterClient;
+
+  const workerPath = resolveTreeSitterWorkerPath();
+  if (!workerPath) return null;
+
+  const dataPaths = getDataPaths();
+  const client = new TreeSitterClient({
+    dataPath: dataPaths.globalDataPath,
+    workerPath,
+    initTimeout: 1_000,
+  });
+  client.on("error", () => {
+    // OpenTUI falls back to unstyled content if highlighting fails.
+  });
+  _treeSitterClient = client;
+  return client;
+}
+
+async function saveThemePreference(themeName: string): Promise<void> {
+  const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
+  await writeConfig(GLOBAL_CONFIG_PATH, {
+    ...config,
+    tui: {
+      ...config.tui,
+      theme: themeName,
+    },
+  });
+}
+
+async function saveTuiPreferences(state: State): Promise<void> {
+  const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
+  await writeConfig(GLOBAL_CONFIG_PATH, {
+    ...config,
+    tui: {
+      ...config.tui,
+      theme: state.themeName,
+      diffView: state.diffView,
+      diffLineColors: state.diffLineColors,
+      diffSigns: state.diffSigns,
+      showLineNumbers: state.showLineNumbers,
+    },
+  });
+}
+
+interface SplitDiffRow {
+  oldLine?: number;
+  newLine?: number;
+  oldText: string;
+  newText: string;
+  type: "context" | "change";
+}
+
+function splitDiffRows(hunk: DiffHunk): SplitDiffRow[] {
+  const rows: SplitDiffRow[] = [];
+  const lines = hunk.text
+    .split("\n")
+    .slice(1)
+    .filter((line) => line !== "");
+  let oldLine = hunk.oldStart + 1;
+  let newLine = hunk.newStart + 1;
+
+  for (let i = 0; i < lines.length; ) {
+    const line = lines[i]!;
+    if (line.startsWith(" ")) {
+      const text = line.slice(1);
+      rows.push({ oldLine, newLine, oldText: text, newText: text, type: "context" });
+      oldLine++;
+      newLine++;
+      i++;
+      continue;
+    }
+
+    if (line.startsWith("\\")) {
+      i++;
+      continue;
+    }
+
+    const removed: Array<{ line: number; text: string }> = [];
+    const added: Array<{ line: number; text: string }> = [];
+    while (i < lines.length && !lines[i]!.startsWith(" ")) {
+      const current = lines[i]!;
+      if (current.startsWith("-")) {
+        removed.push({ line: oldLine, text: current.slice(1) });
+        oldLine++;
+      } else if (current.startsWith("+")) {
+        added.push({ line: newLine, text: current.slice(1) });
+        newLine++;
+      }
+      i++;
+    }
+
+    const count = Math.max(removed.length, added.length, 1);
+    for (let idx = 0; idx < count; idx++) {
+      rows.push({
+        oldLine: removed[idx]?.line,
+        newLine: added[idx]?.line,
+        oldText: removed[idx]?.text ?? "",
+        newText: added[idx]?.text ?? "",
+        type: "change",
+      });
+    }
+  }
+
+  return rows;
+}
+
+function SplitHunkDiff({
+  hunk,
+  palette,
+  lineColors,
+  signs,
+  lineNumbers,
+}: {
+  hunk: DiffHunk;
+  palette: Palette;
+  lineColors: boolean;
+  signs: boolean;
+  lineNumbers: boolean;
+}) {
+  return (
+    <box flexDirection="column" width="100%">
+      {splitDiffRows(hunk).map((row, idx) => {
+        const leftBg = lineColors && row.type === "change" ? palette.DIFF_REMOVED_BG : undefined;
+        const rightBg = lineColors && row.type === "change" ? palette.DIFF_ADDED_BG : undefined;
+        const contextBg =
+          lineColors && row.type === "context" ? palette.DIFF_CONTEXT_BG : undefined;
+        const oldNumber = row.oldLine === undefined ? "    " : String(row.oldLine).padStart(4, " ");
+        const newNumber = row.newLine === undefined ? "    " : String(row.newLine).padStart(4, " ");
+        const oldPrefix = `${lineNumbers ? oldNumber : ""}${signs && row.type === "change" ? " - " : "   "}`;
+        const newPrefix = `${lineNumbers ? newNumber : ""}${signs && row.type === "change" ? " + " : "   "}`;
+        return (
+          <box key={idx} flexDirection="row" width="100%">
+            <box width="50%" backgroundColor={leftBg ?? contextBg}>
+              <text
+                width="100%"
+                fg={row.type === "change" ? palette.DIFF_REMOVED : palette.TEXT}
+                bg={leftBg ?? contextBg}
+                truncate
+              >
+                {oldPrefix + row.oldText}
+              </text>
+            </box>
+            <box width="50%" backgroundColor={rightBg ?? contextBg}>
+              <text
+                width="100%"
+                fg={row.type === "change" ? palette.DIFF_ADDED : palette.TEXT}
+                bg={rightBg ?? contextBg}
+                truncate
+              >
+                {newPrefix + row.newText}
+              </text>
+            </box>
+          </box>
+        );
+      })}
+    </box>
+  );
+}
 
 /** For testing — set the renderer before mounting SyncTui directly */
 export function setTestRenderer(r: CliRenderer) {
@@ -73,13 +343,6 @@ function stagedCountForFile(staged: Map<string, Set<number>>, file: SyncFile): s
   if (!set || set.size === 0) return "";
   const total = file.hunks?.length ?? 1;
   return set.size === total ? "\u2713" : `${set.size}/${total}`;
-}
-
-function diffLineColors(line: string, p: Palette): { fg: string; bg?: string } {
-  if (line.startsWith("+")) return { fg: p.DIFF_ADDED, bg: p.DIFF_ADDED_BG };
-  if (line.startsWith("-")) return { fg: p.DIFF_REMOVED, bg: p.DIFF_REMOVED_BG };
-  if (line.startsWith("@@")) return { fg: p.DIFF_HUNK_HEADER };
-  return { fg: p.TEXT };
 }
 
 function toggleStagedHunks(state: State, file: SyncFile | undefined): State {
@@ -127,6 +390,7 @@ function toggleStagedHunks(state: State, file: SyncFile | undefined): State {
 
 async function doPush(
   state: State,
+  setResult: React.Dispatch<React.SetStateAction<ScanResult>>,
   setState: React.Dispatch<React.SetStateAction<State>>,
 ): Promise<void> {
   if (state.pushStatus === "pushing") return;
@@ -154,11 +418,27 @@ async function doPush(
         pushMessage: result.failed.map((f) => `${f.path}: ${f.error}`).join("; "),
       }));
     } else {
+      const pushMessage = `Pushed ${result.written.length} file(s), deleted ${result.deleted.length} file(s) successfully.`;
+      if (refreshScanRef) {
+        const next = await refreshScanRef();
+        setResult(next);
+      }
       setState((p) => ({
         ...p,
+        selectedFileIndex: 0,
+        selectedHunkIndex: 0,
+        stagedHunks: new Map(),
         pushStatus: "done",
-        pushMessage: `Pushed ${result.written.length} file(s), deleted ${result.deleted.length} file(s) successfully.`,
+        pushMessage,
+        statusMessage: pushMessage,
       }));
+      setTimeout(() => {
+        setState((p) =>
+          p.pushStatus === "done"
+            ? { ...p, pushStatus: "idle", pushMessage: "", statusMessage: pushMessage }
+            : p,
+        );
+      }, 2_000);
     }
   } catch (err: unknown) {
     setState((p) => ({
@@ -188,6 +468,10 @@ async function doRefresh(
     setState((prev) => ({
       ...makeInitialState(),
       themeName: prev.themeName,
+      diffView: prev.diffView,
+      diffLineColors: prev.diffLineColors,
+      diffSigns: prev.diffSigns,
+      showLineNumbers: prev.showLineNumbers,
       statusMessage: `Refreshed ${next.files.length} file${next.files.length === 1 ? "" : "s"}.`,
     }));
   } catch (err: unknown) {
@@ -196,6 +480,35 @@ async function doRefresh(
       pushStatus: "error",
       pushMessage: err instanceof Error ? err.message : String(err),
       statusMessage: "",
+    }));
+  }
+}
+
+async function doUnmarkSelected(
+  file: SyncFile | undefined,
+  setResult: React.Dispatch<React.SetStateAction<ScanResult>>,
+  setState: React.Dispatch<React.SetStateAction<State>>,
+): Promise<void> {
+  if (!file) return;
+
+  try {
+    await setSyncFileState(currentScanResult.projectRoot, [file.projectPath], "untracked");
+    const next = refreshScanRef ? await refreshScanRef() : currentScanResult;
+    setResult(next);
+    setState((prev) => ({
+      ...prev,
+      selectedFileIndex: Math.min(prev.selectedFileIndex, Math.max(next.files.length - 1, 0)),
+      selectedHunkIndex: 0,
+      stagedHunks: new Map([...prev.stagedHunks].filter(([path]) => path !== file.projectPath)),
+      pushStatus: "idle",
+      pushMessage: "",
+      statusMessage: `Unmarked ${file.projectPath}`,
+    }));
+  } catch (err: unknown) {
+    setState((prev) => ({
+      ...prev,
+      pushStatus: "error",
+      pushMessage: err instanceof Error ? err.message : String(err),
     }));
   }
 }
@@ -213,6 +526,28 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
     setStateRef = setState;
     return () => {
       setStateRef = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void readConfig(GLOBAL_CONFIG_PATH).then((config) => {
+      const themeName = config?.tui?.theme;
+      if (!cancelled) {
+        setState((prev) => ({
+          ...prev,
+          themeName: themeName && THEMES[themeName] ? themeName : prev.themeName,
+          diffView: config?.tui?.diffView ?? prev.diffView,
+          diffLineColors: config?.tui?.diffLineColors ?? prev.diffLineColors,
+          diffSigns: config?.tui?.diffSigns ?? prev.diffSigns,
+          showLineNumbers: config?.tui?.showLineNumbers ?? prev.showLineNumbers,
+          statusMessage:
+            themeName && THEMES[themeName] ? `Theme: ${themeName}` : prev.statusMessage,
+        }));
+      }
+    });
+    return () => {
+      cancelled = true;
     };
   }, []);
 
@@ -286,15 +621,57 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             void doRefresh(setResult, setState);
             return prev;
 
+          case "u":
+            void doUnmarkSelected(file, setResult, setState);
+            return prev;
+
           case "t": {
             const idx = THEME_NAMES.indexOf(prev.themeName);
             const nextTheme = THEME_NAMES[(idx + 1) % THEME_NAMES.length]!;
+            void saveThemePreference(nextTheme);
             return { ...prev, themeName: nextTheme, statusMessage: `Theme: ${nextTheme}` };
+          }
+
+          case "s": {
+            const diffView: State["diffView"] = prev.diffView === "unified" ? "split" : "unified";
+            const next = { ...prev, diffView, statusMessage: `Diff view: ${diffView}` };
+            void saveTuiPreferences(next);
+            return next;
+          }
+
+          case "b": {
+            const next = {
+              ...prev,
+              diffLineColors: !prev.diffLineColors,
+              statusMessage: `Line colors: ${!prev.diffLineColors ? "on" : "off"}`,
+            };
+            void saveTuiPreferences(next);
+            return next;
+          }
+
+          case "g": {
+            const next = {
+              ...prev,
+              diffSigns: !prev.diffSigns,
+              statusMessage: `+/- markers: ${!prev.diffSigns ? "on" : "off"}`,
+            };
+            void saveTuiPreferences(next);
+            return next;
+          }
+
+          case "l": {
+            const next = {
+              ...prev,
+              showLineNumbers: !prev.showLineNumbers,
+              statusMessage: `Line numbers: ${!prev.showLineNumbers ? "on" : "off"}`,
+            };
+            void saveTuiPreferences(next);
+            return next;
           }
 
           case "enter":
           case "return":
-            void doPush(prev, setStateRef!);
+            void doPush(prev, setResult, setStateRef!);
             return prev;
 
           default:
@@ -310,6 +687,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   }, []);
 
   // Keep module-level files ref in sync for the key handler
+  currentScanResult = result;
   currentFiles = result.files;
 
   const selectedFile = result.files[state.selectedFileIndex] ?? null;
@@ -336,7 +714,8 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
       >
         <text fg={palette.TEXT}>
           Hillbilly Sync | {result.files.length} file{result.files.length !== 1 ? "s" : ""} changed
-          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | j/k nav q quit t theme
+          {totalStaged > 0 ? ` | ${totalStaged} staged` : ""} | {state.diffView} | j/k nav q quit u
+          unmark t theme s split b colors g signs l lines
         </text>
       </box>
 
@@ -407,6 +786,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               {selectedFile.hunks.map((hunk, hi) => {
                 const staged = isHunkStaged(state.stagedHunks, selectedFile.projectPath, hi);
                 const isHunkSelected = hi === clampedHunkIdx && state.focus === "diff";
+                const filetype = pathToFiletype(selectedFile.projectPath);
+                const syntaxStyle = paletteToSyntaxStyle(palette);
+                const treeSitterClient = getSharedTreeSitterClient();
                 return (
                   <box
                     key={hi}
@@ -417,17 +799,42 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                       [{staged ? "\u2713" : " "}] @@ -{hunk.oldStart + 1},{hunk.oldLines} +
                       {hunk.newStart + 1},{hunk.newLines} @@
                     </text>
-                    {hunk.text
-                      .split("\n")
-                      .slice(1)
-                      .map((line, lineIndex) => {
-                        const colors = diffLineColors(line, palette);
-                        return (
-                          <text key={`${hi}-${lineIndex}`} fg={colors.fg} bg={colors.bg} truncate>
-                            {line}
-                          </text>
-                        );
-                      })}
+                    {state.diffView === "split" ? (
+                      <SplitHunkDiff
+                        hunk={hunk}
+                        palette={palette}
+                        lineColors={state.diffLineColors}
+                        signs={state.diffSigns}
+                        lineNumbers={state.showLineNumbers}
+                      />
+                    ) : (
+                      <diff
+                        diff={hunkDiffForFile(selectedFile, hunk)}
+                        view="unified"
+                        width="100%"
+                        height={hunkDiffHeight(hunk, "unified")}
+                        syntaxStyle={syntaxStyle}
+                        treeSitterClient={treeSitterClient ?? undefined}
+                        filetype={filetype}
+                        fg={palette.TEXT}
+                        addedBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
+                        removedBg={state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG}
+                        contextBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
+                        addedContentBg={state.diffLineColors ? palette.DIFF_ADDED_BG : palette.BG}
+                        removedContentBg={
+                          state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
+                        }
+                        contextContentBg={
+                          state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
+                        }
+                        addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
+                        removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
+                        lineNumberFg={palette.TEXT_MUTED}
+                        lineNumberBg={state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG}
+                        wrapMode="none"
+                        showLineNumbers={state.showLineNumbers}
+                      />
+                    )}
                   </box>
                 );
               })}
@@ -456,7 +863,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         {state.pushStatus === "idle" && (
           <text fg={palette.TEXT}>
             [Space] stage/unstage [Tab] switch panel [r] refresh [t] theme [Enter] push staged [q]
-            quit
+            quit [u] unmark [s] split/unified [b] colors [g] signs [l] lines
             {state.statusMessage ? ` | ${state.statusMessage}` : ""}
           </text>
         )}
@@ -464,7 +871,9 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         {state.pushStatus === "done" && (
           <text fg={palette.SUCCESS}>{state.pushMessage} [q] quit</text>
         )}
-        {state.pushStatus === "error" && <text fg={palette.ERROR}>{state.pushMessage} [q] quit</text>}
+        {state.pushStatus === "error" && (
+          <text fg={palette.ERROR}>{state.pushMessage} [q] quit</text>
+        )}
       </box>
     </box>
   );
@@ -474,7 +883,10 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 // launchTui — entry point
 // ---------------------------------------------------------------------------
 
-export async function launchTui(result: ScanResult): Promise<void> {
+export async function launchTui(
+  result: ScanResult,
+  refreshScan?: () => Promise<ScanResult>,
+): Promise<void> {
   const defaultPalette = THEMES[DEFAULT_THEME]!;
   const renderer = await createCliRenderer({
     exitOnCtrlC: false,
@@ -485,6 +897,7 @@ export async function launchTui(result: ScanResult): Promise<void> {
     backgroundColor: defaultPalette.BG,
   });
   _renderer = renderer;
+  refreshScanRef = refreshScan ?? null;
 
   await new Promise<void>((resolve) => {
     quitResolver = resolve;
@@ -495,6 +908,11 @@ export async function launchTui(result: ScanResult): Promise<void> {
 
   // Cleanup after quit
   _renderer = null;
+  refreshScanRef = null;
   renderer.stop();
   renderer.destroy();
+  if (_treeSitterClient) {
+    void _treeSitterClient.destroy();
+    _treeSitterClient = null;
+  }
 }

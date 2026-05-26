@@ -7,6 +7,13 @@ import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 export interface HillbillyConfig {
   templateRepo?: string;
   templateSubdir?: string;
+  tui?: {
+    theme?: string;
+    diffView?: "unified" | "split";
+    diffLineColors?: boolean;
+    diffSigns?: boolean;
+    showLineNumbers?: boolean;
+  };
 }
 
 export interface TemplateResolution {
@@ -22,11 +29,33 @@ export function projectConfigPath(projectRoot: string): string {
   return resolve(projectRoot, PROJECT_CONFIG_NAME);
 }
 
-async function readConfig(path: string): Promise<HillbillyConfig | null> {
+export function resolveProjectRoot(startPath: string): string {
+  let current = resolve(startPath);
+
+  while (true) {
+    if (
+      existsSync(resolve(current, PROJECT_CONFIG_NAME)) ||
+      existsSync(resolve(current, ".copier-answers.yml"))
+    ) {
+      return current;
+    }
+
+    const parent = dirname(current);
+    if (parent === current) return resolve(startPath);
+    current = parent;
+  }
+}
+
+export async function readConfig(path: string): Promise<HillbillyConfig | null> {
   if (!existsSync(path)) return null;
   const raw = await readFile(path, "utf-8");
   const parsed = parseYaml(raw) as HillbillyConfig | null;
   return parsed ?? {};
+}
+
+export async function writeConfig(path: string, config: HillbillyConfig): Promise<void> {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, stringifyYaml(config), "utf-8");
 }
 
 function resolveConfiguredTemplateRoot(config: HillbillyConfig, baseDir: string): string | null {
@@ -57,7 +86,7 @@ export async function resolveTemplateRoot(
   projectRoot: string,
   options: { template?: string } = {},
 ): Promise<TemplateResolution> {
-  const normalizedProjectRoot = resolve(projectRoot);
+  const normalizedProjectRoot = resolveProjectRoot(projectRoot);
 
   if (options.template) {
     const templateRoot = resolve(options.template);
@@ -78,7 +107,11 @@ export async function resolveTemplateRoot(
     ? resolveConfiguredTemplateRoot(globalConfig, dirname(GLOBAL_CONFIG_PATH))
     : null;
   if (globalTemplateRoot) {
-    return { templateRoot: globalTemplateRoot, source: "global-config", configPath: GLOBAL_CONFIG_PATH };
+    return {
+      templateRoot: globalTemplateRoot,
+      source: "global-config",
+      configPath: GLOBAL_CONFIG_PATH,
+    };
   }
 
   const copierTemplateRoot = await resolveCopierTemplateRoot(normalizedProjectRoot);
@@ -96,10 +129,11 @@ export async function writeTemplateConfig(
   templateRepo: string,
   templateSubdir = "template",
 ): Promise<void> {
-  await mkdir(dirname(configPath), { recursive: true });
+  const existing = (await readConfig(configPath)) ?? {};
   const config: HillbillyConfig = {
+    ...existing,
     templateRepo: resolve(templateRepo),
     templateSubdir,
   };
-  await writeFile(configPath, stringifyYaml(config), "utf-8");
+  await writeConfig(configPath, config);
 }

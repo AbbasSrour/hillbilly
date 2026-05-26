@@ -1,10 +1,11 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, unlink } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { SyncFile } from "./scan.js";
 import { applyStagedHunks } from "./scan.js";
 
 export interface PushResult {
   written: string[];
+  deleted: string[];
   failed: { path: string; error: string }[];
 }
 
@@ -23,6 +24,7 @@ export async function pushChanges(
 ): Promise<PushResult> {
   const result: PushResult = {
     written: [],
+    deleted: [],
     failed: [],
   };
 
@@ -38,7 +40,10 @@ export async function pushChanges(
       // Create parent directories if they don't exist
       await mkdir(dirname(file.templatePath), { recursive: true });
 
-      if (file.status === "added") {
+      if (file.status === "deleted") {
+        await unlink(file.templatePath);
+        result.deleted.push(file.templatePath);
+      } else if (file.status === "added") {
         if (file.projectContent === undefined) {
           throw new Error("projectContent is missing for added file");
         }
@@ -50,9 +55,7 @@ export async function pushChanges(
         if (file.hunks && file.hunks.length > 0) {
           // Determine which hunk indices to apply
           const indicesToApply: Set<number> =
-            stagedIndices.size === 0
-              ? new Set(file.hunks.map((_, i) => i))
-              : stagedIndices;
+            stagedIndices.size === 0 ? new Set(file.hunks.map((_, i) => i)) : stagedIndices;
 
           // Read current template content
           const templateContent = await readFile(file.templatePath, "utf-8");
