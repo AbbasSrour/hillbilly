@@ -381,9 +381,8 @@ export function applyStagedHunks(
   hunks: DiffHunk[],
   stagedHunkIndices: Set<number>,
 ): string {
-  const stripped = stripRawBlocks(templateContent);
-  const lines = stripped === "" ? [] : stripped.split("\n");
-  const templateEndsWithNewline = stripped.endsWith("\n");
+  const lines = templateContent === "" ? [] : templateContent.split("\n");
+  const templateEndsWithNewline = templateContent.endsWith("\n");
   let resultEndsWithNewline = templateEndsWithNewline;
 
   // Apply hunks in reverse order to avoid index shifting

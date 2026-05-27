@@ -113,7 +113,10 @@ function isHunkStaged(staged: Map<string, Set<number>>, projectPath: string, idx
   return staged.get(projectPath)?.has(idx) ?? false;
 }
 
-function stagedCountForFile(staged: Map<string, Set<number>>, file: { projectPath: string; hunks?: unknown[] }): string {
+function stagedCountForFile(
+  staged: Map<string, Set<number>>,
+  file: { projectPath: string; hunks?: unknown[] },
+): string {
   const set = staged.get(file.projectPath);
   if (!set || set.size === 0) return "";
   const total = file.hunks?.length ?? 1;
@@ -138,7 +141,10 @@ function stageAllHunks(state: FakeState, files: FakeFile[]): FakeState {
   const alreadyAll = files.every((f) => {
     if (f.status === "stale") return true;
     const hunkCount = f.hunks?.length ?? 0;
-    if (hunkCount === 0 && (f.status === "added" || f.status === "moved" || f.status === "renamed")) {
+    if (
+      hunkCount === 0 &&
+      (f.status === "added" || f.status === "moved" || f.status === "renamed")
+    ) {
       return next.has(f.projectPath);
     }
     return (next.get(f.projectPath)?.size ?? 0) === hunkCount;
@@ -149,7 +155,10 @@ function stageAllHunks(state: FakeState, files: FakeFile[]): FakeState {
     for (const f of files) {
       if (f.status === "stale") continue;
       const hunkCount = f.hunks?.length ?? 0;
-      if (hunkCount === 0 && (f.status === "added" || f.status === "moved" || f.status === "renamed")) {
+      if (
+        hunkCount === 0 &&
+        (f.status === "added" || f.status === "moved" || f.status === "renamed")
+      ) {
         next.set(f.projectPath, new Set([0]));
       } else {
         const all = new Set<number>();
@@ -165,7 +174,10 @@ function toggleStagedHunks(state: FakeState, file: FakeFile | undefined): FakeSt
   if (!file) return state;
   if (file.status === "stale") return state;
   const hunkCount = file.hunks?.length ?? 0;
-  if (hunkCount === 0 && (file.status === "added" || file.status === "moved" || file.status === "renamed")) {
+  if (
+    hunkCount === 0 &&
+    (file.status === "added" || file.status === "moved" || file.status === "renamed")
+  ) {
     const next = new Map(state.stagedHunks);
     if (next.has(file.projectPath)) {
       next.delete(file.projectPath);
@@ -546,12 +558,20 @@ describe("toggleStagedHunks", () => {
 
 describe("pathChangeLabel", () => {
   it("returns 'Moved file' for directory changes", () => {
-    const file = { projectPath: "new/path/file.ts", status: "moved", movedFrom: "old/path/file.ts" };
+    const file = {
+      projectPath: "new/path/file.ts",
+      status: "moved",
+      movedFrom: "old/path/file.ts",
+    };
     expect(pathChangeLabel(file)).toBe("Moved file");
   });
 
   it("returns 'Renamed file' for name-only changes", () => {
-    const file = { projectPath: "path/newname.ts", status: "renamed", movedFrom: "path/oldname.ts" };
+    const file = {
+      projectPath: "path/newname.ts",
+      status: "renamed",
+      movedFrom: "path/oldname.ts",
+    };
     expect(pathChangeLabel(file)).toBe("Renamed file");
   });
 

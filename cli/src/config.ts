@@ -13,6 +13,7 @@ export interface HillbillyConfig {
     diffLineColors?: boolean;
     diffSigns?: boolean;
     showLineNumbers?: boolean;
+    diffWrap?: boolean;
   };
 }
 
@@ -50,7 +51,7 @@ export async function readConfig(path: string): Promise<HillbillyConfig | null> 
   if (!existsSync(path)) return null;
   const raw = await readFile(path, "utf-8");
   const parsed = parseYaml(raw);
-  return (parsed && typeof parsed === "object" && !Array.isArray(parsed))
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed)
     ? (parsed as HillbillyConfig)
     : {};
 }

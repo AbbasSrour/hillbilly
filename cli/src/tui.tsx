@@ -121,6 +121,49 @@ function statusLetter(status: SyncFile["status"], formatOnly: boolean | undefine
   return "M";
 }
 
+const HELP_ITEMS: [string, string][] = [
+  ["j/k   .", "Navigate files / hunks"],
+  ["gg/G  .", "Jump to first / last item"],
+  ["Space  .", "Stage current file or hunk"],
+  ["a      .", "Toggle all hunks in all files"],
+  ["Tab    .", "Switch panel (files <> diff)"],
+  ["Enter  .", "Push staged changes to template"],
+  ["r      .", "Refresh scan"],
+  ["m      .", "Mark project files for sync"],
+  ["u      .", "Unmark / untrack selected file"],
+  ["d      .", "Delete/prune stale file (press twice)"],
+  ["/      .", "Filter files by path"],
+  ["f      .", "Filter files by status"],
+  ["t      .", "Theme picker"],
+  ["s      .", "Toggle unified / split diff view"],
+  ["b      .", "Toggle line colors"],
+  ["z      .", "Toggle +/- markers"],
+  ["l      .", "Toggle line numbers"],
+  ["w      .", "Toggle line wrap"],
+  ["?      .", "Toggle this help overlay"],
+  ["q Esc  .", "Quit / close picker"],
+];
+
+interface StatusFilter {
+  id: string;
+  label: string;
+  filter: (f: SyncFile) => boolean;
+}
+
+const STATUS_FILTERS: StatusFilter[] = [
+  { id: "all", label: "All Files", filter: () => true },
+  { id: "format", label: "Format Only", filter: (f) => f.formatOnly === true },
+  { id: "modified", label: "Modified", filter: (f) => f.status === "modified" && !f.formatOnly },
+  { id: "added", label: "Added", filter: (f) => f.status === "added" },
+  {
+    id: "moved",
+    label: "Moved / Renamed",
+    filter: (f) => f.status === "moved" || f.status === "renamed",
+  },
+  { id: "deleted", label: "Deleted", filter: (f) => f.status === "deleted" },
+  { id: "stale", label: "Stale", filter: (f) => f.status === "stale" },
+];
+
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
@@ -138,6 +181,7 @@ interface State {
   diffLineColors: boolean;
   diffSigns: boolean;
   showLineNumbers: boolean;
+  diffWrap: boolean;
   pendingPrunePath: string | null;
   pickerOpen: boolean;
   pickerIndex: number;
@@ -151,6 +195,13 @@ interface State {
   fileListFilter: string;
   fileListFilterActive: boolean;
   pushConfirmOpen: boolean;
+  statusFilter: string | null;
+  statusPickerOpen: boolean;
+  statusPickerIndex: number;
+  statusPickerFilter: string;
+  pendingG: boolean;
+  helpIndex: number;
+  helpFilter: string;
 }
 
 function makeInitialState(): State {
@@ -167,6 +218,7 @@ function makeInitialState(): State {
     diffLineColors: true,
     diffSigns: true,
     showLineNumbers: true,
+    diffWrap: false,
     pendingPrunePath: null,
     pickerOpen: false,
     pickerIndex: 0,
@@ -180,6 +232,13 @@ function makeInitialState(): State {
     fileListFilter: "",
     fileListFilterActive: false,
     pushConfirmOpen: false,
+    statusFilter: null,
+    statusPickerOpen: false,
+    statusPickerIndex: 0,
+    statusPickerFilter: "",
+    pendingG: false,
+    helpIndex: 0,
+    helpFilter: "",
   };
 }
 
@@ -188,10 +247,12 @@ function makeInitialState(): State {
 // ---------------------------------------------------------------------------
 
 let setStateRef: React.Dispatch<React.SetStateAction<State>> | null = null;
+let setResultRef: React.Dispatch<React.SetStateAction<ScanResult>> | null = null;
 let quitResolver: (() => void) | null = null;
 let currentFiles: SyncFile[] = [];
 let currentScanResult: ScanResult;
 let _renderer: CliRenderer | null = null;
+let _root: ReturnType<typeof createRoot> | null = null;
 let refreshScanRef: (() => Promise<ScanResult>) | null = null;
 let _treeSitterClient: TreeSitterClient | null = null;
 
@@ -282,8 +343,19 @@ async function getMarkableFiles(
 }
 
 // Build a mini unified diff string for a single hunk
-function hunkDiffForFile(file: SyncFile, hunk: DiffHunk): string {
-  return `--- ${file.projectPath}\n+++ ${file.projectPath}\n${hunk.text}\n`;
+function stripDiffSigns(text: string): string {
+  return text
+    .split("\n")
+    .map((line) => {
+      if (line.startsWith("+") || line.startsWith("-")) return " " + line.slice(1);
+      return line;
+    })
+    .join("\n");
+}
+
+function hunkDiffForFile(file: SyncFile, hunk: DiffHunk, stripSigns = false): string {
+  const text = stripSigns ? stripDiffSigns(hunk.text) : hunk.text;
+  return `--- ${file.projectPath}\n+++ ${file.projectPath}\n${text}\n`;
 }
 
 function hunkDiffHeight(hunk: DiffHunk, view: "unified" | "split"): number {
@@ -374,6 +446,7 @@ async function saveTuiPreferences(state: State): Promise<void> {
         diffLineColors: s.diffLineColors,
         diffSigns: s.diffSigns,
         showLineNumbers: s.showLineNumbers,
+        diffWrap: s.diffWrap,
       },
     });
   }
@@ -774,6 +847,7 @@ async function doRefresh(
       diffLineColors: prev.diffLineColors,
       diffSigns: prev.diffSigns,
       showLineNumbers: prev.showLineNumbers,
+      diffWrap: prev.diffWrap,
       statusMessage: `Refreshed ${next.files.length} file${next.files.length === 1 ? "" : "s"}.`,
     }));
   } catch (err: unknown) {
@@ -863,6 +937,13 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
   }, []);
 
   useEffect(() => {
+    setResultRef = setResult;
+    return () => {
+      setResultRef = null;
+    };
+  }, [setResult]);
+
+  useEffect(() => {
     let cancelled = false;
     void readConfig(GLOBAL_CONFIG_PATH).then((config) => {
       const themeName = config?.tui?.theme;
@@ -874,6 +955,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           diffLineColors: config?.tui?.diffLineColors ?? prev.diffLineColors,
           diffSigns: config?.tui?.diffSigns ?? prev.diffSigns,
           showLineNumbers: config?.tui?.showLineNumbers ?? prev.showLineNumbers,
+          diffWrap: config?.tui?.diffWrap ?? prev.diffWrap,
           statusMessage:
             themeName && THEMES[themeName] ? `Theme: ${themeName}` : prev.statusMessage,
         }));
@@ -891,11 +973,16 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
     const handler = (event: KeyEvent) => {
       setState((prev) => {
-        const filtered = prev.fileListFilter
-          ? currentFiles.filter((f) =>
-              f.projectPath.toLowerCase().includes(prev.fileListFilter.toLowerCase()),
-            )
-          : currentFiles;
+        const statusFilterFn = STATUS_FILTERS.find((s) => s.id === prev.statusFilter)?.filter;
+        let filtered = currentFiles;
+        if (prev.fileListFilter) {
+          filtered = filtered.filter((f) =>
+            f.projectPath.toLowerCase().includes(prev.fileListFilter.toLowerCase()),
+          );
+        }
+        if (statusFilterFn) {
+          filtered = filtered.filter(statusFilterFn);
+        }
         const file = filtered[prev.selectedFileIndex];
         const hCount = file?.hunks?.length ?? 0;
         const fileCount = Math.max(filtered.length - 1, 0);
@@ -908,13 +995,40 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
         // Help overlay mode
         if (prev.helpOpen) {
+          const filteredHelp = HELP_ITEMS.filter(([key, desc]) =>
+            `${key} ${desc}`.toLowerCase().includes(prev.helpFilter.toLowerCase()),
+          );
+          const helpMax = Math.max(filteredHelp.length - 1, 0);
           switch (event.name) {
+            case "j":
+            case "down":
+              return { ...prev, helpIndex: Math.min(prev.helpIndex + 1, helpMax) };
+            case "k":
+            case "up":
+              return { ...prev, helpIndex: Math.max(prev.helpIndex - 1, 0) };
+            case "g":
+              if (event.shift) return { ...prev, helpIndex: helpMax };
+              if (prev.pendingG) return { ...prev, pendingG: false, helpIndex: 0 };
+              return { ...prev, pendingG: true };
+            case "G":
+              return { ...prev, helpIndex: helpMax };
+            case "backspace":
+              return { ...prev, helpFilter: prev.helpFilter.slice(0, -1), helpIndex: 0 };
+            case "delete":
+              return { ...prev, helpFilter: "", helpIndex: 0 };
             case "?":
             case "escape":
             case "q":
-              return { ...prev, helpOpen: false };
+              return { ...prev, helpOpen: false, helpIndex: 0, helpFilter: "" };
             default:
-              return prev;
+              if (event.name.length === 1 && !event.ctrl && !event.meta && !event.shift) {
+                return {
+                  ...prev,
+                  helpFilter: prev.helpFilter + event.name,
+                  helpIndex: 0,
+                };
+              }
+              return { ...prev, pendingG: false };
           }
         }
 
@@ -922,7 +1036,12 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
         if (prev.fileListFilterActive) {
           switch (event.name) {
             case "escape":
-              return { ...prev, fileListFilter: "", fileListFilterActive: false, pushConfirmOpen: false };
+              return {
+                ...prev,
+                fileListFilter: "",
+                fileListFilterActive: false,
+                pushConfirmOpen: false,
+              };
             case "enter":
             case "return":
               return { ...prev, fileListFilterActive: false };
@@ -1010,8 +1129,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             case "k":
             case "up":
               return { ...prev, markPickerIndex: Math.max(prev.markPickerIndex - 1, 0) };
-            case "space":
-            case " ": {
+            case "space": {
               const name = filtered[prev.markPickerIndex];
               if (!name) return prev;
               const next = new Set(prev.markPickerSelected);
@@ -1089,6 +1207,68 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           }
         }
 
+        // Status filter picker mode
+        if (prev.statusPickerOpen) {
+          const filtered = STATUS_FILTERS.filter((s) =>
+            s.label.toLowerCase().includes(prev.statusPickerFilter.toLowerCase()),
+          );
+          switch (event.name) {
+            case "j":
+            case "down":
+              return {
+                ...prev,
+                statusPickerIndex: Math.min(
+                  prev.statusPickerIndex + 1,
+                  Math.max(filtered.length - 1, 0),
+                ),
+              };
+            case "k":
+            case "up":
+              return { ...prev, statusPickerIndex: Math.max(prev.statusPickerIndex - 1, 0) };
+            case "enter":
+            case "return": {
+              const selected = filtered[prev.statusPickerIndex];
+              const filterId = selected?.id === "all" ? null : (selected?.id ?? null);
+              const filterLabel = selected?.id === "all" ? null : (selected?.label ?? null);
+              return {
+                ...prev,
+                statusPickerOpen: false,
+                statusFilter: filterId,
+                statusPickerFilter: "",
+                statusPickerIndex: 0,
+                statusMessage: filterLabel ? `Filter: ${filterLabel}` : "Filter: All",
+                selectedFileIndex: 0,
+                pushConfirmOpen: false,
+              };
+            }
+            case "escape":
+            case "q":
+              return {
+                ...prev,
+                statusPickerOpen: false,
+                statusPickerFilter: "",
+                statusPickerIndex: 0,
+              };
+            case "backspace":
+              return {
+                ...prev,
+                statusPickerFilter: prev.statusPickerFilter.slice(0, -1),
+                statusPickerIndex: 0,
+              };
+            case "delete":
+              return { ...prev, statusPickerFilter: "", statusPickerIndex: 0 };
+            default:
+              if (event.name.length === 1 && !event.ctrl && !event.meta && !event.shift) {
+                return {
+                  ...prev,
+                  statusPickerFilter: prev.statusPickerFilter + event.name,
+                  statusPickerIndex: 0,
+                };
+              }
+              return prev;
+          }
+        }
+
         switch (event.name) {
           case "q":
             r.keyInput.off("keypress", handler);
@@ -1096,10 +1276,73 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return prev;
 
           case "/":
-            return { ...prev, focus: "files", fileListFilter: "", fileListFilterActive: true, selectedFileIndex: 0, pushConfirmOpen: false };
+            return {
+              ...prev,
+              focus: "files",
+              fileListFilter: "",
+              fileListFilterActive: true,
+              selectedFileIndex: 0,
+              pushConfirmOpen: false,
+            };
 
           case "escape":
-            return { ...prev, pushConfirmOpen: false, fileListFilter: "", fileListFilterActive: false, pendingPrunePath: null };
+            return {
+              ...prev,
+              pushConfirmOpen: false,
+              fileListFilter: "",
+              fileListFilterActive: false,
+              pendingPrunePath: null,
+              statusFilter: null,
+            };
+
+          case "g":
+            if (event.shift) {
+              if (prev.focus === "diff") {
+                return {
+                  ...prev,
+                  pendingG: false,
+                  pendingPrunePath: null,
+                  selectedHunkIndex: Math.max(hCount - 1, 0),
+                };
+              }
+              return {
+                ...prev,
+                pendingG: false,
+                pendingPrunePath: null,
+                selectedFileIndex: fileCount,
+                selectedHunkIndex: 0,
+              };
+            }
+            if (prev.pendingG) {
+              if (prev.focus === "diff") {
+                return { ...prev, pendingG: false, pendingPrunePath: null, selectedHunkIndex: 0 };
+              }
+              return {
+                ...prev,
+                pendingG: false,
+                pendingPrunePath: null,
+                selectedFileIndex: 0,
+                selectedHunkIndex: 0,
+              };
+            }
+            return { ...prev, pendingG: true };
+
+          case "G":
+            if (prev.focus === "diff") {
+              return {
+                ...prev,
+                pendingG: false,
+                pendingPrunePath: null,
+                selectedHunkIndex: Math.max(hCount - 1, 0),
+              };
+            }
+            return {
+              ...prev,
+              pendingG: false,
+              pendingPrunePath: null,
+              selectedFileIndex: fileCount,
+              selectedHunkIndex: 0,
+            };
 
           case "j":
           case "down":
@@ -1113,7 +1356,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return {
               ...prev,
               pendingPrunePath: null,
-                selectedFileIndex: Math.min(prev.selectedFileIndex + 1, fileCount),
+              selectedFileIndex: Math.min(prev.selectedFileIndex + 1, fileCount),
               selectedHunkIndex: 0,
             };
 
@@ -1146,7 +1389,6 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           }
 
           case "space":
-          case " ":
             return toggleStagedHunks(prev, file);
 
           case "r":
@@ -1158,7 +1400,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return prev;
 
           case "a":
-            return stageAllHunks(prev, currentFiles);
+            return stageAllHunks(prev, filtered);
 
           case "d":
             if (file?.status !== "stale") return prev;
@@ -1220,7 +1462,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return next;
           }
 
-          case "g": {
+          case "z": {
             const next = {
               ...prev,
               diffSigns: !prev.diffSigns,
@@ -1240,6 +1482,24 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return next;
           }
 
+          case "w": {
+            const next = {
+              ...prev,
+              diffWrap: !prev.diffWrap,
+              statusMessage: `Line wrap: ${!prev.diffWrap ? "on" : "off"}`,
+            };
+            void saveTuiPreferences(next);
+            return next;
+          }
+
+          case "f":
+            return {
+              ...prev,
+              statusPickerOpen: true,
+              statusPickerIndex: STATUS_FILTERS.findIndex((s) => s.id === prev.statusFilter),
+              statusPickerFilter: "",
+            };
+
           case "?": {
             if (prev.helpOpen) return { ...prev, helpOpen: false };
             return { ...prev, helpOpen: true };
@@ -1251,7 +1511,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             return prev;
 
           default:
-            return prev;
+            return { ...prev, pendingG: false };
         }
       });
     };
@@ -1268,11 +1528,16 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
   const displayNames = uniqueDisplayNames(result.files.map((f) => f.projectPath));
 
-  const filteredFileList = state.fileListFilter
-    ? result.files.filter((f) =>
-        f.projectPath.toLowerCase().includes(state.fileListFilter.toLowerCase()),
-      )
-    : result.files;
+  let filteredFileList = result.files;
+  if (state.fileListFilter) {
+    filteredFileList = filteredFileList.filter((f) =>
+      f.projectPath.toLowerCase().includes(state.fileListFilter.toLowerCase()),
+    );
+  }
+  const statusFilterFn = STATUS_FILTERS.find((s) => s.id === state.statusFilter)?.filter;
+  if (statusFilterFn) {
+    filteredFileList = filteredFileList.filter(statusFilterFn);
+  }
 
   const selectedFile = filteredFileList[state.selectedFileIndex] ?? null;
   const hunkCount = selectedFile?.hunks?.length ?? 0;
@@ -1308,34 +1573,32 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
           <box height={1} flexShrink={0}>
             <text fg={palette.PRIMARY}>Keybindings</text>
           </box>
-          {[
-            ["j/k   .", "Navigate files / hunks"],
-            ["Space  .", "Stage current file or hunk"],
-            ["a      .", "Toggle all hunks in all files"],
-            ["Tab    .", "Switch panel (files <> diff)"],
-            ["Enter  .", "Push staged changes to template"],
-            ["r      .", "Refresh scan"],
-            ["m      .", "Mark project files for sync"],
-            ["u      .", "Unmark / untrack selected file"],
-            ["d      .", "Delete/prune stale file (press twice)"],
-            ["/      .", "Filter files by path"],
-            ["t      .", "Theme picker"],
-            ["s      .", "Toggle unified / split diff view"],
-            ["b      .", "Toggle line colors"],
-            ["g      .", "Toggle +/- markers"],
-            ["l      .", "Toggle line numbers"],
-            ["?      .", "Toggle this help overlay"],
-            ["q Esc  .", "Quit / close picker"],
-          ].map(([key, desc], i) => (
-            <box key={i} height={1} flexShrink={0} flexDirection="row">
-              <text fg={palette.PRIMARY} width={20}>
+          <box height={1} flexShrink={0} flexDirection="row" alignItems="center">
+            <text fg={palette.TEXT_MUTED}>Filter: </text>
+            <text fg={palette.TEXT}>{state.helpFilter}</text>
+            <text fg={palette.PRIMARY}>|</text>
+          </box>
+          {HELP_ITEMS.filter(([key, desc]) =>
+            `${key} ${desc}`.toLowerCase().includes(state.helpFilter.toLowerCase()),
+          ).map(([key, desc], i) => (
+            <box
+              key={i}
+              height={1}
+              flexShrink={0}
+              flexDirection="row"
+              backgroundColor={i === state.helpIndex ? palette.SELECTED_BG : undefined}
+            >
+              <text fg={i === state.helpIndex ? palette.PRIMARY : palette.TEXT_MUTED} width={20}>
                 {key}
               </text>
-              <text fg={palette.TEXT_MUTED}>{desc}</text>
+              <text fg={i === state.helpIndex ? palette.TEXT : palette.TEXT_MUTED}>{desc}</text>
             </box>
           ))}
+          {HELP_ITEMS.filter(([key, desc]) =>
+            `${key} ${desc}`.toLowerCase().includes(state.helpFilter.toLowerCase()),
+          ).length === 0 && <text fg={palette.TEXT_MUTED}>No bindings match</text>}
           <box height={1} flexShrink={0}>
-            <text fg={palette.TEXT_MUTED}>Press ? or Esc or q to close</text>
+            <text fg={palette.TEXT_MUTED}>type to search j/k navigate ? Esc q close</text>
           </box>
         </box>
       ) : state.markPickerOpen ? (
@@ -1390,6 +1653,46 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             <text fg={palette.TEXT_MUTED}>
               j/k navigate Space toggle a toggle all Enter confirm Esc/q close
             </text>
+          </box>
+        </box>
+      ) : state.statusPickerOpen ? (
+        <box flexDirection="column" flexGrow={1} paddingX={2} paddingY={1}>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.PRIMARY}>Filter by Status</text>
+          </box>
+          <box height={1} flexShrink={0} flexDirection="row" alignItems="center">
+            <text fg={palette.TEXT_MUTED}>Filter: </text>
+            <text fg={palette.TEXT}>{state.statusPickerFilter}</text>
+            <text fg={palette.PRIMARY}>|</text>
+          </box>
+          <scrollbox
+            flexGrow={1}
+            minHeight={0}
+            scrollY
+            verticalScrollbarOptions={{ visible: false }}
+            horizontalScrollbarOptions={{ visible: false }}
+          >
+            {STATUS_FILTERS.filter((s) =>
+              s.label.toLowerCase().includes(state.statusPickerFilter.toLowerCase()),
+            ).map((s, i) => (
+              <box
+                key={s.id}
+                backgroundColor={i === state.statusPickerIndex ? palette.SELECTED_BG : undefined}
+                height={1}
+                flexShrink={0}
+              >
+                <text fg={i === state.statusPickerIndex ? palette.PRIMARY : palette.TEXT}>
+                  {s.id === state.statusFilter ? "\u25cf " : "  "}
+                  {s.label}
+                </text>
+              </box>
+            ))}
+            {STATUS_FILTERS.filter((s) =>
+              s.label.toLowerCase().includes(state.statusPickerFilter.toLowerCase()),
+            ).length === 0 && <text fg={palette.TEXT_MUTED}>No filters match</text>}
+          </scrollbox>
+          <box height={1} flexShrink={0}>
+            <text fg={palette.TEXT_MUTED}>j/k navigate Enter select Esc/q close</text>
           </box>
         </box>
       ) : state.pickerOpen ? (
@@ -1478,6 +1781,12 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
             <text fg={palette.TEXT_MUTED} flexShrink={0}>
               {" | "}
             </text>
+            <text fg={state.diffWrap ? palette.TEXT : palette.TEXT_MUTED} flexShrink={0}>
+              wrap
+            </text>
+            <text fg={palette.TEXT_MUTED} flexShrink={0}>
+              {" | "}
+            </text>
             <text fg={palette.TEXT_MUTED} flexShrink={0}>
               ? help
             </text>
@@ -1505,8 +1814,24 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                   fg={state.focus === "files" ? palette.PRIMARY : palette.TEXT_MUTED}
                   flexShrink={0}
                 >
-                  {state.focus === "files" ? "▸ " : "  "}Files
+                  {state.focus === "files" ? "\u25b8 " : "  "}Files
                 </text>
+                {state.statusFilter && (
+                  <>
+                    <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                      {" "}
+                    </text>
+                    <text fg={palette.INFO} flexShrink={0}>
+                      [{STATUS_FILTERS.find((s) => s.id === state.statusFilter)?.label ?? ""}]
+                    </text>
+                  </>
+                )}
+                {(state.fileListFilter || state.statusFilter) && (
+                  <text fg={palette.TEXT} flexShrink={0}>
+                    {" "}
+                    {filteredFileList.length}
+                  </text>
+                )}
                 <box flexGrow={1} />
                 <text
                   fg={state.focus === "files" ? palette.TEXT : palette.TEXT_MUTED}
@@ -1560,27 +1885,41 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                       alignItems="center"
                       height={1}
                       flexShrink={0}
+                      width="100%"
                       backgroundColor={isSelected ? palette.SELECTED_BG : undefined}
                       paddingY={0}
                       paddingX={1}
                     >
-                      <text fg={palette.TEXT}>{isSelected ? ">" : " "}</text>
-                      <text fg={statusColor}>{statusLetter(file.status, file.formatOnly)}</text>
-                      <text fg={palette.TEXT}> </text>
-                      <text fg={palette.TEXT_MUTED}>{icon} </text>
+                      <text fg={palette.TEXT} flexShrink={0}>
+                        {isSelected ? ">" : " "}
+                      </text>
+                      <text fg={statusColor} flexShrink={0}>
+                        {statusLetter(file.status, file.formatOnly)}
+                      </text>
+                      <text fg={palette.TEXT} flexShrink={0}>
+                        {" "}
+                      </text>
+                      <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                        {icon}{" "}
+                      </text>
                       <box flexGrow={1} minWidth={0}>
-                        <text fg={palette.TEXT} wrapMode="none" truncate>
+                        <text fg={palette.TEXT} wrapMode="none" truncate width="100%">
                           {displayNames.get(file.projectPath) ?? file.projectPath}
                         </text>
                       </box>
-                      {count !== "" && <text fg={palette.SUCCESS}> {count}</text>}
+                      {count !== "" && (
+                        <text fg={palette.SUCCESS} flexShrink={0}>
+                          {" "}
+                          {count}
+                        </text>
+                      )}
                       {file.addedLines !== undefined && file.removedLines !== undefined && (
-                        <text fg={palette.TEXT_MUTED}>
+                        <text fg={palette.TEXT_MUTED} flexShrink={0}>
                           {" "}
                           +{file.addedLines} -{file.removedLines}
                         </text>
                       )}
-                      <text> </text>
+                      <text flexShrink={0}> </text>
                     </box>
                   );
                 })}
@@ -1691,7 +2030,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                             {hunk.newStart + 1},{hunk.newLines} @@
                           </text>
                           <diff
-                            diff={hunkDiffForFile(selectedFile, hunk)}
+                            diff={hunkDiffForFile(selectedFile, hunk, !state.diffSigns)}
                             view={state.diffView}
                             width="100%"
                             height={hunkDiffHeight(hunk, state.diffView)}
@@ -1711,8 +2050,8 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                             contextContentBg={
                               state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
                             }
-                            addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.BG}
-                            removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.BG}
+                            addedSignColor={state.diffSigns ? palette.DIFF_ADDED : palette.TEXT}
+                            removedSignColor={state.diffSigns ? palette.DIFF_REMOVED : palette.TEXT}
                             lineNumberFg={palette.TEXT_MUTED}
                             lineNumberBg={
                               state.diffLineColors ? palette.DIFF_CONTEXT_BG : palette.BG
@@ -1723,7 +2062,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                             removedLineNumberBg={
                               state.diffLineColors ? palette.DIFF_REMOVED_BG : palette.BG
                             }
-                            wrapMode="none"
+                            wrapMode={state.diffWrap ? "word" : "none"}
                             showLineNumbers={state.showLineNumbers}
                           />
                         </box>
@@ -1762,6 +2101,19 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                   nav{" "}
                 </text>
                 <text fg={palette.PRIMARY} flexShrink={0}>
+                  gg
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  /
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  G
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  jump{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
                   Space
                 </text>
                 <text fg={palette.TEXT_MUTED} flexShrink={0}>
@@ -1795,6 +2147,13 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
                 <text fg={palette.TEXT_MUTED} flexShrink={0}>
                   {" "}
                   mark{" "}
+                </text>
+                <text fg={palette.PRIMARY} flexShrink={0}>
+                  f
+                </text>
+                <text fg={palette.TEXT_MUTED} flexShrink={0}>
+                  {" "}
+                  filter{" "}
                 </text>
                 <text fg={palette.PRIMARY} flexShrink={0}>
                   q
@@ -1862,34 +2221,27 @@ export async function launchTui(
 
   // Auto-refresh on project changes (debounced 500ms)
   let watcherTimer: ReturnType<typeof setTimeout> | null = null;
-  const watcher = watch(
-    result.projectRoot,
-    { recursive: true },
-    (_event, filename) => {
-      if (!filename || !refreshScanRef) return;
-      if (shouldExclude(filename)) return;
-      if (watcherTimer) clearTimeout(watcherTimer);
-      watcherTimer = setTimeout(async () => {
-        try {
-          const next = await refreshScanRef?.();
-          if (!next) return;
-          currentScanResult = next;
-          currentFiles = next.files;
-          if (_renderer) {
-            const root = createRoot(_renderer);
-            root.render(<SyncTui scanResult={next} />);
-          }
-        } catch {
-          // Silently skip refresh errors
-        }
-      }, 500);
-    },
-  );
+  const watcher = watch(result.projectRoot, { recursive: true }, (_event, filename) => {
+    if (!filename || !refreshScanRef) return;
+    if (shouldExclude(filename)) return;
+    if (watcherTimer) clearTimeout(watcherTimer);
+    watcherTimer = setTimeout(async () => {
+      try {
+        const next = await refreshScanRef?.();
+        if (!next) return;
+        currentScanResult = next;
+        currentFiles = next.files;
+        if (setResultRef) setResultRef(next);
+      } catch {
+        // Silently skip refresh errors
+      }
+    }, 500);
+  });
 
   await new Promise<void>((resolve) => {
     quitResolver = resolve;
-    const root = createRoot(renderer);
-    root.render(<SyncTui scanResult={result} />);
+    _root = createRoot(renderer);
+    _root.render(<SyncTui scanResult={result} />);
     renderer.start();
   });
 
@@ -1897,6 +2249,7 @@ export async function launchTui(
   watcher.close();
   if (watcherTimer) clearTimeout(watcherTimer);
   _renderer = null;
+  _root = null;
   refreshScanRef = null;
   renderer.stop();
   renderer.destroy();
