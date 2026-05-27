@@ -451,121 +451,6 @@ async function saveTuiPreferences(state: State): Promise<void> {
   }
 }
 
-interface SplitDiffRow {
-  oldLine?: number;
-  newLine?: number;
-  oldText: string;
-  newText: string;
-  type: "context" | "change";
-}
-
-function splitDiffRows(hunk: DiffHunk): SplitDiffRow[] {
-  const rows: SplitDiffRow[] = [];
-  const lines = hunk.text
-    .split("\n")
-    .slice(1)
-    .filter((line) => line !== "");
-  let oldLine = hunk.oldStart + 1;
-  let newLine = hunk.newStart + 1;
-
-  for (let i = 0; i < lines.length; ) {
-    const line = lines[i]!;
-    if (line.startsWith(" ")) {
-      const text = line.slice(1);
-      rows.push({ oldLine, newLine, oldText: text, newText: text, type: "context" });
-      oldLine++;
-      newLine++;
-      i++;
-      continue;
-    }
-
-    if (line.startsWith("\\")) {
-      i++;
-      continue;
-    }
-
-    const removed: Array<{ line: number; text: string }> = [];
-    const added: Array<{ line: number; text: string }> = [];
-    while (i < lines.length && !lines[i]!.startsWith(" ")) {
-      const current = lines[i]!;
-      if (current.startsWith("-")) {
-        removed.push({ line: oldLine, text: current.slice(1) });
-        oldLine++;
-      } else if (current.startsWith("+")) {
-        added.push({ line: newLine, text: current.slice(1) });
-        newLine++;
-      }
-      i++;
-    }
-
-    const count = Math.max(removed.length, added.length, 1);
-    for (let idx = 0; idx < count; idx++) {
-      rows.push({
-        oldLine: removed[idx]?.line,
-        newLine: added[idx]?.line,
-        oldText: removed[idx]?.text ?? "",
-        newText: added[idx]?.text ?? "",
-        type: "change",
-      });
-    }
-  }
-
-  return rows;
-}
-
-function SplitHunkDiff({
-  hunk,
-  palette,
-  lineColors,
-  signs,
-  lineNumbers,
-}: {
-  hunk: DiffHunk;
-  palette: Palette;
-  lineColors: boolean;
-  signs: boolean;
-  lineNumbers: boolean;
-}) {
-  return (
-    <box flexDirection="column" width="100%">
-      {splitDiffRows(hunk).map((row, idx) => {
-        const leftBg = lineColors && row.type === "change" ? palette.DIFF_REMOVED_BG : undefined;
-        const rightBg = lineColors && row.type === "change" ? palette.DIFF_ADDED_BG : undefined;
-        const contextBg =
-          lineColors && row.type === "context" ? palette.DIFF_CONTEXT_BG : undefined;
-        const oldNumber = row.oldLine === undefined ? "    " : String(row.oldLine).padStart(4, " ");
-        const newNumber = row.newLine === undefined ? "    " : String(row.newLine).padStart(4, " ");
-        const oldPrefix = `${lineNumbers ? oldNumber : ""}${signs && row.type === "change" ? " - " : "   "}`;
-        const newPrefix = `${lineNumbers ? newNumber : ""}${signs && row.type === "change" ? " + " : "   "}`;
-        return (
-          <box key={idx} flexDirection="row" width="100%">
-            <box width="50%" backgroundColor={leftBg ?? contextBg}>
-              <text
-                width="100%"
-                fg={row.type === "change" ? palette.DIFF_REMOVED : palette.TEXT}
-                bg={leftBg ?? contextBg}
-                truncate
-              >
-                {oldPrefix + row.oldText}
-              </text>
-            </box>
-            <box width="50%" backgroundColor={rightBg ?? contextBg}>
-              <text
-                width="100%"
-                fg={row.type === "change" ? palette.DIFF_ADDED : palette.TEXT}
-                bg={rightBg ?? contextBg}
-                truncate
-              >
-                {newPrefix + row.newText}
-              </text>
-            </box>
-          </box>
-        );
-      })}
-    </box>
-  );
-}
-
 /** For testing — set the renderer before mounting SyncTui directly */
 export function setTestRenderer(r: CliRenderer) {
   _renderer = r;
@@ -574,15 +459,6 @@ export function setTestRenderer(r: CliRenderer) {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function truncatePath(path: string, maxLen: number): string {
-  if (path.length <= maxLen) return path;
-  const slash = path.lastIndexOf("/");
-  if (slash === -1) return "\u2026" + path.slice(-(maxLen - 1));
-  const tail = path.slice(slash + 1);
-  if (tail.length >= maxLen - 1) return "\u2026" + tail.slice(-(maxLen - 2));
-  return "\u2026" + path.slice(slash);
-}
 
 /**
  * Compute unique display names for a list of paths.
@@ -1137,7 +1013,6 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
               return { ...prev, markPickerSelected: next };
             }
             case "a": {
-              const allVisible = new Set(filtered);
               const currentlySelected = new Set(
                 filtered.filter((f) => prev.markPickerSelected.has(f)),
               );

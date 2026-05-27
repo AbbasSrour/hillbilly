@@ -19,14 +19,14 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 
 ## Quick commands
 
-| What                          | Command                              |
-| ----------------------------- | ------------------------------------ |
-| Install deps                  | `bun install` (NOT `npm`)            |
-| Format, lint, typecheck       | `vp check` (or `vp check --fix`)     |
-| Run all tests                 | `vp test` or `vp run -r test`        |
-| Run a single test file        | `vitest run <path>` from package dir |
-| Dead code / unused deps check | `knip`                               |
-| Release (root-level)          | `bun release`                        |
+| What                          | Command                          |
+| ----------------------------- | -------------------------------- |
+| Install deps                  | `bun install` (NOT `npm`)        |
+| Format, lint, typecheck       | `vp check` (or `vp check --fix`) |
+| Run all tests                 | `vp test` or `vp run -r test`    |
+| Run a single test file        | `vitest run <path>`              |
+| Dead code / unused deps check | `knip`                           |
+| Release (root-level)          | `bun release`                    |
 
 ## Package manager
 
@@ -36,14 +36,19 @@ Bun with isolated linker (`bunfig.toml`). **Never use npm or pnpm.** The Node ve
 
 ```
 hillbilly/
-├── template/     ← Copier template for scaffolding new projects
-│   └── packages/ ← template-owned workspace packages
-│       ├── rbac/      ← @hillbilly/rbac (built ESM, shipped in template)
-│       ├── tsconfig/  ← tsconfig presets (base, nestjs, nextjs, react-library, start)
-│       ├── templates/ ← React Email templates
-│       └── ui/        ← @hillbilly/ui (source-distributed, shipped in template)
-├── cli/          ← hillbilly sync CLI
-└── plans/        ← planning docs (hillbilly.md is the canonical plan)
+├── src/           ← hillbilly sync CLI source
+├── tests/         ← CLI tests
+├── template/      ← Copier template for scaffolding new projects
+│   ├── apps/
+│   │   ├── backend/  ← NestJS backend
+│   │   └── client/   ← TanStack Start frontend
+│   ├── packages/
+│   │   ├── rbac/      ← @hillbilly/rbac (built ESM, shipped in template)
+│   │   ├── tsconfig/  ← tsconfig presets (base, nestjs, nextjs, react-library, start)
+│   │   ├── templates/ ← React Email templates
+│   │   └── ui/        ← @hillbilly/ui (source-distributed, shipped in template)
+│   └── bin/           ← hillbilly binary + runtime assets
+└── plans/         ← planning docs (hillbilly.md is the canonical plan)
 ```
 
 All packages are template-owned — none are published to npm. `template/` is NOT a workspace — it's a Copier source.
@@ -76,8 +81,4 @@ Root configs (`vite.config.ts`, `.lintstagedrc.json`, `.release-it.json`, etc.) 
 
 ## Knip (dead code detection)
 
-Configured with workspace-specific patterns in `knip.config.ts`:
-
-- Root: `vite.config.ts` as entry
-- `apps/*`: `src/main.ts!` + `src/router.tsx!` as entries (not currently present)
-- Ignores generated files like `**/routeTree.gen.ts`
+Configured in `knip.config.ts` — entry is `src/index.ts`, ignores generated files like `**/routeTree.gen.ts`.

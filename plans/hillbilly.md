@@ -262,7 +262,7 @@ cd apps/backend && vp run build
 
 ### Done
 
-- **`hillbilly sync` CLI** (Bun executable at `cli/`):
+- **`hillbilly sync` CLI** (Bun executable at `src/`):
   - `sync push` — interactive OpenTUI React TUI (lazygit-style): file list, diff view, hunk-level staging (Space to stage, Enter to push)
   - `sync pull` — wraps `copier update`
   - **Scanner** (`scan.ts`): finds `/* @hillbilly-sync */` markers, diffs against template, parses hunks for line-level staging
@@ -270,13 +270,24 @@ cd apps/backend && vp run build
   - **Marker system**: `/* @hillbilly-sync */` first-line comment on all template-owned files (125+ files annotated, `module/` excluded)
   - **Tested E2E** against test-nest: scan detects changes, TUI renders in virtual terminal, keyboard simulation stages hunks, push writes to template
   - **Package upgrades** (2026-05-25): `@opentui/core` 0.1→0.2, `@opentui/react` 0.1→0.2, `commander` 13→14, `diff` 8→9, `vitest` 2→4, `react` 19.0→19.2, `@types/node` → 25, added `@types/bun` (pre-existing missing type)
-  - **DX**: `bin` field for `hillbilly` command, `build` script (`bun build --compile`), standalone binary rebuilt (92 MB), `cli/README.md` with full usage guide
+  - **DX**: `bin` field for `hillbilly` command, `build` script (`bun build --compile`), standalone binary rebuilt (92 MB), `README.md` with full usage guide
   - **Approved next DX direction**: generated projects should run `hillbilly sync push` from inside the project and resolve a local template repo via explicit CLI option, project `.hillbilly.yml`, global config, then Copier answers fallback. PR automation is deferred until the local repo loop is solid.
   - **Config workflow implemented**: `sync push --template`, project `hillbilly.yml`, Copier fallback, `config set-template`, and `config doctor`.
   - **Sync ownership moved to manifest**: `hillbilly.yml` sync section is now the source of truth with `tracked`/`untracked` tombstones. Inline `@hillbilly-sync` comments and scanning were removed.
   - **Config consolidation**: three files (`.hillbilly.yml`, `.hillbilly-sync.yml`, `.copier-answers.yml`) merged into `hillbilly.yml`. Global config removed. `pull` command extracts/merges Copier answers via transient `.copier-answers.yml`.
 
 ### In Progress
+
+- **Repo restructure** (Session: 2026-05-27):
+  - Flattened `cli/` up to root — single package, no monorepo nesting.
+  - `cli/src/` → `src/`, `cli/tests/` → `tests/`, `cli/scripts/` → `scripts/`
+  - Merged `cli/package.json` into root `package.json` (deps, scripts, bin entry).
+  - Root `tsconfig.json` replaced with CLI's config (adjusted for new paths).
+  - `knip.config.ts` simplified — no more workspace entries.
+  - Test imports updated from `../src/` to `./` where needed.
+  - `copy-runtime-assets.ts` path fixed (`../template/bin` → `template/bin`).
+
+### Recently Completed
 
 - **Config file consolidation** (Session: 2026-05-27):
   - Merged `.hillbilly.yml`, `.hillbilly-sync.yml`, and `.copier-answers.yml` into a single `hillbilly.yml` per project.
@@ -287,8 +298,6 @@ cd apps/backend && vp run build
   - SDK exclusion removed from scanner.
   - All template files converted to `.jinja` (623 files); only `bin/`, images, and `packages/sdk/src/docs/*.md` left as plain files.
   - 4 shell scripts with bash `[[ ]]` conditionals wrapped in `[% raw %]...[% endraw %]` blocks.
-
-### Recently Completed (Session: 2026-05-27)
 
 - **Sync markers added to all template TS/JS files** (416 files, up from 197):
   - Previously excluded `module/` directories (auth, user) now included
@@ -329,7 +338,7 @@ All stable packages across the template upgraded to latest. Code fixes applied w
 
 1. Fix BetterAuth password hashing mismatch (login broken)
 2. Run `vp install` + `vp run build` on test-nest to verify all upgrades
-3. ~~Build `hillbilly` as standalone binary (`bun build --compile`) and add to template~~ DONE (binary rebuilt, `bin` + `build` script added, `cli/README.md` written)
+3. ~~Build `hillbilly` as standalone binary (`bun build --compile`) and add to template~~ DONE (binary rebuilt, `bin` + `build` script added, `README.md` written)
 4. Add missing pages (settings, profile, etc.) to client template
 
 #### NestJS v12 Alphas (NO UPDATE — all at latest)

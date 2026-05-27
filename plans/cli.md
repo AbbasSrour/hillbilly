@@ -7,7 +7,7 @@ An interactive terminal UI (like lazygit) to push template-owned changes from a 
 ## Architecture
 
 ```
-cli/src/
+src/
 ├── index.ts        # CLI entry (commander: sync push, sync pull)
 ├── scan.ts         # Marker scanner + diff engine
 ├── tui.tsx         # OpenTUI React TUI
@@ -174,7 +174,7 @@ bun run src/index.ts sync push --project /path/to/test-nest
 ### Test:
 
 ```bash
-cd /path/to/test-nest && bun run /path/to/cli/src/index.ts sync pull
+cd /path/to/test-nest && bun run /path/to/src/index.ts sync pull
 ```
 
 ### Verification:

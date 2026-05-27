@@ -13,4 +13,4 @@ async function copyMatchingFiles(fromDir: string, toDir: string): Promise<void> 
 }
 
 await copyMatchingFiles("dist-worker", "dist");
-await copyMatchingFiles("dist", "../template/bin");
+await copyMatchingFiles("dist", "template/bin");

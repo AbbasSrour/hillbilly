@@ -1,4 +1,4 @@
-import { chmod, mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
+import { chmod, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { relative, resolve, join } from "node:path";
 
 export async function atomicCopyFile(source: string, dest: string, mode?: number): Promise<void> {

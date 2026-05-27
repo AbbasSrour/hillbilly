@@ -5,7 +5,7 @@ import { existsSync } from "node:fs";
 import { createPatch } from "diff";
 import { resolveProjectRoot, resolveTemplateRoot, readCopierAnswers } from "./config.js";
 import { readSyncManifest, trackedSyncPaths } from "./manifest.js";
-import { shouldExclude, walkFiles } from "./exclude.js";
+import { walkFiles } from "./exclude.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -190,19 +190,6 @@ async function tryReadText(path: string): Promise<string | null> {
   }
 }
 
-function diffStat(file: SyncFile): { added: number; removed: number } {
-  if (!file.hunks) return { added: 0, removed: 0 };
-  let added = 0;
-  let removed = 0;
-  for (const hunk of file.hunks) {
-    for (const line of hunk.text.split("\n").slice(1)) {
-      if (line.startsWith("+")) added++;
-      else if (line.startsWith("-")) removed++;
-    }
-  }
-  return { added, removed };
-}
-
 export async function scan(
   projectRoot: string,
   options: { template?: string } = {},
@@ -222,7 +209,7 @@ export async function scan(
 
   async function addSyncFile(
     relativePath: string,
-    options: { manifestTracked?: boolean } = {},
+    _options: { manifestTracked?: boolean } = {},
   ): Promise<void> {
     if (seenPaths.has(relativePath)) return;
     seenPaths.add(relativePath);
