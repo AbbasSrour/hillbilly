@@ -9,7 +9,7 @@ import {
 } from "@opentui/core";
 import type { CliRenderer, ThemeTokenStyle } from "@opentui/core";
 import { createRoot } from "@opentui/react";
-import { existsSync, watch } from "node:fs";
+import { watch } from "node:fs";
 import { rm } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";
@@ -387,32 +387,12 @@ function hunkDiffHeight(hunk: DiffHunk, view: "unified" | "split"): number {
   return Math.max(1, height);
 }
 
-function resolveTreeSitterWorkerPath(): string | null {
-  const candidates = [
-    resolve(dirname(process.execPath), "parser.worker.js"),
-    resolve(process.cwd(), "bin/parser.worker.js"),
-    resolve(process.cwd(), "node_modules/@opentui/core/parser.worker.js"),
-    resolve(import.meta.dirname, "../node_modules/@opentui/core/parser.worker.js"),
-  ];
-
-  const found = candidates.find((path) => existsSync(path)) ?? null;
-  if (!found && process.env.NODE_ENV !== "test") {
-    console.warn("hillbilly: tree-sitter worker not found, syntax highlighting disabled");
-  }
-  return found;
-}
-
 function getSharedTreeSitterClient(): TreeSitterClient | null {
   if (_treeSitterClient) return _treeSitterClient;
-
-  const workerPath = resolveTreeSitterWorkerPath();
-  if (!workerPath) return null;
 
   const dataPaths = getDataPaths();
   const client = new TreeSitterClient({
     dataPath: dataPaths.globalDataPath,
-    workerPath,
-    initTimeout: 1_000,
   });
   client.on("error", () => {
     // OpenTUI falls back to unstyled content if highlighting fails.

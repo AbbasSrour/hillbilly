@@ -9,8 +9,7 @@
   "scripts": {
     "check": "vp check",
     "check:fix": "vp check --fix",
-    "build": "bun build --compile src/index.ts --outfile ./dist/hillbilly && bun build ./node_modules/@opentui/core/parser.worker.js --target=bun --outdir ./dist-worker && bun run ./scripts/copy-runtime-assets.ts",
-    "postbuild": "cp ./dist/hillbilly template/bin/hillbilly",
+    "build": "bun run ./scripts/build.ts",
     "dev": "bun run src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
