@@ -1,0 +1,10 @@
+import { cn } from '@[[ project_name ]]/ui/lib/utils';
+import type { PropsWithChildren } from 'react';
+
+interface ListSectionProps extends PropsWithChildren {
+  className?: string;
+}
+
+export const ListSection = ({ children, className }: ListSectionProps) => {
+  return <div className={cn('space-y-4', className)}>{children}</div>;
+};

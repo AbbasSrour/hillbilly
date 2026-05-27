@@ -18,10 +18,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - service: ticklet-web-dev
+          - service: [[ project_name ]]-web-dev
             dockerfile: apps/web/Dockerfile
             build_arg: 'NEXT_PUBLIC_API_URL=none'
-          - service: ticklet-backend-dev
+          - service: [[ project_name ]]-backend-dev
             dockerfile: apps/backend/Dockerfile
             build_arg: ''
 

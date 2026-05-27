@@ -1,0 +1,14 @@
+import { InsightGrid } from '@[[ project_name ]]/ui/components/insights/insight-grid';
+import { AdminsManagersInsight } from '@/app/users/components/insights/admins-managers-insight';
+import { NewUsersInsight } from '@/app/users/components/insights/new-users-insight';
+import { TotalUsersInsight } from '@/app/users/components/insights/total-users-insight';
+
+export function UserInsights() {
+  return (
+    <InsightGrid>
+      <TotalUsersInsight />
+      <AdminsManagersInsight />
+      <NewUsersInsight />
+    </InsightGrid>
+  );
+}

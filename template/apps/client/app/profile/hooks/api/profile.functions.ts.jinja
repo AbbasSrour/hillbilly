@@ -1,0 +1,22 @@
+import { createIsomorphicFn } from '@tanstack/react-start';
+import { getRequestHeaders } from '@tanstack/react-start/server';
+import { apiClient } from '@/lib/api.ts';
+import type { UpdateCurrentUserDto, UserDto } from '@[[ project_name ]]/sdk';
+
+export const getMeFn = async (headers?: Headers) => {
+  const res = await apiClient.get<UserDto>('/api/v1/users/me', { headers });
+  return res.data;
+};
+
+export const getMeServerFn = createIsomorphicFn()
+  .client(() => getMeFn())
+  .server(() => getMeFn(getRequestHeaders()));
+
+export const updateMeFn = async (data: UpdateCurrentUserDto, headers?: Headers) => {
+  const res = await apiClient.patch<UserDto>('/api/v1/users/me', data, { headers });
+  return res.data;
+};
+
+export const updateMeServerFn = createIsomorphicFn()
+  .client((data: UpdateCurrentUserDto) => updateMeFn(data))
+  .server((data: UpdateCurrentUserDto) => updateMeFn(data, getRequestHeaders()));

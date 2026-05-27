@@ -7,8 +7,8 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ApiConfigService } from '@config/service/api-config.service';
 import { TwilioService } from '@/package/twilio/service/twilio.service';
-import { PermissionWithRoles } from '@hillbilly/rbac';
-import { rbac } from '@hillbilly/rbac/server';
+import { PermissionWithRoles } from '@[[ project_name ]]/rbac';
+import { rbac } from '@[[ project_name ]]/rbac/server';
 import { GeneratorProvider } from '@/provider/generator.provider';
 import { authConfig as baseAuthConfig } from '@lib/auth';
 import { openAPI, phoneNumber } from 'better-auth/plugins';
@@ -19,7 +19,7 @@ import { mikroOrmAdapter } from 'better-auth-mikro-orm';
 import {
   generateEmailVerificationEmail,
   generatePasswordResetEmail,
-} from '@hillbilly/templates/email';
+} from '@[[ project_name ]]/templates/email';
 
 @Injectable()
 export class BetterAuthConfigService {

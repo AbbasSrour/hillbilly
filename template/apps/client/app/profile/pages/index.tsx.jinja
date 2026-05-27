@@ -1,0 +1,42 @@
+import { Main } from '@[[ project_name ]]/ui/components/layout/main';
+import { PageHeader } from '@[[ project_name ]]/ui/components/layout/page-header';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
+import { ProfileForm } from '@/app/profile/components/form/profile-form.tsx';
+import { profileQueries } from '@/app/profile/hooks/api/profile.queries.ts';
+import { EditUserSkeleton } from '@/app/users/components/loading/edit-user-skeleton';
+
+export const Route = createFileRoute('/admin/profile')({
+  pendingComponent: EditUserSkeleton,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(profileQueries.me());
+  },
+  head: () => ({
+    meta: [
+      { title: 'Profile - [[ project_name ]]' },
+      { name: 'description', content: 'Manage your profile and preferences.' },
+      { property: 'og:title', content: 'Profile - [[ project_name ]]' },
+      { property: 'og:description', content: 'Manage your profile and preferences.' },
+    ],
+  }),
+  component: ProfilePage,
+});
+
+function ProfilePage() {
+  const { data: user } = useSuspenseQuery(profileQueries.me());
+
+  if (!user) {
+    return <div>Unable to load profile</div>;
+  }
+
+  return (
+    <Main>
+      <PageHeader
+        title="Profile"
+        description="Manage your personal information and preferences."
+        withSeparator
+      />
+      <ProfileForm user={user} />
+    </Main>
+  );
+}
