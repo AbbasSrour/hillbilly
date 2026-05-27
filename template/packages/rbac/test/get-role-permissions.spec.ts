@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vite-plus/test';
 import { getRolePermissions } from '../src/utils/get-role-permissions';
 import { type MockAdapter, createMockAdapter } from './test-utils';
 
