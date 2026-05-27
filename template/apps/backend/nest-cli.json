@@ -9,10 +9,6 @@
     "plugins": ["@nestjs/swagger/plugin"],
     "assets": [
       {
-        "include": "templates/pdf/**/*.hbs",
-        "watchAssets": true
-      },
-      {
         "include": "lib/openapi-description.md",
         "watchAssets": true
       },

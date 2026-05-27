@@ -4,7 +4,7 @@
  * These tests simulate complete user flows from start to finish,
  * testing the full lifecycle of RBAC operations.
  */
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { checkPermissionHandler } from '../src/endpoints/check-permission';
 import {
   assignPermissionHandler,

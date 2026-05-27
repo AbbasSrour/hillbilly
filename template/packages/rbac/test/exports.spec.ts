@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { adminPluginPermissions, isStaticRole, schema } from '../src';
 import { rbac } from '../src/server';
 import { rbacClient } from '../src/client';

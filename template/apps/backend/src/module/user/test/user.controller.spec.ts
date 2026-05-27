@@ -1,6 +1,6 @@
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 
 import { PermissionGuard } from '@/guard/permission.guard';
 import { UserService } from '../service/user.service';

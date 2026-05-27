@@ -4,7 +4,7 @@
  * These tests verify that multiple components work together correctly.
  * They test cross-endpoint interactions and shared utility usage.
  */
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { checkPermissionHandler } from '../src/endpoints/check-permission';
 import { assignPermissionHandler, listRolePermissionsHandler } from '../src/endpoints/permissions';
 import {

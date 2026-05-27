@@ -1,4 +1,4 @@
-import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { type MockAdapter, createMockAdapter } from './test-utils';
 
 /**

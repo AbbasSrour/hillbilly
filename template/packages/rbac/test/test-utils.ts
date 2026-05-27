@@ -1,4 +1,4 @@
-import { vi, type Mock } from 'vitest';
+import { vi, type Mock } from 'vite-plus/test';
 
 export type AdapterArgs = {
   model: string;

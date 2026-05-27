@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // The @nestjs/swagger/plugin emits metadata files containing bare `require()`
@@ -48,4 +48,8 @@ const require = createRequire(import.meta.url);
   console.log(`Patched: ${filePath}`);
 }
 
-walk(DIST);
+if (existsSync(DIST)) {
+  walk(DIST);
+} else {
+  console.log(`Skip: ${DIST} does not exist yet`);
+}

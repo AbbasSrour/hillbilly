@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { getSessionPermissions } from '../src/utils/session-enhancer';
 import { type MockAdapter, createMockAdapter } from './test-utils';
 

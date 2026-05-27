@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { baseSchema, buildSchema, schema } from '../src/schema';
 import type { RBACSchemaConfig } from '../src/types/schema';
 

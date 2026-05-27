@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vite-plus/test';
 import { checkPermissionHandler } from '../src/endpoints/check-permission';
 import {
   type MockAdapter,

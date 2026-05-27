@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 
 import { ExtendedEntityRepository } from '@/abstract/repository/abstract-entity.repository';
 import { ValidatorService } from '@/package/validation/service/validator.service';
