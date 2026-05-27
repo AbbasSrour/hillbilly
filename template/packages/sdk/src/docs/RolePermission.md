@@ -1,23 +1,22 @@
 # RolePermission
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
-**roleId** | **string** |  | [default to undefined]
-**permissionId** | **string** |  | [default to undefined]
+| Name             | Type       | Description | Notes                             |
+| ---------------- | ---------- | ----------- | --------------------------------- |
+| **id**           | **string** |             | [optional] [default to undefined] |
+| **roleId**       | **string** |             | [default to undefined]            |
+| **permissionId** | **string** |             | [default to undefined]            |
 
 ## Example
 
 ```typescript
-import { RolePermission } from './api';
+import { RolePermission } from "./api";
 
 const instance: RolePermission = {
-    id,
-    roleId,
-    permissionId,
+  id,
+  roleId,
+  permissionId,
 };
 ```
 

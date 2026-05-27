@@ -1,23 +1,22 @@
 # UpdateSettingsDto
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**locale** | [**LanguageCode**](LanguageCode.md) |  | [optional] [default to undefined]
-**theme** | [**Theme**](Theme.md) |  | [optional] [default to undefined]
-**timezone** | **string** |  | [optional] [default to undefined]
+| Name         | Type                                | Description | Notes                             |
+| ------------ | ----------------------------------- | ----------- | --------------------------------- |
+| **locale**   | [**LanguageCode**](LanguageCode.md) |             | [optional] [default to undefined] |
+| **theme**    | [**Theme**](Theme.md)               |             | [optional] [default to undefined] |
+| **timezone** | **string**                          |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { UpdateSettingsDto } from './api';
+import { UpdateSettingsDto } from "./api";
 
 const instance: UpdateSettingsDto = {
-    locale,
-    theme,
-    timezone,
+  locale,
+  theme,
+  timezone,
 };
 ```
 

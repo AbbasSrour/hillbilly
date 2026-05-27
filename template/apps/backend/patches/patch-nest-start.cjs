@@ -71,6 +71,7 @@ if (source.includes(oldImport)) {
 // Find: "return () => {" (first one inside createOnSuccessHook)
 const returnFnMarker = '        return () => {';
 const postbuildBlock = `        return () => {
+            console.clear();
             // ESM postbuild: tsc-alias adds .js extensions and resolves path aliases
             try {
                 execSync('node_modules/.bin/tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js', {

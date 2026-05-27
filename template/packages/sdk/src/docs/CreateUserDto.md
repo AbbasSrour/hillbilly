@@ -1,27 +1,26 @@
 # CreateUserDto
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**email** | **string** |  | [optional] [default to undefined]
-**phone** | **string** |  | [optional] [default to undefined]
-**password** | **string** |  | [optional] [default to undefined]
-**role** | **string** |  | [default to undefined]
-**profile** | [**CreateProfileDto**](CreateProfileDto.md) |  | [default to undefined]
+| Name         | Type                                        | Description | Notes                             |
+| ------------ | ------------------------------------------- | ----------- | --------------------------------- |
+| **email**    | **string**                                  |             | [optional] [default to undefined] |
+| **phone**    | **string**                                  |             | [optional] [default to undefined] |
+| **password** | **string**                                  |             | [optional] [default to undefined] |
+| **role**     | **string**                                  |             | [default to undefined]            |
+| **profile**  | [**CreateProfileDto**](CreateProfileDto.md) |             | [default to undefined]            |
 
 ## Example
 
 ```typescript
-import { CreateUserDto } from './api';
+import { CreateUserDto } from "./api";
 
 const instance: CreateUserDto = {
-    email,
-    phone,
-    password,
-    role,
-    profile,
+  email,
+  phone,
+  password,
+  role,
+  profile,
 };
 ```
 

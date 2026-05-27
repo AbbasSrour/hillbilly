@@ -1,21 +1,20 @@
 # OrganizationControllerGetOrganizationsV1200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**data** | [**Array&lt;OrganizationDto&gt;**](OrganizationDto.md) |  | [default to undefined]
-**meta** | [**PageMetaDto**](PageMetaDto.md) |  | [default to undefined]
+| Name     | Type                                                   | Description | Notes                  |
+| -------- | ------------------------------------------------------ | ----------- | ---------------------- |
+| **data** | [**Array&lt;OrganizationDto&gt;**](OrganizationDto.md) |             | [default to undefined] |
+| **meta** | [**PageMetaDto**](PageMetaDto.md)                      |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { OrganizationControllerGetOrganizationsV1200Response } from './api';
+import { OrganizationControllerGetOrganizationsV1200Response } from "./api";
 
 const instance: OrganizationControllerGetOrganizationsV1200Response = {
-    data,
-    meta,
+  data,
+  meta,
 };
 ```
 

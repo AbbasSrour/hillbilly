@@ -1,19 +1,18 @@
 # RevokeUserSessionRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**sessionToken** | **string** | The session token | [default to undefined]
+| Name             | Type       | Description       | Notes                  |
+| ---------------- | ---------- | ----------------- | ---------------------- |
+| **sessionToken** | **string** | The session token | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { RevokeUserSessionRequest } from './api';
+import { RevokeUserSessionRequest } from "./api";
 
 const instance: RevokeUserSessionRequest = {
-    sessionToken,
+  sessionToken,
 };
 ```
 

@@ -1,31 +1,30 @@
 # UserSettingsDto
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**id** | **string** |  | [default to undefined]
-**createdAt** | **string** |  | [default to undefined]
-**updatedAt** | **string** |  | [default to undefined]
-**locale** | [**LanguageCode**](LanguageCode.md) |  | [default to undefined]
-**theme** | [**Theme**](Theme.md) |  | [default to undefined]
-**timezone** | **string** |  | [default to undefined]
-**translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |  | [optional] [default to undefined]
+| Name             | Type                                                                 | Description | Notes                             |
+| ---------------- | -------------------------------------------------------------------- | ----------- | --------------------------------- |
+| **id**           | **string**                                                           |             | [default to undefined]            |
+| **createdAt**    | **string**                                                           |             | [default to undefined]            |
+| **updatedAt**    | **string**                                                           |             | [default to undefined]            |
+| **locale**       | [**LanguageCode**](LanguageCode.md)                                  |             | [default to undefined]            |
+| **theme**        | [**Theme**](Theme.md)                                                |             | [default to undefined]            |
+| **timezone**     | **string**                                                           |             | [default to undefined]            |
+| **translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { UserSettingsDto } from './api';
+import { UserSettingsDto } from "./api";
 
 const instance: UserSettingsDto = {
-    id,
-    createdAt,
-    updatedAt,
-    locale,
-    theme,
-    timezone,
-    translations,
+  id,
+  createdAt,
+  updatedAt,
+  locale,
+  theme,
+  timezone,
+  translations,
 };
 ```
 

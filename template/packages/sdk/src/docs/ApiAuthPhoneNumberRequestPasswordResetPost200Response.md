@@ -1,19 +1,18 @@
 # ApiAuthPhoneNumberRequestPasswordResetPost200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**status** | **boolean** | Indicates if the OTP was sent successfully | [default to undefined]
+| Name       | Type        | Description                                | Notes                  |
+| ---------- | ----------- | ------------------------------------------ | ---------------------- |
+| **status** | **boolean** | Indicates if the OTP was sent successfully | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthPhoneNumberRequestPasswordResetPost200Response } from './api';
+import { ApiAuthPhoneNumberRequestPasswordResetPost200Response } from "./api";
 
 const instance: ApiAuthPhoneNumberRequestPasswordResetPost200Response = {
-    status,
+  status,
 };
 ```
 

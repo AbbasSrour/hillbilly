@@ -4,23 +4,23 @@ Session response when idToken is provided
 
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**redirect** | **boolean** |  | [default to undefined]
-**token** | **string** | Session token | [default to undefined]
-**url** | **string** |  | [optional] [default to undefined]
-**user** | [**User**](.md) |  | [default to undefined]
+| Name         | Type            | Description   | Notes                             |
+| ------------ | --------------- | ------------- | --------------------------------- |
+| **redirect** | **boolean**     |               | [default to undefined]            |
+| **token**    | **string**      | Session token | [default to undefined]            |
+| **url**      | **string**      |               | [optional] [default to undefined] |
+| **user**     | [**User**](.md) |               | [default to undefined]            |
 
 ## Example
 
 ```typescript
-import { SignInEmail200Response } from './api';
+import { SignInEmail200Response } from "./api";
 
 const instance: SignInEmail200Response = {
-    redirect,
-    token,
-    url,
-    user,
+  redirect,
+  token,
+  url,
+  user,
 };
 ```
 

@@ -1,21 +1,20 @@
 # PageDto
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**data** | **Array&lt;object&gt;** |  | [default to undefined]
-**meta** | [**PageMetaDto**](PageMetaDto.md) |  | [default to undefined]
+| Name     | Type                              | Description | Notes                  |
+| -------- | --------------------------------- | ----------- | ---------------------- |
+| **data** | **Array&lt;object&gt;**           |             | [default to undefined] |
+| **meta** | [**PageMetaDto**](PageMetaDto.md) |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { PageDto } from './api';
+import { PageDto } from "./api";
 
 const instance: PageDto = {
-    data,
-    meta,
+  data,
+  meta,
 };
 ```
 

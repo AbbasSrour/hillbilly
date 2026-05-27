@@ -1,19 +1,18 @@
 # ApiAuthRevokeSessionPostRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**token** | **string** | The token to revoke | [default to undefined]
+| Name      | Type       | Description         | Notes                  |
+| --------- | ---------- | ------------------- | ---------------------- |
+| **token** | **string** | The token to revoke | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthRevokeSessionPostRequest } from './api';
+import { ApiAuthRevokeSessionPostRequest } from "./api";
 
 const instance: ApiAuthRevokeSessionPostRequest = {
-    token,
+  token,
 };
 ```
 

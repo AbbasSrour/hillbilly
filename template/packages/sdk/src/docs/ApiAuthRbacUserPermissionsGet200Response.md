@@ -1,21 +1,20 @@
 # ApiAuthRbacUserPermissionsGet200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**role** | [**ApiAuthRbacUserPermissionsGet200ResponseRole**](ApiAuthRbacUserPermissionsGet200ResponseRole.md) |  | [default to undefined]
-**permissions** | [**Array&lt;ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner&gt;**](ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner.md) |  | [default to undefined]
+| Name            | Type                                                                                                                                     | Description | Notes                  |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------- |
+| **role**        | [**ApiAuthRbacUserPermissionsGet200ResponseRole**](ApiAuthRbacUserPermissionsGet200ResponseRole.md)                                      |             | [default to undefined] |
+| **permissions** | [**Array&lt;ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner&gt;**](ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner.md) |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacUserPermissionsGet200Response } from './api';
+import { ApiAuthRbacUserPermissionsGet200Response } from "./api";
 
 const instance: ApiAuthRbacUserPermissionsGet200Response = {
-    role,
-    permissions,
+  role,
+  permissions,
 };
 ```
 

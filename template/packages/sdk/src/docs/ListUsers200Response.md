@@ -1,25 +1,24 @@
 # ListUsers200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**users** | [**Array&lt;User&gt;**](User.md) |  | [default to undefined]
-**total** | **number** |  | [default to undefined]
-**limit** | **number** |  | [optional] [default to undefined]
-**offset** | **number** |  | [optional] [default to undefined]
+| Name       | Type                             | Description | Notes                             |
+| ---------- | -------------------------------- | ----------- | --------------------------------- |
+| **users**  | [**Array&lt;User&gt;**](User.md) |             | [default to undefined]            |
+| **total**  | **number**                       |             | [default to undefined]            |
+| **limit**  | **number**                       |             | [optional] [default to undefined] |
+| **offset** | **number**                       |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ListUsers200Response } from './api';
+import { ListUsers200Response } from "./api";
 
 const instance: ListUsers200Response = {
-    users,
-    total,
-    limit,
-    offset,
+  users,
+  total,
+  limit,
+  offset,
 };
 ```
 

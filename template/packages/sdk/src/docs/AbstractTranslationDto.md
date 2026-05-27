@@ -1,25 +1,24 @@
 # AbstractTranslationDto
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**id** | **string** |  | [default to undefined]
-**createdAt** | **string** |  | [default to undefined]
-**updatedAt** | **string** |  | [default to undefined]
-**translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |  | [optional] [default to undefined]
+| Name             | Type                                                                 | Description | Notes                             |
+| ---------------- | -------------------------------------------------------------------- | ----------- | --------------------------------- |
+| **id**           | **string**                                                           |             | [default to undefined]            |
+| **createdAt**    | **string**                                                           |             | [default to undefined]            |
+| **updatedAt**    | **string**                                                           |             | [default to undefined]            |
+| **translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { AbstractTranslationDto } from './api';
+import { AbstractTranslationDto } from "./api";
 
 const instance: AbstractTranslationDto = {
-    id,
-    createdAt,
-    updatedAt,
-    translations,
+  id,
+  createdAt,
+  updatedAt,
+  translations,
 };
 ```
 

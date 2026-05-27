@@ -1,23 +1,22 @@
 # DeleteUserRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**callbackURL** | **string** | The callback URL to redirect to after the user is deleted | [optional] [default to undefined]
-**password** | **string** | The user\&#39;s password. Required if session is not fresh | [optional] [default to undefined]
-**token** | **string** | The deletion verification token | [optional] [default to undefined]
+| Name            | Type       | Description                                                | Notes                             |
+| --------------- | ---------- | ---------------------------------------------------------- | --------------------------------- |
+| **callbackURL** | **string** | The callback URL to redirect to after the user is deleted  | [optional] [default to undefined] |
+| **password**    | **string** | The user\&#39;s password. Required if session is not fresh | [optional] [default to undefined] |
+| **token**       | **string** | The deletion verification token                            | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { DeleteUserRequest } from './api';
+import { DeleteUserRequest } from "./api";
 
 const instance: DeleteUserRequest = {
-    callbackURL,
-    password,
-    token,
+  callbackURL,
+  password,
+  token,
 };
 ```
 

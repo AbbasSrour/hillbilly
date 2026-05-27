@@ -1,25 +1,24 @@
 # HealthCheckerControllerCheck503Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**status** | **string** |  | [optional] [default to undefined]
-**info** | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |  | [optional] [default to undefined]
-**error** | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |  | [optional] [default to undefined]
-**details** | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |  | [optional] [default to undefined]
+| Name        | Type                                                                                                                              | Description | Notes                             |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------- |
+| **status**  | **string**                                                                                                                        |             | [optional] [default to undefined] |
+| **info**    | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |             | [optional] [default to undefined] |
+| **error**   | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |             | [optional] [default to undefined] |
+| **details** | [**{ [key: string]: HealthCheckerControllerCheck200ResponseErrorValue; }**](HealthCheckerControllerCheck200ResponseErrorValue.md) |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { HealthCheckerControllerCheck503Response } from './api';
+import { HealthCheckerControllerCheck503Response } from "./api";
 
 const instance: HealthCheckerControllerCheck503Response = {
-    status,
-    info,
-    error,
-    details,
+  status,
+  info,
+  error,
+  details,
 };
 ```
 

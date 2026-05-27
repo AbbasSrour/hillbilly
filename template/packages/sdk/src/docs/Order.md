@@ -1,10 +1,9 @@
 # Order
 
-
 ## Enum
 
-* `Asc` (value: `'ASC'`)
+- `Asc` (value: `'ASC'`)
 
-* `Desc` (value: `'DESC'`)
+- `Desc` (value: `'DESC'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

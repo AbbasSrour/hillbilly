@@ -1,21 +1,20 @@
 # ApiAuthVerifyEmailGet200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**user** | [**User**](.md) |  | [default to undefined]
-**status** | **boolean** | Indicates if the email was verified successfully | [default to undefined]
+| Name       | Type            | Description                                      | Notes                  |
+| ---------- | --------------- | ------------------------------------------------ | ---------------------- |
+| **user**   | [**User**](.md) |                                                  | [default to undefined] |
+| **status** | **boolean**     | Indicates if the email was verified successfully | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthVerifyEmailGet200Response } from './api';
+import { ApiAuthVerifyEmailGet200Response } from "./api";
 
 const instance: ApiAuthVerifyEmailGet200Response = {
-    user,
-    status,
+  user,
+  status,
 };
 ```
 

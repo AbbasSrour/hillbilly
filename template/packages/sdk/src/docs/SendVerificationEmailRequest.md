@@ -1,21 +1,20 @@
 # SendVerificationEmailRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**email** | **string** | The email to send the verification email to | [default to undefined]
-**callbackURL** | **string** | The URL to use for email verification callback | [optional] [default to undefined]
+| Name            | Type       | Description                                    | Notes                             |
+| --------------- | ---------- | ---------------------------------------------- | --------------------------------- |
+| **email**       | **string** | The email to send the verification email to    | [default to undefined]            |
+| **callbackURL** | **string** | The URL to use for email verification callback | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { SendVerificationEmailRequest } from './api';
+import { SendVerificationEmailRequest } from "./api";
 
 const instance: SendVerificationEmailRequest = {
-    email,
-    callbackURL,
+  email,
+  callbackURL,
 };
 ```
 

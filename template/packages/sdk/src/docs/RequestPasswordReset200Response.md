@@ -1,21 +1,20 @@
 # RequestPasswordReset200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**status** | **boolean** |  | [optional] [default to undefined]
-**message** | **string** |  | [optional] [default to undefined]
+| Name        | Type        | Description | Notes                             |
+| ----------- | ----------- | ----------- | --------------------------------- |
+| **status**  | **boolean** |             | [optional] [default to undefined] |
+| **message** | **string**  |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { RequestPasswordReset200Response } from './api';
+import { RequestPasswordReset200Response } from "./api";
 
 const instance: RequestPasswordReset200Response = {
-    status,
-    message,
+  status,
+  message,
 };
 ```
 

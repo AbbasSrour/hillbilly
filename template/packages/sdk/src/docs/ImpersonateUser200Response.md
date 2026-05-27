@@ -1,21 +1,20 @@
 # ImpersonateUser200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**session** | [**Session**](Session.md) |  | [optional] [default to undefined]
-**user** | [**User**](User.md) |  | [optional] [default to undefined]
+| Name        | Type                      | Description | Notes                             |
+| ----------- | ------------------------- | ----------- | --------------------------------- |
+| **session** | [**Session**](Session.md) |             | [optional] [default to undefined] |
+| **user**    | [**User**](User.md)       |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ImpersonateUser200Response } from './api';
+import { ImpersonateUser200Response } from "./api";
 
 const instance: ImpersonateUser200Response = {
-    session,
-    user,
+  session,
+  user,
 };
 ```
 

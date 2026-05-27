@@ -1,19 +1,18 @@
 # ApiAuthPhoneNumberSendOtpPostRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**phoneNumber** | **string** | Phone number to send OTP. Eg: \&quot;+1234567890\&quot; | [default to undefined]
+| Name            | Type       | Description                                             | Notes                  |
+| --------------- | ---------- | ------------------------------------------------------- | ---------------------- |
+| **phoneNumber** | **string** | Phone number to send OTP. Eg: \&quot;+1234567890\&quot; | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthPhoneNumberSendOtpPostRequest } from './api';
+import { ApiAuthPhoneNumberSendOtpPostRequest } from "./api";
 
 const instance: ApiAuthPhoneNumberSendOtpPostRequest = {
-    phoneNumber,
+  phoneNumber,
 };
 ```
 

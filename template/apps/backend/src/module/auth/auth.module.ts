@@ -4,7 +4,7 @@ import { PermissionEntity } from './entity/permission.entity';
 import { RoleEntity } from './entity/role.entity';
 import { SessionEntity } from './entity/session.entity';
 import { VerificationEntity } from './entity/verification.entity';
-import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Module, OnModuleInit, Logger } from '@nestjs/common';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule as AppConfigModule } from '@config/config.module';
 import { TwilioModule } from '@/package/twilio/twilio.module';
@@ -46,14 +46,16 @@ import { BetterAuthConfigService } from './service/better-auth-config.service';
   exports: [AuthService, BetterAuthConfigService],
 })
 export class AuthModule implements OnModuleInit {
+  private readonly logger = new Logger(AuthModule.name);
+
   constructor(private readonly authService: AuthService) {}
 
   async onModuleInit() {
     try {
       const syncResult = await this.authService.instance.api.sync();
-      console.info('[RBAC] Sync completed:', syncResult);
+      this.logger.log('[RBAC] Sync completed:', syncResult);
     } catch (error) {
-      console.error('[RBAC] Sync failed:', error);
+      this.logger.log('[RBAC] Sync failed:', error);
     }
   }
 }

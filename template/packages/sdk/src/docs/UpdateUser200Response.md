@@ -1,19 +1,18 @@
 # UpdateUser200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**user** | [**User**](.md) |  | [optional] [default to undefined]
+| Name     | Type            | Description | Notes                             |
+| -------- | --------------- | ----------- | --------------------------------- |
+| **user** | [**User**](.md) |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { UpdateUser200Response } from './api';
+import { UpdateUser200Response } from "./api";
 
 const instance: UpdateUser200Response = {
-    user,
+  user,
 };
 ```
 

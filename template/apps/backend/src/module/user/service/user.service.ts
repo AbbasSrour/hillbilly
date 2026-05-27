@@ -5,18 +5,12 @@ import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 
 import { ExtendedEntityRepository } from '@/abstract/repository/abstract-entity.repository';
-import { RoleType } from '@constant/role-type.constant';
-import { FileNotImageException } from '@/exception/file-not-image.exception';
 import type { IFile } from '@/interface/IFile';
 import { ValidatorService } from '@/package/validation/service/validator.service';
-import { AdminProtectedException } from '../exception/admin-protected.exception';
 import { UserNotFoundException } from '../exception/user-not-found.exception';
-import { GeneratorProvider } from '@/provider/generator.provider';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { CreateProfileDto } from '../dto/create-profile.dto';
 import { CreateSettingsDto } from '../dto/create-settings.dto';
 import { UpdateCurrentUserDto } from '../dto/update-current-user.dto';
-import { UpdateProfileDto } from '../dto/update-profile.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserFiltersDto } from '../dto/user-filters.dto';
 import { UsersPageOptionsDto } from '../dto/users-page-options.dto';

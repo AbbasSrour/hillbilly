@@ -1,21 +1,20 @@
 # UpdateUser1Request
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**userId** | **string** | The user id | [default to undefined]
-**data** | **string** | The user data to update | [default to undefined]
+| Name       | Type       | Description             | Notes                  |
+| ---------- | ---------- | ----------------------- | ---------------------- |
+| **userId** | **string** | The user id             | [default to undefined] |
+| **data**   | **string** | The user data to update | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { UpdateUser1Request } from './api';
+import { UpdateUser1Request } from "./api";
 
 const instance: UpdateUser1Request = {
-    userId,
-    data,
+  userId,
+  data,
 };
 ```
 

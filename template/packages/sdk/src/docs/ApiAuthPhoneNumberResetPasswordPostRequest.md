@@ -1,23 +1,22 @@
 # ApiAuthPhoneNumberResetPasswordPostRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**otp** | **string** | The one time password to reset the password. Eg: \&quot;123456\&quot; | [default to undefined]
-**phoneNumber** | **string** | The phone number to the account which intends to reset the password for. Eg: \&quot;+1234567890\&quot; | [default to undefined]
-**newPassword** | **string** | The new password. Eg: \&quot;new-and-secure-password\&quot; | [default to undefined]
+| Name            | Type       | Description                                                                                            | Notes                  |
+| --------------- | ---------- | ------------------------------------------------------------------------------------------------------ | ---------------------- |
+| **otp**         | **string** | The one time password to reset the password. Eg: \&quot;123456\&quot;                                  | [default to undefined] |
+| **phoneNumber** | **string** | The phone number to the account which intends to reset the password for. Eg: \&quot;+1234567890\&quot; | [default to undefined] |
+| **newPassword** | **string** | The new password. Eg: \&quot;new-and-secure-password\&quot;                                            | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthPhoneNumberResetPasswordPostRequest } from './api';
+import { ApiAuthPhoneNumberResetPasswordPostRequest } from "./api";
 
 const instance: ApiAuthPhoneNumberResetPasswordPostRequest = {
-    otp,
-    phoneNumber,
-    newPassword,
+  otp,
+  phoneNumber,
+  newPassword,
 };
 ```
 

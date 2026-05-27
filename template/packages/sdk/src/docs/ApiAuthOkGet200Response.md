@@ -1,19 +1,18 @@
 # ApiAuthOkGet200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**ok** | **boolean** | Indicates if the API is working | [default to undefined]
+| Name   | Type        | Description                     | Notes                  |
+| ------ | ----------- | ------------------------------- | ---------------------- |
+| **ok** | **boolean** | Indicates if the API is working | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthOkGet200Response } from './api';
+import { ApiAuthOkGet200Response } from "./api";
 
 const instance: ApiAuthOkGet200Response = {
-    ok,
+  ok,
 };
 ```
 

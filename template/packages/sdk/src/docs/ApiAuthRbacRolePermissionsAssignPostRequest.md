@@ -1,21 +1,20 @@
 # ApiAuthRbacRolePermissionsAssignPostRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**roleId** | **string** |  | [default to undefined]
-**permissionId** | **string** |  | [default to undefined]
+| Name             | Type       | Description | Notes                  |
+| ---------------- | ---------- | ----------- | ---------------------- |
+| **roleId**       | **string** |             | [default to undefined] |
+| **permissionId** | **string** |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacRolePermissionsAssignPostRequest } from './api';
+import { ApiAuthRbacRolePermissionsAssignPostRequest } from "./api";
 
 const instance: ApiAuthRbacRolePermissionsAssignPostRequest = {
-    roleId,
-    permissionId,
+  roleId,
+  permissionId,
 };
 ```
 

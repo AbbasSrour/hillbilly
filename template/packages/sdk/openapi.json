@@ -45,9 +45,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -62,9 +60,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -83,9 +79,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -119,9 +113,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -141,9 +133,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -166,9 +156,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -183,9 +171,7 @@
             }
           }
         },
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/api/v1/users": {
@@ -281,10 +267,7 @@
                       "$ref": "#/components/schemas/PageMetaDto"
                     }
                   },
-                  "required": [
-                    "data",
-                    "meta"
-                  ]
+                  "required": ["data", "meta"]
                 }
               }
             }
@@ -309,9 +292,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "post": {
         "operationId": "UserController_createUser_v1",
@@ -357,9 +338,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/users/admin": {
@@ -390,9 +369,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/users/me": {
@@ -430,9 +407,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "operationId": "UserController_updateCurrentUser_v1",
@@ -478,9 +453,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/users/{id}": {
@@ -532,9 +505,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "patch": {
         "operationId": "UserController_updateUser_v1",
@@ -594,9 +565,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "delete": {
         "operationId": "UserController_deleteUser_v1",
@@ -639,9 +608,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/users/{id}/block": {
@@ -686,9 +653,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/users/{id}/unblock": {
@@ -733,9 +698,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/api/v1/organizations/me": {
@@ -787,9 +750,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       },
       "patch": {
         "operationId": "OrganizationController_updateMyOrganization_v1",
@@ -849,9 +810,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       }
     },
     "/api/v1/organizations": {
@@ -943,10 +902,7 @@
                       "$ref": "#/components/schemas/PageMetaDto"
                     }
                   },
-                  "required": [
-                    "data",
-                    "meta"
-                  ]
+                  "required": ["data", "meta"]
                 }
               }
             }
@@ -985,9 +941,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       },
       "post": {
         "operationId": "OrganizationController_createOrganization_v1",
@@ -1047,9 +1001,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       }
     },
     "/api/v1/organizations/{id}": {
@@ -1129,9 +1081,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       },
       "patch": {
         "operationId": "OrganizationController_updateOrganization_v1",
@@ -1219,9 +1169,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       },
       "delete": {
         "operationId": "OrganizationController_deleteOrganization_v1",
@@ -1295,9 +1243,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       }
     },
     "/api/v1/organizations/{id}/ban": {
@@ -1394,9 +1340,7 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       }
     },
     "/api/v1/organizations/{id}/unban": {
@@ -1483,16 +1427,12 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "Organization"
-        ]
+        "tags": ["Organization"]
       }
     },
     "/api/auth/sign-in/social": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Sign in with a social provider",
         "operationId": "socialSignIn",
         "security": [
@@ -1509,109 +1449,66 @@
                 "type": "object",
                 "properties": {
                   "callbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "Callback URL to redirect to after the user has signed in"
                   },
                   "newUserCallbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "errorCallbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "Callback URL to redirect to if an error happens"
                   },
                   "provider": {
                     "type": "string"
                   },
                   "disableRedirect": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
                   },
                   "idToken": {
-                    "type": [
-                      "object",
-                      "null"
-                    ],
+                    "type": ["object", "null"],
                     "properties": {
                       "token": {
                         "type": "string",
                         "description": "ID token from the provider"
                       },
                       "nonce": {
-                        "type": [
-                          "string",
-                          "null"
-                        ],
+                        "type": ["string", "null"],
                         "description": "Nonce used to generate the token"
                       },
                       "accessToken": {
-                        "type": [
-                          "string",
-                          "null"
-                        ],
+                        "type": ["string", "null"],
                         "description": "Access token from the provider"
                       },
                       "refreshToken": {
-                        "type": [
-                          "string",
-                          "null"
-                        ],
+                        "type": ["string", "null"],
                         "description": "Refresh token from the provider"
                       },
                       "expiresAt": {
-                        "type": [
-                          "number",
-                          "null"
-                        ],
+                        "type": ["number", "null"],
                         "description": "Expiry date of the token"
                       }
                     },
-                    "required": [
-                      "token"
-                    ]
+                    "required": ["token"]
                   },
                   "scopes": {
-                    "type": [
-                      "array",
-                      "null"
-                    ],
+                    "type": ["array", "null"],
                     "description": "Array of scopes to request from the provider. This will override the default scopes passed."
                   },
                   "requestSignUp": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Explicitly request sign-up. Useful when disableImplicitSignUp is true for this provider"
                   },
                   "loginHint": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The login hint to use for the authorization code request"
                   },
                   "additionalData": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   }
                 },
-                "required": [
-                  "provider"
-                ]
+                "required": ["provider"]
               }
             }
           }
@@ -1637,16 +1534,10 @@
                     },
                     "redirect": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     }
                   },
-                  "required": [
-                    "redirect",
-                    "token",
-                    "user"
-                  ]
+                  "required": ["redirect", "token", "user"]
                 }
               }
             }
@@ -1661,9 +1552,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -1679,9 +1568,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -1752,9 +1639,7 @@
     },
     "/api/auth/get-session": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Get the current session",
         "operationId": "getSession",
         "security": [
@@ -1779,10 +1664,7 @@
                       "$ref": "#/components/schemas/User"
                     }
                   },
-                  "required": [
-                    "session",
-                    "user"
-                  ]
+                  "required": ["session", "user"]
                 }
               }
             }
@@ -1797,9 +1679,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -1815,9 +1695,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -1888,9 +1766,7 @@
     },
     "/api/auth/sign-out": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Sign out the current user",
         "operationId": "signOut",
         "security": [
@@ -1935,9 +1811,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -1953,9 +1827,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2026,9 +1898,7 @@
     },
     "/api/auth/sign-up/email": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Sign up a user using email and password",
         "operationId": "signUpWithEmailAndPassword",
         "security": [
@@ -2068,11 +1938,7 @@
                     "description": "If this is false, the session will not be remembered. Default is `true`."
                   }
                 },
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ]
+                "required": ["name", "email", "password"]
               }
             }
           }
@@ -2127,19 +1993,10 @@
                           "description": "When the user was last updated"
                         }
                       },
-                      "required": [
-                        "id",
-                        "email",
-                        "name",
-                        "emailVerified",
-                        "createdAt",
-                        "updatedAt"
-                      ]
+                      "required": ["id", "email", "name", "emailVerified", "createdAt", "updatedAt"]
                     }
                   },
-                  "required": [
-                    "user"
-                  ]
+                  "required": ["user"]
                 }
               }
             }
@@ -2154,9 +2011,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2172,9 +2027,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2260,9 +2113,7 @@
     },
     "/api/auth/sign-in/email": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Sign in with email and password",
         "operationId": "signInEmail",
         "security": [
@@ -2287,25 +2138,16 @@
                     "description": "Password of the user"
                   },
                   "callbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "Callback URL to use as a redirect for email verification"
                   },
                   "rememberMe": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "If this is false, the session will not be remembered. Default is `true`.",
                     "default": true
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -2321,9 +2163,7 @@
                   "properties": {
                     "redirect": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "token": {
                       "type": "string",
@@ -2338,11 +2178,7 @@
                       "$ref": "#/components/schemas/User"
                     }
                   },
-                  "required": [
-                    "redirect",
-                    "token",
-                    "user"
-                  ]
+                  "required": ["redirect", "token", "user"]
                 }
               }
             }
@@ -2357,9 +2193,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2375,9 +2209,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2448,9 +2280,7 @@
     },
     "/api/auth/reset-password": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Reset the password for a user",
         "operationId": "resetPassword",
         "security": [
@@ -2471,16 +2301,11 @@
                     "description": "The new password to set"
                   },
                   "token": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The token to reset the password"
                   }
                 },
-                "required": [
-                  "newPassword"
-                ]
+                "required": ["newPassword"]
               }
             }
           }
@@ -2511,9 +2336,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2529,9 +2352,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2602,9 +2423,7 @@
     },
     "/api/auth/verify-password": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Verify the current user's password",
         "operationId": "verifyPassword",
         "security": [
@@ -2625,9 +2444,7 @@
                     "description": "The password to verify"
                   }
                 },
-                "required": [
-                  "password"
-                ]
+                "required": ["password"]
               }
             }
           }
@@ -2658,9 +2475,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2676,9 +2491,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2749,9 +2562,7 @@
     },
     "/api/auth/verify-email": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Verify the email of the user",
         "security": [
           {
@@ -2795,10 +2606,7 @@
                       "description": "Indicates if the email was verified successfully"
                     }
                   },
-                  "required": [
-                    "user",
-                    "status"
-                  ]
+                  "required": ["user", "status"]
                 }
               }
             }
@@ -2813,9 +2621,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2831,9 +2637,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -2904,9 +2708,7 @@
     },
     "/api/auth/send-verification-email": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Send a verification email to the user",
         "operationId": "sendVerificationEmail",
         "security": [
@@ -2933,9 +2735,7 @@
                     "nullable": true
                   }
                 },
-                "required": [
-                  "email"
-                ]
+                "required": ["email"]
               }
             }
           }
@@ -2985,9 +2785,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3058,9 +2856,7 @@
     },
     "/api/auth/change-email": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "operationId": "changeEmail",
         "security": [
           {
@@ -3080,16 +2876,11 @@
                     "description": "The new email address to set must be a valid email address"
                   },
                   "callbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The URL to redirect to after email verification"
                   }
                 },
-                "required": [
-                  "newEmail"
-                ]
+                "required": ["newEmail"]
               }
             }
           }
@@ -3112,17 +2903,12 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": [
-                        "Email updated",
-                        "Verification email sent"
-                      ],
+                      "enum": ["Email updated", "Verification email sent"],
                       "description": "Status message of the email change process",
                       "nullable": true
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -3137,9 +2923,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3155,9 +2939,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3243,9 +3025,7 @@
     },
     "/api/auth/change-password": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Change the password of the user",
         "operationId": "changePassword",
         "security": [
@@ -3270,17 +3050,11 @@
                     "description": "The current password is required"
                   },
                   "revokeOtherSessions": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Must be a boolean value"
                   }
                 },
-                "required": [
-                  "newPassword",
-                  "currentPassword"
-                ]
+                "required": ["newPassword", "currentPassword"]
               }
             }
           }
@@ -3335,19 +3109,10 @@
                           "description": "When the user was last updated"
                         }
                       },
-                      "required": [
-                        "id",
-                        "email",
-                        "name",
-                        "emailVerified",
-                        "createdAt",
-                        "updatedAt"
-                      ]
+                      "required": ["id", "email", "name", "emailVerified", "createdAt", "updatedAt"]
                     }
                   },
-                  "required": [
-                    "user"
-                  ]
+                  "required": ["user"]
                 }
               }
             }
@@ -3362,9 +3127,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3380,9 +3143,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3453,9 +3214,7 @@
     },
     "/api/auth/update-user": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Update the current user",
         "operationId": "updateUser",
         "security": [
@@ -3511,9 +3270,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3529,9 +3286,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3602,9 +3357,7 @@
     },
     "/api/auth/delete-user": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Delete the user",
         "operationId": "deleteUser",
         "security": [
@@ -3650,17 +3403,11 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": [
-                        "User deleted",
-                        "Verification email sent"
-                      ],
+                      "enum": ["User deleted", "Verification email sent"],
                       "description": "Status message of the deletion process"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -3675,9 +3422,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3693,9 +3438,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3766,9 +3509,7 @@
     },
     "/api/auth/request-password-reset": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Send a password reset email to the user",
         "operationId": "requestPasswordReset",
         "security": [
@@ -3789,16 +3530,11 @@
                     "description": "The email address of the user to send a password reset email to"
                   },
                   "redirectTo": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The URL to redirect the user to reset their password. If the token isn't valid or expired, it'll be redirected with a query parameter `?error=INVALID_TOKEN`. If the token is valid, it'll be redirected with a query parameter `?token=VALID_TOKEN"
                   }
                 },
-                "required": [
-                  "email"
-                ]
+                "required": ["email"]
               }
             }
           }
@@ -3832,9 +3568,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3850,9 +3584,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3923,9 +3655,7 @@
     },
     "/api/auth/reset-password/{token}": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Redirects the user to the callback URL with the token",
         "operationId": "resetPasswordCallback",
         "security": [
@@ -3979,9 +3709,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -3997,9 +3725,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4070,9 +3796,7 @@
     },
     "/api/auth/list-sessions": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "List all active sessions for the user",
         "operationId": "listUserSessions",
         "security": [
@@ -4105,9 +3829,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4123,9 +3845,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4196,9 +3916,7 @@
     },
     "/api/auth/revoke-session": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Revoke a single session",
         "security": [
           {
@@ -4217,9 +3935,7 @@
                     "description": "The token to revoke"
                   }
                 },
-                "required": [
-                  "token"
-                ]
+                "required": ["token"]
               }
             }
           }
@@ -4237,9 +3953,7 @@
                       "description": "Indicates if the session was revoked successfully"
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -4254,9 +3968,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4272,9 +3984,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4345,9 +4055,7 @@
     },
     "/api/auth/revoke-sessions": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Revoke all sessions for the user",
         "security": [
           {
@@ -4378,9 +4086,7 @@
                       "description": "Indicates if all sessions were revoked successfully"
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -4395,9 +4101,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4413,9 +4117,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4486,9 +4188,7 @@
     },
     "/api/auth/revoke-other-sessions": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Revoke all other sessions for the user except the current one",
         "security": [
           {
@@ -4519,9 +4219,7 @@
                       "description": "Indicates if all other sessions were revoked successfully"
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -4536,9 +4234,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4554,9 +4250,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4627,9 +4321,7 @@
     },
     "/api/auth/link-social": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Link a social account to the user",
         "operationId": "linkSocialAccount",
         "security": [
@@ -4646,90 +4338,53 @@
                 "type": "object",
                 "properties": {
                   "callbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The URL to redirect to after the user has signed in"
                   },
                   "provider": {
                     "type": "string"
                   },
                   "idToken": {
-                    "type": [
-                      "object",
-                      "null"
-                    ],
+                    "type": ["object", "null"],
                     "properties": {
                       "token": {
                         "type": "string"
                       },
                       "nonce": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
+                        "type": ["string", "null"]
                       },
                       "accessToken": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
+                        "type": ["string", "null"]
                       },
                       "refreshToken": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
+                        "type": ["string", "null"]
                       },
                       "scopes": {
-                        "type": [
-                          "array",
-                          "null"
-                        ]
+                        "type": ["array", "null"]
                       }
                     },
-                    "required": [
-                      "token"
-                    ]
+                    "required": ["token"]
                   },
                   "requestSignUp": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ]
+                    "type": ["boolean", "null"]
                   },
                   "scopes": {
-                    "type": [
-                      "array",
-                      "null"
-                    ],
+                    "type": ["array", "null"],
                     "description": "Additional scopes to request from the provider"
                   },
                   "errorCallbackURL": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The URL to redirect to if there is an error during the link process"
                   },
                   "disableRedirect": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
                   },
                   "additionalData": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   }
                 },
-                "required": [
-                  "provider"
-                ]
+                "required": ["provider"]
               }
             }
           }
@@ -4754,9 +4409,7 @@
                       "type": "boolean"
                     }
                   },
-                  "required": [
-                    "redirect"
-                  ]
+                  "required": ["redirect"]
                 }
               }
             }
@@ -4771,9 +4424,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4789,9 +4440,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4862,9 +4511,7 @@
     },
     "/api/auth/list-accounts": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "List all accounts linked to the user",
         "operationId": "listUserAccounts",
         "security": [
@@ -4934,9 +4581,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -4952,9 +4597,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5025,9 +4668,7 @@
     },
     "/api/auth/delete-user/callback": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Callback to complete user deletion with verification token",
         "security": [
           {
@@ -5047,10 +4688,7 @@
             "name": "callbackURL",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The URL to redirect to after deletion"
             }
           }
@@ -5069,16 +4707,11 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": [
-                        "User deleted"
-                      ],
+                      "enum": ["User deleted"],
                       "description": "Confirmation message"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -5093,9 +4726,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5111,9 +4742,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5184,9 +4813,7 @@
     },
     "/api/auth/unlink-account": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Unlink an account",
         "security": [
           {
@@ -5205,15 +4832,10 @@
                     "type": "string"
                   },
                   "accountId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   }
                 },
-                "required": [
-                  "providerId"
-                ]
+                "required": ["providerId"]
               }
             }
           }
@@ -5244,9 +4866,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5262,9 +4882,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5335,9 +4953,7 @@
     },
     "/api/auth/refresh-token": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Refresh the access token using a refresh token",
         "security": [
           {
@@ -5357,23 +4973,15 @@
                     "description": "The provider ID for the OAuth provider"
                   },
                   "accountId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The account ID associated with the refresh token"
                   },
                   "userId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The user ID associated with the account"
                   }
                 },
-                "required": [
-                  "providerId"
-                ]
+                "required": ["providerId"]
               }
             }
           }
@@ -5424,9 +5032,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5497,9 +5103,7 @@
     },
     "/api/auth/get-access-token": {
       "post": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Get a valid access token, doing a refresh if needed",
         "security": [
           {
@@ -5519,23 +5123,15 @@
                     "description": "The provider ID for the OAuth provider"
                   },
                   "accountId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The account ID associated with the refresh token"
                   },
                   "userId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The user ID associated with the account"
                   }
                 },
-                "required": [
-                  "providerId"
-                ]
+                "required": ["providerId"]
               }
             }
           }
@@ -5579,9 +5175,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5652,9 +5246,7 @@
     },
     "/api/auth/account-info": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Get the account info provided by the provider",
         "security": [
           {
@@ -5689,10 +5281,7 @@
                           "type": "boolean"
                         }
                       },
-                      "required": [
-                        "id",
-                        "emailVerified"
-                      ]
+                      "required": ["id", "emailVerified"]
                     },
                     "data": {
                       "type": "object",
@@ -5700,10 +5289,7 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": [
-                    "user",
-                    "data"
-                  ],
+                  "required": ["user", "data"],
                   "additionalProperties": false
                 }
               }
@@ -5719,9 +5305,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5737,9 +5321,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5810,9 +5392,7 @@
     },
     "/api/auth/ok": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Check if the API is working",
         "security": [
           {
@@ -5833,9 +5413,7 @@
                       "description": "Indicates if the API is working"
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -5850,9 +5428,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5868,9 +5444,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5941,9 +5515,7 @@
     },
     "/api/auth/error": {
       "get": {
-        "tags": [
-          "Default"
-        ],
+        "tags": ["Default"],
         "description": "Displays an error page",
         "security": [
           {
@@ -5973,9 +5545,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -5991,9 +5561,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6064,9 +5632,7 @@
     },
     "/api/auth/admin/set-role": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Set the role of a user",
         "operationId": "setUserRole",
         "security": [
@@ -6091,10 +5657,7 @@
                     "description": "The role to set, this can be a string or an array of strings. Eg: `admin` or `[admin, user]`"
                   }
                 },
-                "required": [
-                  "userId",
-                  "role"
-                ]
+                "required": ["userId", "role"]
               }
             }
           }
@@ -6125,9 +5688,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6143,9 +5704,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6216,9 +5775,7 @@
     },
     "/api/auth/admin/get-user": {
       "get": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Get an existing user",
         "operationId": "getUser",
         "security": [
@@ -6262,9 +5819,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6280,9 +5835,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6353,9 +5906,7 @@
     },
     "/api/auth/admin/create-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Create a new user",
         "operationId": "createUser",
         "security": [
@@ -6376,32 +5927,20 @@
                     "description": "The email of the user"
                   },
                   "password": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "name": {
                     "type": "string",
                     "description": "The name of the user"
                   },
                   "role": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "data": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   }
                 },
-                "required": [
-                  "email",
-                  "name"
-                ]
+                "required": ["email", "name"]
               }
             }
           }
@@ -6432,9 +5971,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6450,9 +5987,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6523,9 +6058,7 @@
     },
     "/api/auth/admin/update-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Update a user's details",
         "operationId": "updateUser1",
         "security": [
@@ -6550,10 +6083,7 @@
                     "description": "The user data to update"
                   }
                 },
-                "required": [
-                  "userId",
-                  "data"
-                ]
+                "required": ["userId", "data"]
               }
             }
           }
@@ -6584,9 +6114,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6602,9 +6130,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6675,9 +6201,7 @@
     },
     "/api/auth/admin/list-users": {
       "get": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "List users",
         "operationId": "listUsers",
         "security": [
@@ -6690,20 +6214,14 @@
             "name": "searchValue",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "searchField",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The field to search in, defaults to email. Can be `email` or `name`. Eg: \"name\""
             }
           },
@@ -6711,10 +6229,7 @@
             "name": "searchOperator",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The operator to use for the search. Can be `contains`, `starts_with` or `ends_with`. Eg: \"contains\""
             }
           },
@@ -6722,30 +6237,21 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The field to sort by"
             }
           },
@@ -6753,10 +6259,7 @@
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The direction to sort by"
             }
           },
@@ -6764,10 +6267,7 @@
             "name": "filterField",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The field to filter by"
             }
           },
@@ -6775,20 +6275,14 @@
             "name": "filterValue",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "filterOperator",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "description": "The operator to use for the filter"
             }
           }
@@ -6817,10 +6311,7 @@
                       "type": "number"
                     }
                   },
-                  "required": [
-                    "users",
-                    "total"
-                  ]
+                  "required": ["users", "total"]
                 }
               }
             }
@@ -6835,9 +6326,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6853,9 +6342,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -6926,9 +6413,7 @@
     },
     "/api/auth/admin/list-user-sessions": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "List user sessions",
         "operationId": "listUserSessions1",
         "security": [
@@ -6949,9 +6434,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -6985,9 +6468,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7003,9 +6484,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7076,9 +6555,7 @@
     },
     "/api/auth/admin/unban-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Unban a user",
         "operationId": "unbanUser",
         "security": [
@@ -7099,9 +6576,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -7132,9 +6607,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7150,9 +6623,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7223,9 +6694,7 @@
     },
     "/api/auth/admin/ban-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Ban a user",
         "operationId": "banUser",
         "security": [
@@ -7246,23 +6715,15 @@
                     "description": "The user id"
                   },
                   "banReason": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "description": "The reason for the ban"
                   },
                   "banExpiresIn": {
-                    "type": [
-                      "number",
-                      "null"
-                    ],
+                    "type": ["number", "null"],
                     "description": "The number of seconds until the ban expires"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -7293,9 +6754,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7311,9 +6770,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7384,9 +6841,7 @@
     },
     "/api/auth/admin/impersonate-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Impersonate a user",
         "operationId": "impersonateUser",
         "security": [
@@ -7407,9 +6862,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -7443,9 +6896,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7461,9 +6912,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7534,9 +6983,7 @@
     },
     "/api/auth/admin/stop-impersonating": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "security": [
           {
             "bearerAuth": []
@@ -7554,9 +7001,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7572,9 +7017,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7645,9 +7088,7 @@
     },
     "/api/auth/admin/revoke-user-session": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Revoke a user session",
         "operationId": "revokeUserSession",
         "security": [
@@ -7668,9 +7109,7 @@
                     "description": "The session token"
                   }
                 },
-                "required": [
-                  "sessionToken"
-                ]
+                "required": ["sessionToken"]
               }
             }
           }
@@ -7701,9 +7140,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7719,9 +7156,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7792,9 +7227,7 @@
     },
     "/api/auth/admin/revoke-user-sessions": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Revoke all user sessions",
         "operationId": "revokeUserSessions",
         "security": [
@@ -7815,9 +7248,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -7848,9 +7279,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7866,9 +7295,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -7939,9 +7366,7 @@
     },
     "/api/auth/admin/remove-user": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Delete a user and all their sessions and accounts. Cannot be undone.",
         "operationId": "removeUser",
         "security": [
@@ -7962,9 +7387,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               }
             }
           }
@@ -7995,9 +7418,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8013,9 +7434,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8086,9 +7505,7 @@
     },
     "/api/auth/admin/set-user-password": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Set a user's password",
         "operationId": "setUserPassword",
         "security": [
@@ -8113,10 +7530,7 @@
                     "description": "The user id"
                   }
                 },
-                "required": [
-                  "newPassword",
-                  "userId"
-                ]
+                "required": ["newPassword", "userId"]
               }
             }
           }
@@ -8147,9 +7561,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8165,9 +7577,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8238,9 +7648,7 @@
     },
     "/api/auth/admin/has-permission": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "description": "Check if the user has permission",
         "security": [
           {
@@ -8264,9 +7672,7 @@
                     "description": "The permission to check"
                   }
                 },
-                "required": [
-                  "permissions"
-                ]
+                "required": ["permissions"]
               }
             }
           }
@@ -8286,9 +7692,7 @@
                       "type": "boolean"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -8303,9 +7707,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8321,9 +7723,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8394,9 +7794,7 @@
     },
     "/api/auth/rbac/sync": {
       "post": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -8414,9 +7812,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8432,9 +7828,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8505,9 +7899,7 @@
     },
     "/api/auth/rbac/roles": {
       "get": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -8518,40 +7910,28 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           }
         ],
@@ -8566,9 +7946,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8584,9 +7962,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8655,9 +8031,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -8675,21 +8049,13 @@
                     "type": "string"
                   },
                   "description": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "permissionIds": {
-                    "type": [
-                      "array",
-                      "null"
-                    ]
+                    "type": ["array", "null"]
                   }
                 },
-                "required": [
-                  "name"
-                ]
+                "required": ["name"]
               }
             }
           }
@@ -8705,9 +8071,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8723,9 +8087,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8796,9 +8158,7 @@
     },
     "/api/auth/rbac/role": {
       "get": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -8824,9 +8184,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8842,9 +8200,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8913,9 +8269,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -8930,30 +8284,19 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "description": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
+                    "type": ["string", "null"]
                   },
                   "permissionIds": {
-                    "type": [
-                      "array",
-                      "null"
-                    ]
+                    "type": ["array", "null"]
                   },
                   "roleId": {
                     "type": "string"
                   }
                 },
-                "required": [
-                  "roleId"
-                ]
+                "required": ["roleId"]
               }
             }
           }
@@ -8969,9 +8312,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -8987,9 +8328,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9058,9 +8397,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9078,9 +8415,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9096,9 +8431,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9169,9 +8502,7 @@
     },
     "/api/auth/rbac/permissions": {
       "get": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9182,40 +8513,28 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           },
           {
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           }
         ],
@@ -9259,11 +8578,7 @@
                             "nullable": true
                           }
                         },
-                        "required": [
-                          "id",
-                          "name",
-                          "code"
-                        ],
+                        "required": ["id", "name", "code"],
                         "additionalProperties": true
                       }
                     },
@@ -9271,10 +8586,7 @@
                       "type": "number"
                     }
                   },
-                  "required": [
-                    "permissions",
-                    "total"
-                  ]
+                  "required": ["permissions", "total"]
                 }
               }
             }
@@ -9289,9 +8601,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9307,9 +8617,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9380,9 +8688,7 @@
     },
     "/api/auth/rbac/role-permissions": {
       "get": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9437,11 +8743,7 @@
                             "nullable": true
                           }
                         },
-                        "required": [
-                          "id",
-                          "name",
-                          "code"
-                        ],
+                        "required": ["id", "name", "code"],
                         "additionalProperties": true
                       }
                     },
@@ -9449,10 +8751,7 @@
                       "type": "number"
                     }
                   },
-                  "required": [
-                    "permissions",
-                    "total"
-                  ]
+                  "required": ["permissions", "total"]
                 }
               }
             }
@@ -9467,9 +8766,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9485,9 +8782,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9558,9 +8853,7 @@
     },
     "/api/auth/rbac/role-permissions/assign": {
       "post": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9581,10 +8874,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "roleId",
-                  "permissionId"
-                ]
+                "required": ["roleId", "permissionId"]
               }
             }
           }
@@ -9600,9 +8890,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9618,9 +8906,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9691,9 +8977,7 @@
     },
     "/api/auth/rbac/role-permissions/remove": {
       "post": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9714,10 +8998,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "roleId",
-                  "permissionId"
-                ]
+                "required": ["roleId", "permissionId"]
               }
             }
           }
@@ -9733,9 +9014,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9751,9 +9030,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9824,9 +9101,7 @@
     },
     "/api/auth/rbac/check-permission": {
       "post": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -9879,9 +9154,7 @@
                     ]
                   }
                 },
-                "required": [
-                  "permission"
-                ]
+                "required": ["permission"]
               }
             }
           }
@@ -9936,11 +9209,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "hasPermission",
-                    "checked",
-                    "userPermissions"
-                  ]
+                  "required": ["hasPermission", "checked", "userPermissions"]
                 }
               }
             }
@@ -9955,9 +9224,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -9973,9 +9240,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10046,9 +9311,7 @@
     },
     "/api/auth/rbac/user-permissions": {
       "get": {
-        "tags": [
-          "Rbac"
-        ],
+        "tags": ["Rbac"],
         "security": [
           {
             "bearerAuth": []
@@ -10075,10 +9338,7 @@
                               "type": "string"
                             }
                           },
-                          "required": [
-                            "id",
-                            "name"
-                          ]
+                          "required": ["id", "name"]
                         },
                         {
                           "type": "null"
@@ -10117,19 +9377,12 @@
                             "nullable": true
                           }
                         },
-                        "required": [
-                          "id",
-                          "name",
-                          "code"
-                        ],
+                        "required": ["id", "name", "code"],
                         "additionalProperties": true
                       }
                     }
                   },
-                  "required": [
-                    "role",
-                    "permissions"
-                  ]
+                  "required": ["role", "permissions"]
                 }
               }
             }
@@ -10144,9 +9397,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10162,9 +9413,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10235,9 +9484,7 @@
     },
     "/api/auth/sign-in/phone-number": {
       "post": {
-        "tags": [
-          "Phone-number"
-        ],
+        "tags": ["Phone-number"],
         "description": "Use this endpoint to sign in with phone number",
         "security": [
           {
@@ -10261,17 +9508,11 @@
                     "description": "Password to use for sign in."
                   },
                   "rememberMe": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Remember the session. Eg: true"
                   }
                 },
-                "required": [
-                  "phoneNumber",
-                  "password"
-                ]
+                "required": ["phoneNumber", "password"]
               }
             }
           }
@@ -10308,9 +9549,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10381,9 +9620,7 @@
     },
     "/api/auth/phone-number/send-otp": {
       "post": {
-        "tags": [
-          "Phone-number"
-        ],
+        "tags": ["Phone-number"],
         "description": "Use this endpoint to send OTP to phone number",
         "security": [
           {
@@ -10403,9 +9640,7 @@
                     "description": "Phone number to send OTP. Eg: \"+1234567890\""
                   }
                 },
-                "required": [
-                  "phoneNumber"
-                ]
+                "required": ["phoneNumber"]
               }
             }
           }
@@ -10436,9 +9671,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10454,9 +9687,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10527,9 +9758,7 @@
     },
     "/api/auth/phone-number/verify": {
       "post": {
-        "tags": [
-          "Phone-number"
-        ],
+        "tags": ["Phone-number"],
         "description": "Use this endpoint to verify phone number",
         "security": [
           {
@@ -10553,24 +9782,15 @@
                     "description": "OTP code. Eg: \"123456\""
                   },
                   "disableSession": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Disable session creation after verification. Eg: false"
                   },
                   "updatePhoneNumber": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Check if there is a session and update the phone number. Eg: true"
                   }
                 },
-                "required": [
-                  "phoneNumber",
-                  "code"
-                ]
+                "required": ["phoneNumber", "code"]
               }
             }
           }
@@ -10586,9 +9806,7 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the verification was successful",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "token": {
                       "type": "string",
@@ -10654,9 +9872,7 @@
                       "description": "User object with phone number details, null if no user is created or found"
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -10674,9 +9890,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10747,9 +9961,7 @@
     },
     "/api/auth/phone-number/request-password-reset": {
       "post": {
-        "tags": [
-          "Phone-number"
-        ],
+        "tags": ["Phone-number"],
         "description": "Request OTP for password reset via phone number",
         "security": [
           {
@@ -10768,9 +9980,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "phoneNumber"
-                ]
+                "required": ["phoneNumber"]
               }
             }
           }
@@ -10786,14 +9996,10 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the OTP was sent successfully",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -10808,9 +10014,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10826,9 +10030,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10899,9 +10101,7 @@
     },
     "/api/auth/phone-number/reset-password": {
       "post": {
-        "tags": [
-          "Phone-number"
-        ],
+        "tags": ["Phone-number"],
         "description": "Reset password using phone number OTP",
         "security": [
           {
@@ -10929,11 +10129,7 @@
                     "description": "The new password. Eg: \"new-and-secure-password\""
                   }
                 },
-                "required": [
-                  "otp",
-                  "phoneNumber",
-                  "newPassword"
-                ]
+                "required": ["otp", "phoneNumber", "newPassword"]
               }
             }
           }
@@ -10949,14 +10145,10 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the password was reset successfully",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     }
                   },
-                  "required": [
-                    "status"
-                  ]
+                  "required": ["status"]
                 }
               }
             }
@@ -10971,9 +10163,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -10989,9 +10179,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             },
@@ -11085,14 +10273,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "page",
-          "take",
-          "itemCount",
-          "pageCount",
-          "hasPreviousPage",
-          "hasNextPage"
-        ]
+        "required": ["page", "take", "itemCount", "pageCount", "hasPreviousPage", "hasNextPage"]
       },
       "PageDto": {
         "type": "object",
@@ -11107,25 +10288,15 @@
             "$ref": "#/components/schemas/PageMetaDto"
           }
         },
-        "required": [
-          "data",
-          "meta"
-        ]
+        "required": ["data", "meta"]
       },
       "LanguageCode": {
         "type": "string",
-        "enum": [
-          "en_US",
-          "ar_LB"
-        ]
+        "enum": ["en_US", "ar_LB"]
       },
       "Theme": {
         "type": "string",
-        "enum": [
-          "light",
-          "dark",
-          "system"
-        ]
+        "enum": ["light", "dark", "system"]
       },
       "AbstractTranslationDto": {
         "type": "object",
@@ -11149,11 +10320,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "createdAt", "updatedAt"]
       },
       "UserSettingsDto": {
         "type": "object",
@@ -11194,14 +10361,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "locale",
-          "theme",
-          "timezone"
-        ]
+        "required": ["id", "createdAt", "updatedAt", "locale", "theme", "timezone"]
       },
       "UserDto": {
         "type": "object",
@@ -11240,14 +10400,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "role",
-          "isBlocked",
-          "settings"
-        ]
+        "required": ["id", "createdAt", "updatedAt", "role", "isBlocked", "settings"]
       },
       "ErrorDto": {
         "type": "object",
@@ -11262,55 +10415,33 @@
             "type": "string"
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "UnauthorizedException": {
         "type": "object",
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              401
-            ]
+            "enum": [401]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.auth.unauthorized"
-            ]
+            "enum": ["error.auth.unauthorized"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Unauthorized"
-            ]
+            "enum": ["Unauthorized"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "Order": {
         "type": "string",
-        "enum": [
-          "ASC",
-          "DESC"
-        ]
+        "enum": ["ASC", "DESC"]
       },
       "UserSort": {
         "type": "string",
-        "enum": [
-          "id",
-          "name",
-          "createdAt",
-          "updatedAt"
-        ]
+        "enum": ["id", "name", "createdAt", "updatedAt"]
       },
       "CreateProfileDto": {
         "type": "object",
@@ -11347,10 +10478,7 @@
             "nullable": true
           }
         },
-        "required": [
-          "firstName",
-          "lastName"
-        ]
+        "required": ["firstName", "lastName"]
       },
       "CreateUserDto": {
         "type": "object",
@@ -11373,10 +10501,7 @@
             "$ref": "#/components/schemas/CreateProfileDto"
           }
         },
-        "required": [
-          "role",
-          "profile"
-        ]
+        "required": ["role", "profile"]
       },
       "UpdateProfileDto": {
         "type": "object",
@@ -11476,28 +10601,18 @@
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              403
-            ]
+            "enum": [403]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.organization.scopeAccessDenied"
-            ]
+            "enum": ["error.organization.scopeAccessDenied"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Forbidden"
-            ]
+            "enum": ["Forbidden"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "OrganizationDto": {
         "type": "object",
@@ -11577,14 +10692,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "name",
-          "banned",
-          "requiresApproval"
-        ]
+        "required": ["id", "createdAt", "updatedAt", "name", "banned", "requiresApproval"]
       },
       "UpdateMyOrganizationDto": {
         "type": "object",
@@ -11628,12 +10736,7 @@
       },
       "OrganizationSortField": {
         "type": "string",
-        "enum": [
-          "id",
-          "name",
-          "createdAt",
-          "updatedAt"
-        ]
+        "enum": ["id", "name", "createdAt", "updatedAt"]
       },
       "CreateOrganizationDto": {
         "type": "object",
@@ -11679,37 +10782,25 @@
             "example": true
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "OrganizationNotFoundException": {
         "type": "object",
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              404
-            ]
+            "enum": [404]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.organization.notFound"
-            ]
+            "enum": ["error.organization.notFound"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Not Found"
-            ]
+            "enum": ["Not Found"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "UpdateOrganizationDto": {
         "type": "object",
@@ -11761,28 +10852,18 @@
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.organization.alreadyBanned"
-            ]
+            "enum": ["error.organization.alreadyBanned"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Bad Request"
-            ]
+            "enum": ["Bad Request"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "OrganizationBanDto": {
         "type": "object",
@@ -11810,56 +10891,36 @@
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.organization.notBanned"
-            ]
+            "enum": ["error.organization.notBanned"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Bad Request"
-            ]
+            "enum": ["Bad Request"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "OrganizationScopeAccessDenied2Exception": {
         "type": "object",
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [
-              403
-            ]
+            "enum": [403]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "error.organization.scopeAccessDenied2"
-            ]
+            "enum": ["error.organization.scopeAccessDenied2"]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "Forbidden"
-            ]
+            "enum": ["Forbidden"]
           }
         },
-        "required": [
-          "statusCode",
-          "message",
-          "error"
-        ]
+        "required": ["statusCode", "message", "error"]
       },
       "User": {
         "type": "object",
@@ -11921,12 +10982,7 @@
             "readOnly": true
           }
         },
-        "required": [
-          "name",
-          "email",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["name", "email", "createdAt", "updatedAt"]
       },
       "Session": {
         "type": "object",
@@ -11963,13 +11019,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "expiresAt",
-          "token",
-          "createdAt",
-          "updatedAt",
-          "userId"
-        ]
+        "required": ["expiresAt", "token", "createdAt", "updatedAt", "userId"]
       },
       "Account": {
         "type": "object",
@@ -12019,13 +11069,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "accountId",
-          "providerId",
-          "userId",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["accountId", "providerId", "userId", "createdAt", "updatedAt"]
       },
       "Verification": {
         "type": "object",
@@ -12054,13 +11098,7 @@
             "default": "Generated at runtime"
           }
         },
-        "required": [
-          "identifier",
-          "value",
-          "expiresAt",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["identifier", "value", "expiresAt", "createdAt", "updatedAt"]
       },
       "Role": {
         "type": "object",
@@ -12075,9 +11113,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "Permission": {
         "type": "object",
@@ -12095,10 +11131,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "code"
-        ]
+        "required": ["name", "code"]
       },
       "RolePermission": {
         "type": "object",
@@ -12113,10 +11146,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "roleId",
-          "permissionId"
-        ]
+        "required": ["roleId", "permissionId"]
       }
     },
     "securitySchemes": {

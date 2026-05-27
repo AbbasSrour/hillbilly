@@ -1,23 +1,22 @@
 # OrganizationScopeAccessDenied2Exception
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**statusCode** | **number** |  | [default to undefined]
-**message** | **string** |  | [default to undefined]
-**error** | **string** |  | [default to undefined]
+| Name           | Type       | Description | Notes                  |
+| -------------- | ---------- | ----------- | ---------------------- |
+| **statusCode** | **number** |             | [default to undefined] |
+| **message**    | **string** |             | [default to undefined] |
+| **error**      | **string** |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { OrganizationScopeAccessDenied2Exception } from './api';
+import { OrganizationScopeAccessDenied2Exception } from "./api";
 
 const instance: OrganizationScopeAccessDenied2Exception = {
-    statusCode,
-    message,
-    error,
+  statusCode,
+  message,
+  error,
 };
 ```
 

@@ -1,19 +1,18 @@
 # ApiAuthRbacCheckPermissionPostRequest
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**permission** | [**ApiAuthRbacCheckPermissionPostRequestPermission**](ApiAuthRbacCheckPermissionPostRequestPermission.md) |  | [default to undefined]
+| Name           | Type                                                                                                      | Description | Notes                  |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ----------- | ---------------------- |
+| **permission** | [**ApiAuthRbacCheckPermissionPostRequestPermission**](ApiAuthRbacCheckPermissionPostRequestPermission.md) |             | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacCheckPermissionPostRequest } from './api';
+import { ApiAuthRbacCheckPermissionPostRequest } from "./api";
 
 const instance: ApiAuthRbacCheckPermissionPostRequest = {
-    permission,
+  permission,
 };
 ```
 

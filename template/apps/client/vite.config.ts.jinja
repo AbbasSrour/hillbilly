@@ -1,12 +1,11 @@
-// import { nitro } from 'nitro/vie';
-
+import { nitro } from 'nitro/vite';
 import { fileURLToPath, URL } from 'node:url';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import tailwindcss from '@tailwindcss/vite';
 import { devtools } from '@tanstack/devtools-vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import viteReact from '@vitejs/plugin-react';
 import { defineConfig } from 'vite-plus';
+import viteReact from '@vitejs/plugin-react';
 
 const config = defineConfig({
   resolve: {
@@ -23,7 +22,8 @@ const config = defineConfig({
     noExternal: ['@[[ project_name ]]/ui', '@[[ project_name ]]/rbac', '@[[ project_name ]]/sdk', 'react-use'],
   },
   server: {
-    host: 'localhost',
+    host: 'client.[[ project_name ]].localhost',
+    port: 3000,
   },
   plugins: [
     devtools(),
@@ -32,7 +32,7 @@ const config = defineConfig({
       outdir: './paraglide',
       strategy: ['url'],
     }),
-    // nitro(),
+    nitro({ rollupConfig: { external: [/^@sentry\//] } }),
     tailwindcss(),
     tanstackStart({
       srcDirectory: '.',
@@ -41,11 +41,7 @@ const config = defineConfig({
         virtualRouteConfig: './routes.ts',
       },
     }),
-    viteReact({
-      babel: {
-        plugins: ['babel-plugin-react-compiler'],
-      },
-    }),
+    viteReact(),
   ],
 });
 

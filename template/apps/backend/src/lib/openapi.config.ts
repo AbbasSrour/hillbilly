@@ -42,6 +42,11 @@ export async function setupOpenapi(app: INestApplication) {
       ...mergeResult.output,
       openapi: '3.1.0',
     };
+
+    // Patch Better Auth routes that declare path parameters in the URL template
+    // but omit them from the OpenAPI `parameters` array (e.g. /callback/{id}).
+    patchUndeclaredPathParameters(mergedSchema);
+
     const outputPath = path.resolve(import.meta.dirname, '../../../../packages/sdk/openapi.json');
 
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -97,5 +102,45 @@ export async function setupOpenapi(app: INestApplication) {
         skipValidation: false,
       },
     });
+  }
+}
+
+/**
+ * Better Auth generates some routes (e.g. /callback/{id}) with path parameters
+ * in the URL template but an empty `parameters` array. This patches those
+ * operations so the merged OpenAPI spec is valid for code generation.
+ */
+function patchUndeclaredPathParameters(spec: Record<string, unknown>) {
+  const paths = spec.paths as Record<string, Record<string, unknown>> | undefined;
+  if (!paths) return;
+
+  const httpMethods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'] as const;
+
+  for (const [pathPattern, pathItem] of Object.entries(paths)) {
+    const templateParams = [...pathPattern.matchAll(/\{(\w+)\}/g)].map((m) => m[1]!);
+    if (!templateParams.length) continue;
+
+    for (const method of httpMethods) {
+      const operation = pathItem[method] as Record<string, unknown> | undefined;
+      if (!operation) continue;
+
+      const parameters = (operation.parameters as Array<Record<string, unknown>>) ?? [];
+      const declaredPathParams = parameters
+        .filter((p) => p.in === 'path')
+        .map((p) => p.name as string);
+
+      const missing = templateParams.filter((name) => !declaredPathParams.includes(name));
+      if (!missing.length) continue;
+
+      operation.parameters = [
+        ...parameters,
+        ...missing.map((name) => ({
+          name,
+          in: 'path',
+          required: true,
+          schema: { type: 'string' },
+        })),
+      ];
+    }
   }
 }

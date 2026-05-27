@@ -11,6 +11,7 @@ import {
 } from '@mikro-orm/decorators/legacy';
 import { UserDto, type UserDtoOptions } from '../dto/user.dto';
 import { UserSettingsEntity } from './user-settings.entity';
+import { RoleType } from '@constant/role-type.constant';
 
 @Entity({ tableName: 'users' })
 @Check({ expression: 'email IS NOT NULL OR phone_number IS NOT NULL' })
@@ -34,10 +35,10 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Property({ type: 'text', nullable: true })
   public avatar?: string;
 
-  @Property({ type: 'varchar', length: 255 })
+  @Property({ type: 'varchar', length: 255, default: RoleType.USER })
   public role: string;
 
-  @Property({ type: 'boolean' })
+  @Property({ type: 'boolean', default: false })
   public banned: boolean;
 
   @Property({ type: 'text', nullable: true })

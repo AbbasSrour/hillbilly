@@ -1,19 +1,18 @@
 # SendVerificationEmail400Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**message** | **string** | Error message | [optional] [default to undefined]
+| Name        | Type       | Description   | Notes                             |
+| ----------- | ---------- | ------------- | --------------------------------- |
+| **message** | **string** | Error message | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { SendVerificationEmail400Response } from './api';
+import { SendVerificationEmail400Response } from "./api";
 
 const instance: SendVerificationEmail400Response = {
-    message,
+  message,
 };
 ```
 

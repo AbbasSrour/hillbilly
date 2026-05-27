@@ -1,19 +1,18 @@
 # SocialSignIn403Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**message** | **string** |  | [optional] [default to undefined]
+| Name        | Type       | Description | Notes                             |
+| ----------- | ---------- | ----------- | --------------------------------- |
+| **message** | **string** |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { SocialSignIn403Response } from './api';
+import { SocialSignIn403Response } from "./api";
 
 const instance: SocialSignIn403Response = {
-    message,
+  message,
 };
 ```
 

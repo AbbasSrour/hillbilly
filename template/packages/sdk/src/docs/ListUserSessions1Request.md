@@ -1,19 +1,18 @@
 # ListUserSessions1Request
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**userId** | **string** | The user id | [default to undefined]
+| Name       | Type       | Description | Notes                  |
+| ---------- | ---------- | ----------- | ---------------------- |
+| **userId** | **string** | The user id | [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ListUserSessions1Request } from './api';
+import { ListUserSessions1Request } from "./api";
 
 const instance: ListUserSessions1Request = {
-    userId,
+  userId,
 };
 ```
 

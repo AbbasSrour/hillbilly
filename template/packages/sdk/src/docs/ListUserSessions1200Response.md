@@ -1,19 +1,18 @@
 # ListUserSessions1200Response
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**sessions** | [**Array&lt;Session&gt;**](Session.md) |  | [optional] [default to undefined]
+| Name         | Type                                   | Description | Notes                             |
+| ------------ | -------------------------------------- | ----------- | --------------------------------- |
+| **sessions** | [**Array&lt;Session&gt;**](Session.md) |             | [optional] [default to undefined] |
 
 ## Example
 
 ```typescript
-import { ListUserSessions1200Response } from './api';
+import { ListUserSessions1200Response } from "./api";
 
 const instance: ListUserSessions1200Response = {
-    sessions,
+  sessions,
 };
 ```
 
