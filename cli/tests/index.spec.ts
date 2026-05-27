@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, chmod, readFile, rm, stat, symlink, writeFile } from "n
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { atomicCopyFile, expandMarkPath, fishCompletion } from "./helpers.js";
+import { atomicCopyFile, expandMarkPath, fishCompletion } from "../src/helpers.js";
 
 const tempRoots: string[] = [];
 

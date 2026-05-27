@@ -15,10 +15,10 @@ import { basename, dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
-import { readCopierAnswers } from "./scan.js";
+import { readCopierAnswers } from "./config.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
-import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
+import { readProjectConfig, writeProjectConfig } from "./config.js";
 import { readSyncManifest, removeSyncFiles, setSyncFileState } from "./manifest.js";
 import { THEMES, THEME_NAMES, DEFAULT_THEME, type Palette } from "./theme.js";
 import { shouldExclude, walkFiles } from "./exclude.js";
@@ -427,8 +427,9 @@ async function saveThemePreference(themeName: string): Promise<void> {
   const prev = _configWritePending;
   _configWritePending = prev?.then?.(() => _doSaveTheme(themeName)) ?? _doSaveTheme(themeName);
   async function _doSaveTheme(name: string) {
-    const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
-    await writeConfig(GLOBAL_CONFIG_PATH, { ...config, tui: { ...config.tui, theme: name } });
+    const config = await readProjectConfig(currentScanResult.projectRoot);
+    config.tui = { ...config.tui, theme: name };
+    await writeProjectConfig(currentScanResult.projectRoot, config);
   }
 }
 
@@ -436,19 +437,17 @@ async function saveTuiPreferences(state: State): Promise<void> {
   const prev = _configWritePending;
   _configWritePending = prev?.then?.(() => _doSave(state)) ?? _doSave(state);
   async function _doSave(s: State) {
-    const config = (await readConfig(GLOBAL_CONFIG_PATH)) ?? {};
-    await writeConfig(GLOBAL_CONFIG_PATH, {
-      ...config,
-      tui: {
-        ...config.tui,
-        theme: s.themeName,
-        diffView: s.diffView,
-        diffLineColors: s.diffLineColors,
-        diffSigns: s.diffSigns,
-        showLineNumbers: s.showLineNumbers,
-        diffWrap: s.diffWrap,
-      },
-    });
+    const config = await readProjectConfig(currentScanResult.projectRoot);
+    config.tui = {
+      ...config.tui,
+      theme: s.themeName,
+      diffView: s.diffView,
+      diffLineColors: s.diffLineColors,
+      diffSigns: s.diffSigns,
+      showLineNumbers: s.showLineNumbers,
+      diffWrap: s.diffWrap,
+    };
+    await writeProjectConfig(currentScanResult.projectRoot, config);
   }
 }
 
@@ -945,7 +944,7 @@ export function SyncTui({ scanResult }: { scanResult: ScanResult }) {
 
   useEffect(() => {
     let cancelled = false;
-    void readConfig(GLOBAL_CONFIG_PATH).then((config) => {
+    void readProjectConfig(currentScanResult.projectRoot).then((config) => {
       const themeName = config?.tui?.theme;
       if (!cancelled) {
         setState((prev) => ({

@@ -11,7 +11,7 @@ import {
   trackedSyncPaths,
   writeSyncManifest,
   type SyncManifest,
-} from "./manifest.js";
+} from "../src/manifest.js";
 
 const tempRoots: string[] = [];
 
@@ -33,17 +33,17 @@ afterEach(async () => {
 describe("syncManifestPath", () => {
   it("resolves manifest path relative to project root", () => {
     const result = syncManifestPath("/some/project");
-    expect(result).toBe(join("/some", "project", ".hillbilly-sync.yml"));
+    expect(result).toBe(join("/some", "project", "hillbilly.yml"));
   });
 
   it("handles trailing slash in project root", () => {
     const result = syncManifestPath("/some/project/");
-    expect(result).toBe(join("/some", "project", ".hillbilly-sync.yml"));
+    expect(result).toBe(join("/some", "project", "hillbilly.yml"));
   });
 
   it("handles dot as project root", () => {
     const result = syncManifestPath(".");
-    expect(result).toBe(join(process.cwd(), ".hillbilly-sync.yml"));
+    expect(result).toBe(join(process.cwd(), "hillbilly.yml"));
   });
 });
 
@@ -57,7 +57,7 @@ describe("readSyncManifest", () => {
   it("reads valid manifest with tracked and untracked files", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - path: src/index.ts
@@ -77,7 +77,7 @@ files:
   it("silently drops malformed entries missing path", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - path: valid.ts
@@ -96,7 +96,7 @@ files:
   it("silently drops entries with invalid state values", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - path: good.ts
@@ -116,7 +116,7 @@ files:
   it("returns empty files when files key is not an array", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files: "not an array"
 `,
@@ -128,7 +128,7 @@ files: "not an array"
 
   it("returns empty files when YAML is null", async () => {
     const root = await makeTempDir();
-    await write(join(root, ".hillbilly-sync.yml"), "null\n");
+    await write(join(root, "hillbilly.yml"), "null\n");
 
     const result = await readSyncManifest(root);
     expect(result.files).toEqual([]);
@@ -136,7 +136,7 @@ files: "not an array"
 
   it("returns empty files when YAML is empty", async () => {
     const root = await makeTempDir();
-    await write(join(root, ".hillbilly-sync.yml"), "");
+    await write(join(root, "hillbilly.yml"), "");
 
     const result = await readSyncManifest(root);
     expect(result.files).toEqual([]);
@@ -145,7 +145,7 @@ files: "not an array"
   it("drops entries where path is not a string", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - path: 123
@@ -163,7 +163,7 @@ files:
   it("drops entries that are null instead of objects", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - null
@@ -179,7 +179,7 @@ files:
   it("always returns version 1 regardless of stored version", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 99
 files: []
 `,
@@ -200,7 +200,7 @@ describe("writeSyncManifest", () => {
 
     await writeSyncManifest(root, manifest);
 
-    const content = await readFile(join(root, ".hillbilly-sync.yml"), "utf-8");
+    const content = await readFile(join(root, "hillbilly.yml"), "utf-8");
     expect(content).toContain("path: src/app.ts");
     expect(content).toContain("state: tracked");
     expect(content).toContain("version: 1");
@@ -213,14 +213,14 @@ describe("writeSyncManifest", () => {
 
     await writeSyncManifest(root, manifest);
 
-    const content = await readFile(join(root, ".hillbilly-sync.yml"), "utf-8");
+    const content = await readFile(join(root, "hillbilly.yml"), "utf-8");
     expect(content.trim()).toBe("version: 1\nfiles: []");
   });
 
   it("overwrites existing manifest", async () => {
     const root = await makeTempDir();
     await write(
-      join(root, ".hillbilly-sync.yml"),
+      join(root, "hillbilly.yml"),
       `version: 1
 files:
   - path: old.ts

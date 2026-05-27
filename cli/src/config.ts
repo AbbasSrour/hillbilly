@@ -1,7 +1,6 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { homedir } from "node:os";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 
 export interface HillbillyConfig {
@@ -19,12 +18,13 @@ export interface HillbillyConfig {
 
 export interface TemplateResolution {
   templateRoot: string;
-  source: "cli" | "project-config" | "global-config" | "copier";
+  source: "cli" | "project-config" | "copier";
   configPath?: string;
 }
 
-export const PROJECT_CONFIG_NAME = ".hillbilly.yml";
-export const GLOBAL_CONFIG_PATH = resolve(homedir(), ".config", "hillbilly", "config.yml");
+export const PROJECT_CONFIG_NAME = "hillbilly.yml";
+
+const KNOWN_HILLBILLY_ROOT_KEYS = new Set(["templateRepo", "templateSubdir", "tui", "sync"]);
 
 export function projectConfigPath(projectRoot: string): string {
   return resolve(projectRoot, PROJECT_CONFIG_NAME);
@@ -34,10 +34,7 @@ export function resolveProjectRoot(startPath: string): string {
   let current = resolve(startPath);
 
   while (true) {
-    if (
-      existsSync(resolve(current, PROJECT_CONFIG_NAME)) ||
-      existsSync(resolve(current, ".copier-answers.yml"))
-    ) {
+    if (existsSync(resolve(current, PROJECT_CONFIG_NAME))) {
       return current;
     }
 
@@ -45,6 +42,146 @@ export function resolveProjectRoot(startPath: string): string {
     if (parent === current) return resolve(startPath);
     current = parent;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Merged project file (hillbilly.yml) — contains Copier answers + hillbilly
+// config + TUI settings + sync manifest
+// ---------------------------------------------------------------------------
+
+async function readMergedFile(projectRoot: string): Promise<Record<string, unknown> | null> {
+  const path = projectConfigPath(projectRoot);
+  if (!existsSync(path)) return null;
+  const raw = await readFile(path, "utf-8");
+  const parsed = parseYaml(raw);
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : null;
+}
+
+async function writeMergedFile(projectRoot: string, data: Record<string, unknown>): Promise<void> {
+  await mkdir(dirname(projectConfigPath(projectRoot)), { recursive: true });
+  await writeFile(projectConfigPath(projectRoot), stringifyYaml(data), "utf-8");
+}
+
+// ---------------------------------------------------------------------------
+// Project config (templateRepo, templateSubdir, tui)
+// ---------------------------------------------------------------------------
+
+export async function readProjectConfig(projectRoot: string): Promise<HillbillyConfig> {
+  const merged = await readMergedFile(projectRoot);
+  if (!merged) return {};
+  return {
+    templateRepo: typeof merged.templateRepo === "string" ? merged.templateRepo : undefined,
+    templateSubdir: typeof merged.templateSubdir === "string" ? merged.templateSubdir : undefined,
+    tui:
+      merged.tui && typeof merged.tui === "object"
+        ? (merged.tui as HillbillyConfig["tui"])
+        : undefined,
+  };
+}
+
+export async function writeProjectConfig(
+  projectRoot: string,
+  config: HillbillyConfig,
+): Promise<void> {
+  const merged = (await readMergedFile(projectRoot)) ?? {};
+  merged.templateRepo = config.templateRepo;
+  merged.templateSubdir = config.templateSubdir;
+  if (config.tui) merged.tui = config.tui;
+  await writeMergedFile(projectRoot, merged);
+}
+
+function resolveConfiguredTemplateRoot(config: HillbillyConfig, baseDir: string): string | null {
+  if (!config.templateRepo) return null;
+
+  const repoRoot = resolve(baseDir, config.templateRepo);
+  const subdir = config.templateSubdir ?? "template";
+  const templateRoot = resolve(repoRoot, subdir);
+
+  return existsSync(templateRoot) ? templateRoot : repoRoot;
+}
+
+async function resolveCopierTemplateRoot(projectRoot: string): Promise<string | null> {
+  const merged = await readMergedFile(projectRoot);
+  if (!merged) return null;
+  const srcPath = merged._src_path;
+  if (typeof srcPath !== "string") return null;
+
+  const sourceRoot = resolve(projectRoot, srcPath);
+  const templateRoot = resolve(sourceRoot, "template");
+  return existsSync(templateRoot) ? templateRoot : sourceRoot;
+}
+
+export async function resolveTemplateRoot(
+  projectRoot: string,
+  options: { template?: string } = {},
+): Promise<TemplateResolution> {
+  const normalizedProjectRoot = resolveProjectRoot(projectRoot);
+
+  if (options.template) {
+    const templateRoot = resolve(options.template);
+    return { templateRoot, source: "cli" };
+  }
+
+  const projectConfig = await readProjectConfig(normalizedProjectRoot);
+  const projectTemplateRoot = projectConfig
+    ? resolveConfiguredTemplateRoot(projectConfig, normalizedProjectRoot)
+    : null;
+  if (projectTemplateRoot) {
+    return {
+      templateRoot: projectTemplateRoot,
+      source: "project-config",
+      configPath: projectConfigPath(normalizedProjectRoot),
+    };
+  }
+
+  const copierTemplateRoot = await resolveCopierTemplateRoot(normalizedProjectRoot);
+  if (copierTemplateRoot) {
+    return { templateRoot: copierTemplateRoot, source: "copier" };
+  }
+
+  throw new Error(
+    `No Hillbilly template source found for ${normalizedProjectRoot}. Run \`hillbilly config set-template /path/to/hillbilly\`, pass \`--template\`, or ensure hillbilly.yml has _src_path.`,
+  );
+}
+
+export async function writeTemplateConfig(
+  projectRoot: string,
+  templateRepo: string,
+  templateSubdir = "template",
+): Promise<void> {
+  const config: HillbillyConfig = {
+    templateRepo: resolve(templateRepo),
+    templateSubdir,
+  };
+  await writeProjectConfig(projectRoot, config);
+}
+
+// ---------------------------------------------------------------------------
+// Copier answers — read from the merged file, with fallback to old .copier-answers.yml
+// ---------------------------------------------------------------------------
+
+export async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
+  const merged = await readMergedFile(projectRoot);
+
+  if (merged) {
+    const answers: Record<string, unknown> = {};
+    for (const key of Object.keys(merged)) {
+      if (!KNOWN_HILLBILLY_ROOT_KEYS.has(key)) {
+        answers[key] = merged[key];
+      }
+    }
+    if (Object.keys(answers).length > 0) return answers;
+  }
+
+  const legacyPath = resolve(projectRoot, ".copier-answers.yml");
+  if (existsSync(legacyPath)) {
+    const raw = await readFile(legacyPath, "utf-8");
+    return (parseYaml(raw) as Record<string, unknown> | null) ?? {};
+  }
+
+  return {};
 }
 
 export async function readConfig(path: string): Promise<HillbillyConfig | null> {
@@ -61,82 +198,22 @@ export async function writeConfig(path: string, config: HillbillyConfig): Promis
   await writeFile(path, stringifyYaml(config), "utf-8");
 }
 
-function resolveConfiguredTemplateRoot(config: HillbillyConfig, baseDir: string): string | null {
-  if (!config.templateRepo) return null;
-
-  const repoRoot = resolve(baseDir, config.templateRepo);
-  const subdir = config.templateSubdir ?? "template";
-  const templateRoot = resolve(repoRoot, subdir);
-
-  return existsSync(templateRoot) ? templateRoot : repoRoot;
-}
-
-async function resolveCopierTemplateRoot(projectRoot: string): Promise<string | null> {
-  const answersPath = resolve(projectRoot, ".copier-answers.yml");
-  if (!existsSync(answersPath)) return null;
-
-  const raw = await readFile(answersPath, "utf-8");
-  const parsed = parseYaml(raw) as Record<string, unknown>;
-  const srcPath = parsed._src_path;
-  if (typeof srcPath !== "string") return null;
-
-  const sourceRoot = resolve(dirname(answersPath), srcPath);
-  const templateRoot = resolve(sourceRoot, "template");
-  return existsSync(templateRoot) ? templateRoot : sourceRoot;
-}
-
-export async function resolveTemplateRoot(
+export async function mergeCopierAnswersIntoProject(
   projectRoot: string,
-  options: { template?: string } = {},
-): Promise<TemplateResolution> {
-  const normalizedProjectRoot = resolveProjectRoot(projectRoot);
-
-  if (options.template) {
-    const templateRoot = resolve(options.template);
-    return { templateRoot, source: "cli" };
-  }
-
-  const projectPath = projectConfigPath(normalizedProjectRoot);
-  const projectConfig = await readConfig(projectPath);
-  const projectTemplateRoot = projectConfig
-    ? resolveConfiguredTemplateRoot(projectConfig, normalizedProjectRoot)
-    : null;
-  if (projectTemplateRoot) {
-    return { templateRoot: projectTemplateRoot, source: "project-config", configPath: projectPath };
-  }
-
-  const globalConfig = await readConfig(GLOBAL_CONFIG_PATH);
-  const globalTemplateRoot = globalConfig
-    ? resolveConfiguredTemplateRoot(globalConfig, dirname(GLOBAL_CONFIG_PATH))
-    : null;
-  if (globalTemplateRoot) {
-    return {
-      templateRoot: globalTemplateRoot,
-      source: "global-config",
-      configPath: GLOBAL_CONFIG_PATH,
-    };
-  }
-
-  const copierTemplateRoot = await resolveCopierTemplateRoot(normalizedProjectRoot);
-  if (copierTemplateRoot) {
-    return { templateRoot: copierTemplateRoot, source: "copier" };
-  }
-
-  throw new Error(
-    `No Hillbilly template source found for ${normalizedProjectRoot}. Run \`hillbilly config set-template /path/to/hillbilly\`, pass \`--template\`, or ensure .copier-answers.yml has _src_path.`,
-  );
-}
-
-export async function writeTemplateConfig(
-  configPath: string,
-  templateRepo: string,
-  templateSubdir = "template",
+  answers: Record<string, unknown>,
 ): Promise<void> {
-  const existing = (await readConfig(configPath)) ?? {};
-  const config: HillbillyConfig = {
-    ...existing,
-    templateRepo: resolve(templateRepo),
-    templateSubdir,
-  };
-  await writeConfig(configPath, config);
+  const merged = (await readMergedFile(projectRoot)) ?? {};
+
+  for (const key of Object.keys(merged)) {
+    if (KNOWN_HILLBILLY_ROOT_KEYS.has(key)) continue;
+    delete merged[key];
+  }
+
+  for (const key of Object.keys(answers)) {
+    if (!KNOWN_HILLBILLY_ROOT_KEYS.has(key)) {
+      merged[key] = answers[key];
+    }
+  }
+
+  await writeMergedFile(projectRoot, merged);
 }

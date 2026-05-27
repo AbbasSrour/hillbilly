@@ -53,10 +53,6 @@ export function shouldExclude(filePath: string): boolean {
     return true;
   }
 
-  if (normalized === "packages/sdk/openapi.json" || normalized.startsWith("packages/sdk/src/")) {
-    return true;
-  }
-
   if (
     (normalized.startsWith("project.inlang/") || normalized.includes("/project.inlang/")) &&
     !normalized.endsWith("project.inlang/settings.json")

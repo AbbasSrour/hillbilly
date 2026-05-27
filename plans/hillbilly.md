@@ -272,14 +272,23 @@ cd apps/backend && vp run build
   - **Package upgrades** (2026-05-25): `@opentui/core` 0.1→0.2, `@opentui/react` 0.1→0.2, `commander` 13→14, `diff` 8→9, `vitest` 2→4, `react` 19.0→19.2, `@types/node` → 25, added `@types/bun` (pre-existing missing type)
   - **DX**: `bin` field for `hillbilly` command, `build` script (`bun build --compile`), standalone binary rebuilt (92 MB), `cli/README.md` with full usage guide
   - **Approved next DX direction**: generated projects should run `hillbilly sync push` from inside the project and resolve a local template repo via explicit CLI option, project `.hillbilly.yml`, global config, then Copier answers fallback. PR automation is deferred until the local repo loop is solid.
-  - **Config workflow implemented**: `sync push --template`, project `.hillbilly.yml`, global `~/.config/hillbilly/config.yml`, Copier fallback, `config set-template`, and `config doctor`.
-  - **Sync ownership moved to manifest**: `.hillbilly-sync.yml` is now the source of truth with `tracked`/`untracked` tombstones. Inline `@hillbilly-sync` comments and scanning were removed.
+  - **Config workflow implemented**: `sync push --template`, project `hillbilly.yml`, Copier fallback, `config set-template`, and `config doctor`.
+  - **Sync ownership moved to manifest**: `hillbilly.yml` sync section is now the source of truth with `tracked`/`untracked` tombstones. Inline `@hillbilly-sync` comments and scanning were removed.
+  - **Config consolidation**: three files (`.hillbilly.yml`, `.hillbilly-sync.yml`, `.copier-answers.yml`) merged into `hillbilly.yml`. Global config removed. `pull` command extracts/merges Copier answers via transient `.copier-answers.yml`.
 
 ### In Progress
 
-- (none)
+- **Config file consolidation** (Session: 2026-05-27):
+  - Merged `.hillbilly.yml`, `.hillbilly-sync.yml`, and `.copier-answers.yml` into a single `hillbilly.yml` per project.
+  - Removed global config (`~/.config/hillbilly/config.yml`) — all settings now per-project.
+  - `hillbilly.yml` stores: Copier answers (flat keys), template config (`templateRepo`, `templateSubdir`), TUI settings (`tui.*`), and sync manifest (`sync.files`).
+  - `.copier-answers.yml` is now transient: `hillbilly sync pull` extracts answers to it, runs copier, merges new answers back, then deletes it.
+  - `.copier-answers.yml` added to `.gitignore` and scanner exclusions.
+  - SDK exclusion removed from scanner.
+  - All template files converted to `.jinja` (623 files); only `bin/`, images, and `packages/sdk/src/docs/*.md` left as plain files.
+  - 4 shell scripts with bash `[[ ]]` conditionals wrapped in `[% raw %]...[% endraw %]` blocks.
 
-### Recently Completed (Session: 2026-05-25)
+### Recently Completed (Session: 2026-05-27)
 
 - **Sync markers added to all template TS/JS files** (416 files, up from 197):
   - Previously excluded `module/` directories (auth, user) now included
@@ -505,8 +514,9 @@ No updates (peer/better-auth + zod, dev/types-node + vitest — covered elsewher
 
 1. Fix BetterAuth password hashing mismatch (login broken)
 2. Investigate/fix Better Auth memory DB warning
-3. Build `hillbilly` as standalone binary (`bun build --compile`) and add to template
-4. Add missing pages (settings, profile, etc.) to client template
+3. ~~Build `hillbilly` as standalone binary (`bun build --compile`) and add to template~~ DONE
+4. ~~Config consolidation (hillbilly.yml merges all three files)~~ DONE
+5. Add missing pages (settings, profile, etc.) to client template
 
 ## Deferred
 

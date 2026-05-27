@@ -1,9 +1,10 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { projectConfigPath } from "./config.js";
 
-export const SYNC_MANIFEST_NAME = ".hillbilly-sync.yml";
+export const SYNC_MANIFEST_NAME = "hillbilly.yml";
 
 export type SyncFileState = "tracked" | "untracked";
 
@@ -18,38 +19,59 @@ export interface SyncManifest {
 }
 
 export function syncManifestPath(projectRoot: string): string {
-  return resolve(projectRoot, SYNC_MANIFEST_NAME);
+  return projectConfigPath(projectRoot);
 }
 
-export async function readSyncManifest(projectRoot: string): Promise<SyncManifest> {
-  const path = syncManifestPath(projectRoot);
-  if (!existsSync(path)) return { version: 1, files: [] };
+// ---------------------------------------------------------------------------
+// Merged file helpers
+// ---------------------------------------------------------------------------
 
+async function readMergedFile(projectRoot: string): Promise<Record<string, unknown> | null> {
+  const path = projectConfigPath(projectRoot);
+  if (!existsSync(path)) return null;
   const raw = await readFile(path, "utf-8");
-  const parsed = parseYaml(raw) as Partial<SyncManifest> | null;
+  const parsed = parseYaml(raw);
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : null;
+}
 
-  return {
-    version: 1,
-    files: Array.isArray(parsed?.files)
-      ? parsed.files.filter((file): file is SyncManifestFile => {
-          return (
-            typeof file === "object" &&
-            file !== null &&
-            typeof file.path === "string" &&
-            (file.state === "tracked" || file.state === "untracked")
-          );
-        })
-      : [],
-  };
+async function writeMergedFile(projectRoot: string, data: Record<string, unknown>): Promise<void> {
+  await mkdir(dirname(projectConfigPath(projectRoot)), { recursive: true });
+  await writeFile(projectConfigPath(projectRoot), stringifyYaml(data), "utf-8");
+}
+
+// ---------------------------------------------------------------------------
+// Sync manifest — stored in the `sync` key of hillbilly.yml
+// ---------------------------------------------------------------------------
+
+export async function readSyncManifest(projectRoot: string): Promise<SyncManifest> {
+  const merged = await readMergedFile(projectRoot);
+  const rawSync = merged?.sync;
+  if (!rawSync || typeof rawSync !== "object" || Array.isArray(rawSync)) {
+    return { version: 1, files: [] };
+  }
+  const sync = rawSync as Record<string, unknown>;
+  const files = Array.isArray(sync.files)
+    ? (sync.files as unknown[]).filter(
+        (file): file is SyncManifestFile =>
+          typeof file === "object" &&
+          file !== null &&
+          typeof (file as Record<string, unknown>).path === "string" &&
+          ((file as Record<string, unknown>).state === "tracked" ||
+            (file as Record<string, unknown>).state === "untracked"),
+      )
+    : [];
+  return { version: 1, files };
 }
 
 export async function writeSyncManifest(
   projectRoot: string,
   manifest: SyncManifest,
 ): Promise<void> {
-  const path = syncManifestPath(projectRoot);
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, stringifyYaml({ version: 1, files: manifest.files }), "utf-8");
+  const merged = (await readMergedFile(projectRoot)) ?? {};
+  merged.sync = { version: 1, files: manifest.files };
+  await writeMergedFile(projectRoot, merged);
 }
 
 export function normalizeProjectPath(projectRoot: string, path: string): string {

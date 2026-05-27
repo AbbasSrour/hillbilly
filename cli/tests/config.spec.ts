@@ -3,7 +3,6 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  GLOBAL_CONFIG_PATH,
   PROJECT_CONFIG_NAME,
   projectConfigPath,
   readConfig,
@@ -11,7 +10,7 @@ import {
   resolveTemplateRoot,
   writeConfig,
   writeTemplateConfig,
-} from "./config.js";
+} from "../src/config.js";
 
 const tempRoots: string[] = [];
 
@@ -63,20 +62,20 @@ describe("resolveProjectRoot", () => {
     expect(result).toBe(root);
   });
 
-  it("finds root with .copier-answers.yml present", async () => {
+  it("finds root with .hillbilly.yml present", async () => {
     const root = await makeTempDir();
     const nested = join(root, "src", "deep");
-    await write(join(root, ".copier-answers.yml"), "project_name: demo\n");
+    await write(join(root, PROJECT_CONFIG_NAME), "project_name: demo\n");
     await mkdir(nested, { recursive: true });
 
     const result = resolveProjectRoot(nested);
     expect(result).toBe(root);
   });
 
-  it("prefers .hillbilly.yml when both configs exist", async () => {
+  it("finds .hillbilly.yml config", async () => {
     const root = await makeTempDir();
     await write(join(root, PROJECT_CONFIG_NAME), "templateRepo: /repo\n");
-    await write(join(root, ".copier-answers.yml"), "project_name: demo\n");
+    await write(join(root, PROJECT_CONFIG_NAME), "project_name: demo\n");
 
     const result = resolveProjectRoot(root);
     expect(result).toBe(root);
@@ -406,34 +405,14 @@ describe("resolveTemplateRoot", () => {
     expect(result.source).toBe("project-config");
   });
 
-  it("uses global config when project config has no template", async () => {
-    const root = await makeTempDir();
-    const globalDir = dirname(GLOBAL_CONFIG_PATH);
-    const templateDir = join(root, "global-template", "template");
-    await mkdir(templateDir, { recursive: true });
-
-    await write(GLOBAL_CONFIG_PATH, `templateRepo: ${join(root, "global-template")}\n`);
-    await write(join(root, PROJECT_CONFIG_NAME), "tui:\n  theme: dark\n");
-
-    try {
-      const result = await resolveTemplateRoot(root);
-
-      expect(result).toEqual({
-        templateRoot: templateDir,
-        source: "global-config",
-        configPath: GLOBAL_CONFIG_PATH,
-      });
-    } finally {
-      await rm(GLOBAL_CONFIG_PATH, { force: true });
-    }
-  });
+  it.skip("global config removed — use project config instead", async () => {});
 
   it("uses copier answers when no config files exist", async () => {
     const root = await makeTempDir();
     const templateDir = join(root, "copier-template", "template");
     await mkdir(templateDir, { recursive: true });
     await write(
-      join(root, ".copier-answers.yml"),
+      join(root, PROJECT_CONFIG_NAME),
       `_src_path: ${join(root, "copier-template")}\nproject_name: demo\n`,
     );
 
@@ -449,7 +428,7 @@ describe("resolveTemplateRoot", () => {
     const root = await makeTempDir();
     const sourceDir = join(root, "copier-source");
     await mkdir(sourceDir, { recursive: true });
-    await write(join(root, ".copier-answers.yml"), `_src_path: ${sourceDir}\nproject_name: demo\n`);
+    await write(join(root, PROJECT_CONFIG_NAME), `_src_path: ${sourceDir}\nproject_name: demo\n`);
 
     const result = await resolveTemplateRoot(root);
 
@@ -492,7 +471,7 @@ describe("resolveTemplateRoot", () => {
       join(root, PROJECT_CONFIG_NAME),
       `templateRepo: ${join(root, "project-template")}\n`,
     );
-    await write(join(root, ".copier-answers.yml"), `_src_path: ${join(root, "copier-template")}\n`);
+    await write(join(root, PROJECT_CONFIG_NAME), `_src_path: ${join(root, "copier-template")}\n`);
 
     const result = await resolveTemplateRoot(root);
 
@@ -505,7 +484,7 @@ describe("resolveTemplateRoot", () => {
     const copierTemplate = join(root, "copier-template", "template");
     await mkdir(copierTemplate, { recursive: true });
     await write(join(root, PROJECT_CONFIG_NAME), "tui:\n  theme: dark\n");
-    await write(join(root, ".copier-answers.yml"), `_src_path: ${join(root, "copier-template")}\n`);
+    await write(join(root, PROJECT_CONFIG_NAME), `_src_path: ${join(root, "copier-template")}\n`);
 
     const result = await resolveTemplateRoot(root);
 

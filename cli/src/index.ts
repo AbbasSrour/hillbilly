@@ -3,14 +3,16 @@ import { Command } from "commander";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
+import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { scan } from "./scan.js";
 import { launchTui } from "./tui.js";
 import {
-  GLOBAL_CONFIG_PATH,
   projectConfigPath,
   resolveProjectRoot,
   resolveTemplateRoot,
   writeTemplateConfig,
+  readCopierAnswers,
+  mergeCopierAnswersIntoProject,
 } from "./config.js";
 import { readSyncManifest, setSyncFileState, syncManifestPath } from "./manifest.js";
 import { atomicCopyFile, expandMarkPath, fishCompletion } from "./helpers.js";
@@ -57,7 +59,7 @@ sync
 
 sync
   .command("mark")
-  .description("Track project files in .hillbilly-sync.yml")
+  .description("Track project files in .hillbilly.yml")
   .argument("<files...>", "Files to track for sync")
   .option("-p, --project <path>", "Path to the generated project", process.cwd())
   .action(async (files: string[], options: { project: string }) => {
@@ -117,7 +119,7 @@ sync
 
 sync
   .command("list")
-  .description("List files in .hillbilly-sync.yml")
+  .description("List files in .hillbilly.yml")
   .option("-p, --project <path>", "Path to the generated project", process.cwd())
   .action(async (options: { project: string }) => {
     const projectRoot = resolveProjectRoot(options.project);
@@ -134,8 +136,20 @@ sync
   .option("--recopy", "Use copier recopy instead of update when the old _commit is unavailable")
   .action(async (options: { project: string; vcsRef: string; recopy?: boolean }) => {
     const projectRoot = resolveProjectRoot(options.project);
-    const manifestPath = syncManifestPath(projectRoot);
-    const manifestBackup = existsSync(manifestPath) ? await readFile(manifestPath) : null;
+    const hillbillyPath = projectConfigPath(projectRoot);
+
+    // Extract Copier answers from .hillbilly.yml → temp .copier-answers.yml
+    if (existsSync(hillbillyPath)) {
+      const answers = await readCopierAnswers(projectRoot);
+      if (Object.keys(answers).length > 0) {
+        await writeFile(
+          resolve(projectRoot, ".copier-answers.yml"),
+          stringifyYaml(answers),
+          "utf-8",
+        );
+      }
+    }
+
     const copierCommand = options.recopy ? "recopy" : "update";
     console.log(`Running copier ${copierCommand} --vcs-ref ${options.vcsRef} in ${projectRoot}...`);
     const proc = Bun.spawn(["copier", copierCommand, "--vcs-ref", options.vcsRef], {
@@ -144,11 +158,17 @@ sync
     });
     const exitCode = await proc.exited;
 
-    if (manifestBackup) {
-      await writeFile(manifestPath, manifestBackup);
-      console.log(`Restored project sync manifest: ${manifestPath}`);
-    } else if (existsSync(manifestPath)) {
-      await unlink(manifestPath);
+    // Merge updated Copier answers back into .hillbilly.yml
+    const copierAnswersPath = resolve(projectRoot, ".copier-answers.yml");
+    if (existsSync(hillbillyPath) && existsSync(copierAnswersPath)) {
+      const raw = await readFile(copierAnswersPath, "utf-8");
+      const newAnswers = (parseYaml(raw) as Record<string, unknown> | null) ?? {};
+      await mergeCopierAnswersIntoProject(projectRoot, newAnswers);
+    }
+
+    // Clean up transient .copier-answers.yml
+    if (existsSync(copierAnswersPath)) {
+      await unlink(copierAnswersPath);
     }
 
     if (exitCode !== 0 && !options.recopy) {
@@ -199,8 +219,6 @@ program
 
     await mkdir(destDir, { recursive: true });
 
-    // Write to a temp file then atomically rename — handles the case
-    // where the destination binary is currently executing (ETXTBSY on copyFile).
     await atomicCopyFile(sourceBinary, destBinary, 0o755);
 
     const sourceBinDir = join(templateRoot, "bin");
@@ -226,22 +244,14 @@ const config = program.command("config").description("Manage Hillbilly CLI confi
 config
   .command("set-template")
   .argument("<path>", "Path to the local Hillbilly repo or template directory")
-  .description("Store the template source path for this project or globally")
+  .description("Store the template source path for this project")
   .option("-p, --project <path>", "Path to the generated project", process.cwd())
-  .option("--global", "Write to ~/.config/hillbilly/config.yml instead of .hillbilly.yml")
   .option("--template-subdir <path>", "Template subdirectory inside the repo", "template")
-  .action(
-    async (
-      templatePath: string,
-      options: { project: string; global?: boolean; templateSubdir: string },
-    ) => {
-      const configPath = options.global
-        ? GLOBAL_CONFIG_PATH
-        : projectConfigPath(resolveProjectRoot(options.project));
-      await writeTemplateConfig(configPath, templatePath, options.templateSubdir);
-      console.log(`Wrote ${configPath}`);
-    },
-  );
+  .action(async (templatePath: string, options: { project: string; templateSubdir: string }) => {
+    const projectRoot = resolveProjectRoot(options.project);
+    await writeTemplateConfig(projectRoot, templatePath, options.templateSubdir);
+    console.log(`Wrote ${projectConfigPath(projectRoot)}`);
+  });
 
 config
   .command("doctor")
@@ -253,9 +263,6 @@ config
     console.log(`Project: ${projectRoot}`);
     console.log(
       `Project config: ${projectConfigPath(projectRoot)} ${existsSync(projectConfigPath(projectRoot)) ? "✓" : "-"}`,
-    );
-    console.log(
-      `Global config: ${GLOBAL_CONFIG_PATH} ${existsSync(GLOBAL_CONFIG_PATH) ? "✓" : "-"}`,
     );
 
     const resolution = await resolveTemplateRoot(projectRoot, { template: options.template });

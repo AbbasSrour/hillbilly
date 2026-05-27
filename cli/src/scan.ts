@@ -3,8 +3,7 @@ import { readFile } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { createPatch } from "diff";
-import { parse as parseYaml } from "yaml";
-import { resolveProjectRoot, resolveTemplateRoot } from "./config.js";
+import { resolveProjectRoot, resolveTemplateRoot, readCopierAnswers } from "./config.js";
 import { readSyncManifest, trackedSyncPaths } from "./manifest.js";
 import { shouldExclude, walkFiles } from "./exclude.js";
 
@@ -51,14 +50,6 @@ export interface ScanResult {
 // ---------------------------------------------------------------------------
 // Copier rendering
 // ---------------------------------------------------------------------------
-
-export async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
-  const answersPath = resolve(projectRoot, ".copier-answers.yml");
-  if (!existsSync(answersPath)) return {};
-
-  const raw = await readFile(answersPath, "utf-8");
-  return (parseYaml(raw) as Record<string, unknown> | null) ?? {};
-}
 
 function renderSimpleCopierVariables(content: string, answers: Record<string, unknown>): string {
   return content.replace(/\[\[\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\]\]/g, (match, key: string) => {

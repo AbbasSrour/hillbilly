@@ -2,8 +2,8 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { pushChanges } from "./push.js";
-import { applyStagedHunks, scan } from "./scan.js";
+import { pushChanges } from "../src/push.js";
+import { applyStagedHunks, scan } from "../src/scan.js";
 
 const tempRoots: string[] = [];
 
@@ -72,7 +72,7 @@ describe("scan", () => {
     await write(join(project, "modified.txt"), "after\n");
     await write(join(project, "extra.txt"), "project only\n");
     await write(
-      join(project, ".hillbilly-sync.yml"),
+      join(project, "hillbilly.yml"),
       "version: 1\nfiles:\n- path: extra.txt\n  state: tracked\n- path: deleted.txt\n  state: untracked\n",
     );
 
