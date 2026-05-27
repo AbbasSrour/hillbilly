@@ -1,0 +1,55 @@
+/* eslint-disable */
+/** @typedef {import('../runtime.js').LocalizedString} LocalizedString */
+
+
+export const language_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`اللغة`)
+};
+
+export const current_locale = /** @type {(inputs: { locale: NonNullable<unknown> }) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`اللغة الحالية: ${i?.locale}`)
+};
+
+export const auth_login_button = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`تسجيل الدخول`)
+};
+
+export const auth_login_email_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`البريد الإلكتروني`)
+};
+
+export const auth_login_email_placeholder = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`m@example.com`)
+};
+
+export const auth_login_password_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`كلمة المرور`)
+};
+
+export const auth_login_remember_me = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`تذكرني`)
+};
+
+export const auth_login_brand_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Class Cellulars.`)
+};
+
+export const auth_login_welcome_title = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`مرحبا بك في Digital Pins.`)
+};
+
+export const auth_login_panel_title = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`إدارة مخزونك الرقمي`)
+};
+
+export const auth_login_panel_description = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`سجل الدخول لإدارة القسائم والأرقام التسلسلية وعمليات المؤسسة.`)
+};
+
+export const auth_login_footer = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Class Cellulars. جميع الحقوق محفوظة.`)
+};
+
+export const auth_error_generic = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`حدث خطأ غير متوقع!`)
+};

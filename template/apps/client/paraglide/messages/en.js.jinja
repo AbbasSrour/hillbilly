@@ -1,0 +1,55 @@
+/* eslint-disable */
+/** @typedef {import('../runtime.js').LocalizedString} LocalizedString */
+
+
+export const language_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Language`)
+};
+
+export const current_locale = /** @type {(inputs: { locale: NonNullable<unknown> }) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Current locale: ${i?.locale}`)
+};
+
+export const auth_login_button = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Login`)
+};
+
+export const auth_login_email_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Email`)
+};
+
+export const auth_login_email_placeholder = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`m@example.com`)
+};
+
+export const auth_login_password_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Password`)
+};
+
+export const auth_login_remember_me = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Remember me`)
+};
+
+export const auth_login_brand_label = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Class Cellulars.`)
+};
+
+export const auth_login_welcome_title = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Welcome to Digital Pins.`)
+};
+
+export const auth_login_panel_title = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manage your digital inventory`)
+};
+
+export const auth_login_panel_description = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Sign in to manage vouchers, serial numbers, and organization operations.`)
+};
+
+export const auth_login_footer = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Class Cellulars. All Rights Reserved.`)
+};
+
+export const auth_error_generic = /** @type {(inputs: {}) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Something went wrong!`)
+};

@@ -1,9 +1,10 @@
 #!/bin/bash
+[% raw %]
 
-# This script initializes a PostgreSQL database by creating the database and granting privileges.
+# This script imports data from a SQL file into the PostgreSQL database.
 #
 # Usage:
-#   ./scripts/init-data.sh [-c <container_name>] [-d <database_name>]
+#   ./scripts/import-data.sh [-c <container_name>] <path/to/your-data.sql>
 
 set -euo pipefail
 
@@ -34,52 +35,28 @@ fi
 # --- Configuration from environment --- #
 DB_NAME="${DB_DATABASE:-}"
 DB_USER="${DB_USERNAME:-}"
-DB_HOST="${DB_HOST:-localhost}"
-DB_PORT="${DB_PORT:-5432}"
+DB_HOST="${DB_HOST:-}"
+DB_PORT="${DB_PORT:-}"
 PGPASSWORD="${DB_PASSWORD:-}"
 
 CONTAINER_NAME="${CONTAINER_NAME:-backend-postgres-1}"
 
 # --- Functions --- #
 usage() {
-  echo "Usage: $0 [-c <container_name>] [-d <database_name>]"
-  echo ""
-  echo "Initialize PostgreSQL database by creating it and granting privileges."
-  echo ""
-  echo "Options:"
+  echo "Usage: $0 [-c <container_name>] <path/to/your-data.sql>"
   echo "  -c <container_name>  Optional: The name of the docker container. Defaults to '${CONTAINER_NAME}'."
-  echo "  -d <database_name>   Optional: Override the database name from .env file."
-  echo "  -h, --help           Display this help message."
-  echo ""
-  echo "Examples:"
-  echo "  $0"
-  echo "  $0 -c my-postgres-container"
-  echo "  $0 -d my_database"
-  exit 0
+  echo "  -h                   Display this help message."
+  exit 1
 }
 
 # --- Parse command-line options --- #
-while getopts "c:d:h-:" opt; do
+while getopts "c:h" opt; do
   case ${opt} in
     c )
       CONTAINER_NAME=$OPTARG
       ;;
-    d )
-      DB_NAME=$OPTARG
-      ;;
     h )
       usage
-      ;;
-    - )
-      case "${OPTARG}" in
-        help)
-          usage
-          ;;
-        *)
-          echo "Error: Unknown option --${OPTARG}" >&2
-          usage
-          ;;
-      esac
       ;;
     \? )
       usage
@@ -90,13 +67,35 @@ shift $((OPTIND -1))
 
 # --- Script --- #
 
-echo "--- Database Initialization Script ---"
+echo "--- Database Import Script ---"
 echo ""
 
-# --- Pre-initialization checks ---
-if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$PGPASSWORD" ]; then
+# Check if SQL file argument is provided
+if [ -z "${1:-}" ]; then
+  echo "Error: No SQL file provided." >&2
+  usage
+fi
+
+SQL_FILE="$1"
+
+# Validate SQL file exists
+if [ ! -f "$SQL_FILE" ]; then
+    echo "Error: File not found at '${SQL_FILE}'" >&2
+    exit 1
+fi
+
+# Get absolute path and file size for better output
+SQL_FILE_ABS="$(cd "$(dirname "$SQL_FILE")" && pwd)/$(basename "$SQL_FILE")"
+SQL_FILE_SIZE=$(du -h "${SQL_FILE}" | cut -f1)
+
+echo "SQL file: ${SQL_FILE_ABS}"
+echo "File size: ${SQL_FILE_SIZE}"
+echo ""
+
+# --- Pre-import checks ---
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$PGPASSWORD" ]; then
   echo "Error: One or more required database environment variables are not set." >&2
-  echo "Please ensure DB_DATABASE, DB_USERNAME, and DB_PASSWORD are set in your .env file." >&2
+  echo "Please ensure DB_DATABASE, DB_USERNAME, DB_HOST, DB_PORT, and DB_PASSWORD are set in your .env file." >&2
   exit 1
 fi
 
@@ -114,7 +113,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
   exit 1
 fi
 
-echo "Database configuration:"
+echo "Target database configuration:"
 echo "  Container: ${CONTAINER_NAME}"
 echo "  Database:  ${DB_NAME}"
 echo "  User:      ${DB_USER}"
@@ -123,46 +122,32 @@ echo "  Port:      ${DB_PORT}"
 echo ""
 
 # Confirmation prompt for safety
-read -p "⚠️  This will create database '${DB_NAME}' if it doesn't exist. Continue? (y/N): " -n 1 -r
+read -p "⚠️  This will import data into the database. Continue? (y/N): " -n 1 -r
 echo ""
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Initialization cancelled."
+    echo "Import cancelled."
     exit 0
 fi
 
-echo "Initializing database..."
-echo ""
+echo "Starting database import..."
 
-# Execute database initialization inside the container
+# The '< "$SQL_FILE"' part is what pipes the file content into psql
 if docker exec -i \
   -e PGPASSWORD="${PGPASSWORD}" \
   "${CONTAINER_NAME}" psql \
-  -v ON_ERROR_STOP=1 \
+  --single-transaction \
   --username="${DB_USER}" \
   --host="${DB_HOST}" \
   --port="${DB_PORT}" \
-  --dbname="postgres" \
-  <<-EOSQL
-	-- Check if database exists
-	SELECT 'Database already exists' AS message WHERE EXISTS (SELECT FROM pg_database WHERE datname = '${DB_NAME}');
-	
-	-- Create database if it doesn't exist
-	CREATE DATABASE ${DB_NAME};
-	
-	-- Grant privileges
-	GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USER};
-EOSQL
-then
+  --dbname="${DB_NAME}" < "${SQL_FILE}"; then
+  
   echo ""
-  echo "✓ Database initialization completed successfully!"
-  echo ""
-  echo "Next steps:"
-  echo "  - Run migrations: bun migration:update"
-  echo "  - Run seeds: bun seed"
+  echo "✓ Import completed successfully!"
 else
   echo "" >&2
-  echo "✗ Database initialization failed." >&2
+  echo "✗ Import failed. Changes have been rolled back (--single-transaction)." >&2
   exit 1
 fi
 
 echo "--- End of Script ---"
+[% endraw %]
