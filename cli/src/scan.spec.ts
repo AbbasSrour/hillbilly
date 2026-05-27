@@ -126,6 +126,7 @@ describe("scan", () => {
       result.files,
       new Map([["apps/backend/patches/patch-nest-start.cjs", new Set([0])]]),
       template,
+      "demo",
     );
 
     await expect(

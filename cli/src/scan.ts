@@ -52,7 +52,7 @@ export interface ScanResult {
 // Copier rendering
 // ---------------------------------------------------------------------------
 
-async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
+export async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
   const answersPath = resolve(projectRoot, ".copier-answers.yml");
   if (!existsSync(answersPath)) return {};
 

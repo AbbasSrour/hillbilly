@@ -15,6 +15,7 @@ import { basename, dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { useState, useEffect } from "react";
 import type { SyncFile, ScanResult, DiffHunk } from "./scan.js";
+import { readCopierAnswers } from "./scan.js";
 import type { PushResult } from "./push.js";
 import { pushChanges } from "./push.js";
 import { GLOBAL_CONFIG_PATH, readConfig, writeConfig } from "./config.js";
@@ -708,8 +709,10 @@ async function doPush(
   setState((p) => ({ ...p, pushStatus: "pushing", pushMessage: "", pushConfirmOpen: false }));
 
   try {
-    const templateRoot = ""; // not needed, paths are absolute in SyncFile
-    const result: PushResult = await pushChanges(currentFiles, staged, templateRoot);
+    const templateRoot = "";
+    const answers = await readCopierAnswers(currentScanResult.projectRoot);
+    const projectName = typeof answers.project_name === "string" ? answers.project_name : undefined;
+    const result: PushResult = await pushChanges(currentFiles, staged, templateRoot, projectName);
     if (result.failed.length > 0) {
       setState((p) => ({
         ...p,

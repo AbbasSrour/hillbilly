@@ -9,6 +9,13 @@ export interface PushResult {
   failed: { path: string; error: string }[];
 }
 
+function reverseRender(content: string, projectName: string): string {
+  if (!projectName) return content;
+  return content
+    .replaceAll(`@${projectName}/`, `@[[ project_name ]]/`)
+    .replaceAll(projectName, "[[ project_name ]]");
+}
+
 /**
  * Push staged changes back to the hillbilly template.
  *
@@ -16,11 +23,13 @@ export interface PushResult {
  * @param staged - Map<projectPath, Set<hunkIndex>> — which hunks to push per file.
  *                 If a file is staged with an empty set, push ALL changes for that file.
  * @param templateRoot - root of the template directory
+ * @param projectName - Copier project_name, used to reverse-render [[ project_name ]] when writing to template
  */
 export async function pushChanges(
   files: SyncFile[],
   staged: Map<string, Set<number>>,
   _templateRoot: string,
+  projectName?: string,
 ): Promise<PushResult> {
   const result: PushResult = {
     written: [],
@@ -47,7 +56,11 @@ export async function pushChanges(
         if (file.projectContent === undefined) {
           throw new Error("projectContent is missing for moved/renamed file");
         }
-        await writeFile(file.templatePath, file.projectContent, "utf-8");
+        await writeFile(
+          file.templatePath,
+          reverseRender(file.projectContent, projectName ?? ""),
+          "utf-8",
+        );
         result.written.push(file.templatePath);
         if (file.movedFromTemplatePath) {
           await unlink(file.movedFromTemplatePath);
@@ -57,27 +70,28 @@ export async function pushChanges(
         if (file.projectContent === undefined) {
           throw new Error("projectContent is missing for added file");
         }
-        await writeFile(file.templatePath, file.projectContent, "utf-8");
+        await writeFile(
+          file.templatePath,
+          reverseRender(file.projectContent, projectName ?? ""),
+          "utf-8",
+        );
         result.written.push(file.templatePath);
       } else if (file.status === "modified") {
         let newContent: string;
 
         if (file.hunks && file.hunks.length > 0) {
-          // Determine which hunk indices to apply
           const indicesToApply: Set<number> =
             stagedIndices.size === 0 ? new Set(file.hunks.map((_, i) => i)) : stagedIndices;
 
-          // Read current template content
           const templateContent = await readFile(file.templatePath, "utf-8");
 
-          // Apply selected hunks
           newContent = applyStagedHunks(templateContent, file.hunks, indicesToApply);
+          newContent = reverseRender(newContent, projectName ?? "");
         } else {
-          // No hunks available — write project content directly
           if (file.projectContent === undefined) {
             throw new Error("projectContent is missing for modified file with no hunks");
           }
-          newContent = file.projectContent;
+          newContent = reverseRender(file.projectContent, projectName ?? "");
         }
 
         await writeFile(file.templatePath, newContent, "utf-8");
