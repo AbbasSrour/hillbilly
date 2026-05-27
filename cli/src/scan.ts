@@ -69,13 +69,19 @@ function renderSimpleCopierVariables(content: string, answers: Record<string, un
   });
 }
 
+const RAW_BLOCK_RE = /\[%-?\s*raw\s*-?%\]([\s\S]*?)\[%-?\s*endraw\s*-?%\]/g;
+
+function stripRawBlocks(content: string): string {
+  return content.replace(RAW_BLOCK_RE, "$1");
+}
+
 function renderTemplateForComparison(
   templatePath: string,
   templateContent: string,
   answers: Record<string, unknown>,
 ): string {
   if (!templatePath.endsWith(".jinja")) return templateContent;
-  return renderSimpleCopierVariables(templateContent, answers);
+  return stripRawBlocks(renderSimpleCopierVariables(templateContent, answers));
 }
 
 function toProjectPath(templateRelativePath: string): string {
@@ -375,8 +381,9 @@ export function applyStagedHunks(
   hunks: DiffHunk[],
   stagedHunkIndices: Set<number>,
 ): string {
-  const lines = templateContent === "" ? [] : templateContent.split("\n");
-  const templateEndsWithNewline = templateContent.endsWith("\n");
+  const stripped = stripRawBlocks(templateContent);
+  const lines = stripped === "" ? [] : stripped.split("\n");
+  const templateEndsWithNewline = stripped.endsWith("\n");
   let resultEndsWithNewline = templateEndsWithNewline;
 
   // Apply hunks in reverse order to avoid index shifting
