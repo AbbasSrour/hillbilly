@@ -131,11 +131,11 @@ if /usr/bin/docker exec -i \
         echo "Error: Backup file was created but is empty." >&2
         rm -f "${BACKUP_FILE}"
         exit 1
-fi
-[% endraw %]
+    fi
 else
     echo "✗ Backup failed." >&2
     # Remove incomplete backup file if it exists
     rm -f "${BACKUP_FILE}" || true
     exit 1
 fi
+[% endraw %]
