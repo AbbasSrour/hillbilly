@@ -1,22 +1,23 @@
 # ChangePasswordRequest
 
+
 ## Properties
 
-| Name                    | Type        | Description                      | Notes                             |
-| ----------------------- | ----------- | -------------------------------- | --------------------------------- |
-| **newPassword**         | **string**  | The new password to set          | [default to undefined]            |
-| **currentPassword**     | **string**  | The current password is required | [default to undefined]            |
-| **revokeOtherSessions** | **boolean** | Must be a boolean value          | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**newPassword** | **string** | The new password to set | [default to undefined]
+**currentPassword** | **string** | The current password is required | [default to undefined]
+**revokeOtherSessions** | **boolean** | Must be a boolean value | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ChangePasswordRequest } from "./api";
+import { ChangePasswordRequest } from './api';
 
 const instance: ChangePasswordRequest = {
-  newPassword,
-  currentPassword,
-  revokeOtherSessions,
+    newPassword,
+    currentPassword,
+    revokeOtherSessions,
 };
 ```
 

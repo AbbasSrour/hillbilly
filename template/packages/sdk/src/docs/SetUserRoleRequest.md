@@ -1,20 +1,21 @@
 # SetUserRoleRequest
 
+
 ## Properties
 
-| Name       | Type       | Description                                                                                                      | Notes                  |
-| ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| **userId** | **string** | The user id                                                                                                      | [default to undefined] |
-| **role**   | **string** | The role to set, this can be a string or an array of strings. Eg: &#x60;admin&#x60; or &#x60;[admin, user]&#x60; | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**userId** | **string** | The user id | [default to undefined]
+**role** | **string** | The role to set, this can be a string or an array of strings. Eg: &#x60;admin&#x60; or &#x60;[admin, user]&#x60; | [default to undefined]
 
 ## Example
 
 ```typescript
-import { SetUserRoleRequest } from "./api";
+import { SetUserRoleRequest } from './api';
 
 const instance: SetUserRoleRequest = {
-  userId,
-  role,
+    userId,
+    role,
 };
 ```
 

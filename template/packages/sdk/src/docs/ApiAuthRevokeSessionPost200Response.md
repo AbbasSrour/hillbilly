@@ -1,18 +1,19 @@
 # ApiAuthRevokeSessionPost200Response
 
+
 ## Properties
 
-| Name       | Type        | Description                                       | Notes                  |
-| ---------- | ----------- | ------------------------------------------------- | ---------------------- |
-| **status** | **boolean** | Indicates if the session was revoked successfully | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**status** | **boolean** | Indicates if the session was revoked successfully | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthRevokeSessionPost200Response } from "./api";
+import { ApiAuthRevokeSessionPost200Response } from './api';
 
 const instance: ApiAuthRevokeSessionPost200Response = {
-  status,
+    status,
 };
 ```
 

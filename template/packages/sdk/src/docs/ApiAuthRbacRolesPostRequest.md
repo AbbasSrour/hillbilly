@@ -1,22 +1,23 @@
 # ApiAuthRbacRolesPostRequest
 
+
 ## Properties
 
-| Name              | Type                 | Description | Notes                             |
-| ----------------- | -------------------- | ----------- | --------------------------------- |
-| **name**          | **string**           |             | [default to undefined]            |
-| **description**   | **string**           |             | [optional] [default to undefined] |
-| **permissionIds** | **Array&lt;any&gt;** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **string** |  | [default to undefined]
+**description** | **string** |  | [optional] [default to undefined]
+**permissionIds** | **Array&lt;any&gt;** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacRolesPostRequest } from "./api";
+import { ApiAuthRbacRolesPostRequest } from './api';
 
 const instance: ApiAuthRbacRolesPostRequest = {
-  name,
-  description,
-  permissionIds,
+    name,
+    description,
+    permissionIds,
 };
 ```
 

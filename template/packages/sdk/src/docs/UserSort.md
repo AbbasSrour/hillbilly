@@ -1,13 +1,14 @@
 # UserSort
 
+
 ## Enum
 
-- `Id` (value: `'id'`)
+* `Id` (value: `'id'`)
 
-- `Name` (value: `'name'`)
+* `Name` (value: `'name'`)
 
-- `CreatedAt` (value: `'createdAt'`)
+* `CreatedAt` (value: `'createdAt'`)
 
-- `UpdatedAt` (value: `'updatedAt'`)
+* `UpdatedAt` (value: `'updatedAt'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

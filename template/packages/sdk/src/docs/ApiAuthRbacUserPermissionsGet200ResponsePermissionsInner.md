@@ -1,24 +1,25 @@
 # ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner
 
+
 ## Properties
 
-| Name            | Type       | Description | Notes                             |
-| --------------- | ---------- | ----------- | --------------------------------- |
-| **id**          | **string** |             | [default to undefined]            |
-| **name**        | **string** |             | [default to undefined]            |
-| **code**        | **string** |             | [default to undefined]            |
-| **description** | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
+**code** | **string** |  | [default to undefined]
+**description** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner } from "./api";
+import { ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner } from './api';
 
 const instance: ApiAuthRbacUserPermissionsGet200ResponsePermissionsInner = {
-  id,
-  name,
-  code,
-  description,
+    id,
+    name,
+    code,
+    description,
 };
 ```
 

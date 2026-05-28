@@ -1,24 +1,25 @@
 # Permission
 
+
 ## Properties
 
-| Name            | Type       | Description | Notes                             |
-| --------------- | ---------- | ----------- | --------------------------------- |
-| **id**          | **string** |             | [optional] [default to undefined] |
-| **name**        | **string** |             | [default to undefined]            |
-| **code**        | **string** |             | [default to undefined]            |
-| **description** | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** |  | [optional] [default to undefined]
+**name** | **string** |  | [default to undefined]
+**code** | **string** |  | [default to undefined]
+**description** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { Permission } from "./api";
+import { Permission } from './api';
 
 const instance: Permission = {
-  id,
-  name,
-  code,
-  description,
+    id,
+    name,
+    code,
+    description,
 };
 ```
 

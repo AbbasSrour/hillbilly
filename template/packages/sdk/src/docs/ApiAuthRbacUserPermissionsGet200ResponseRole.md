@@ -1,20 +1,21 @@
 # ApiAuthRbacUserPermissionsGet200ResponseRole
 
+
 ## Properties
 
-| Name     | Type       | Description | Notes                  |
-| -------- | ---------- | ----------- | ---------------------- |
-| **id**   | **string** |             | [default to undefined] |
-| **name** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthRbacUserPermissionsGet200ResponseRole } from "./api";
+import { ApiAuthRbacUserPermissionsGet200ResponseRole } from './api';
 
 const instance: ApiAuthRbacUserPermissionsGet200ResponseRole = {
-  id,
-  name,
+    id,
+    name,
 };
 ```
 

@@ -1,20 +1,21 @@
 # ApiAuthUnlinkAccountPostRequest
 
+
 ## Properties
 
-| Name           | Type       | Description | Notes                             |
-| -------------- | ---------- | ----------- | --------------------------------- |
-| **providerId** | **string** |             | [default to undefined]            |
-| **accountId**  | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**providerId** | **string** |  | [default to undefined]
+**accountId** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthUnlinkAccountPostRequest } from "./api";
+import { ApiAuthUnlinkAccountPostRequest } from './api';
 
 const instance: ApiAuthUnlinkAccountPostRequest = {
-  providerId,
-  accountId,
+    providerId,
+    accountId,
 };
 ```
 

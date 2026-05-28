@@ -1,26 +1,27 @@
 # LinkSocialAccountRequestIdToken
 
+
 ## Properties
 
-| Name             | Type                 | Description | Notes                             |
-| ---------------- | -------------------- | ----------- | --------------------------------- |
-| **token**        | **string**           |             | [default to undefined]            |
-| **nonce**        | **string**           |             | [optional] [default to undefined] |
-| **accessToken**  | **string**           |             | [optional] [default to undefined] |
-| **refreshToken** | **string**           |             | [optional] [default to undefined] |
-| **scopes**       | **Array&lt;any&gt;** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**token** | **string** |  | [default to undefined]
+**nonce** | **string** |  | [optional] [default to undefined]
+**accessToken** | **string** |  | [optional] [default to undefined]
+**refreshToken** | **string** |  | [optional] [default to undefined]
+**scopes** | **Array&lt;any&gt;** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { LinkSocialAccountRequestIdToken } from "./api";
+import { LinkSocialAccountRequestIdToken } from './api';
 
 const instance: LinkSocialAccountRequestIdToken = {
-  token,
-  nonce,
-  accessToken,
-  refreshToken,
-  scopes,
+    token,
+    nonce,
+    accessToken,
+    refreshToken,
+    scopes,
 };
 ```
 

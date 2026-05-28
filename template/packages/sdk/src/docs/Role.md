@@ -1,22 +1,23 @@
 # Role
 
+
 ## Properties
 
-| Name            | Type       | Description | Notes                             |
-| --------------- | ---------- | ----------- | --------------------------------- |
-| **id**          | **string** |             | [optional] [default to undefined] |
-| **name**        | **string** |             | [default to undefined]            |
-| **description** | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** |  | [optional] [default to undefined]
+**name** | **string** |  | [default to undefined]
+**description** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { Role } from "./api";
+import { Role } from './api';
 
 const instance: Role = {
-  id,
-  name,
-  description,
+    id,
+    name,
+    description,
 };
 ```
 

@@ -1,20 +1,21 @@
 # GetSession200Response
 
+
 ## Properties
 
-| Name        | Type                      | Description | Notes                  |
-| ----------- | ------------------------- | ----------- | ---------------------- |
-| **session** | [**Session**](Session.md) |             | [default to undefined] |
-| **user**    | [**User**](User.md)       |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**session** | [**Session**](Session.md) |  | [default to undefined]
+**user** | [**User**](User.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { GetSession200Response } from "./api";
+import { GetSession200Response } from './api';
 
 const instance: GetSession200Response = {
-  session,
-  user,
+    session,
+    user,
 };
 ```
 

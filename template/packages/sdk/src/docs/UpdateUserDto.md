@@ -1,24 +1,25 @@
 # UpdateUserDto
 
+
 ## Properties
 
-| Name            | Type                                        | Description | Notes                             |
-| --------------- | ------------------------------------------- | ----------- | --------------------------------- |
-| **email**       | **string**                                  |             | [optional] [default to undefined] |
-| **phoneNumber** | **string**                                  |             | [optional] [default to undefined] |
-| **role**        | **string**                                  |             | [optional] [default to undefined] |
-| **profile**     | [**UpdateProfileDto**](UpdateProfileDto.md) |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**email** | **string** |  | [optional] [default to undefined]
+**phoneNumber** | **string** |  | [optional] [default to undefined]
+**role** | **string** |  | [optional] [default to undefined]
+**profile** | [**UpdateProfileDto**](UpdateProfileDto.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { UpdateUserDto } from "./api";
+import { UpdateUserDto } from './api';
 
 const instance: UpdateUserDto = {
-  email,
-  phoneNumber,
-  role,
-  profile,
+    email,
+    phoneNumber,
+    role,
+    profile,
 };
 ```
 

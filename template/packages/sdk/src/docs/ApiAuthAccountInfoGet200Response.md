@@ -1,20 +1,21 @@
 # ApiAuthAccountInfoGet200Response
 
+
 ## Properties
 
-| Name     | Type                                                                                | Description | Notes                  |
-| -------- | ----------------------------------------------------------------------------------- | ----------- | ---------------------- |
-| **user** | [**ApiAuthAccountInfoGet200ResponseUser**](ApiAuthAccountInfoGet200ResponseUser.md) |             | [default to undefined] |
-| **data** | **{ [key: string]: any; }**                                                         |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**user** | [**ApiAuthAccountInfoGet200ResponseUser**](ApiAuthAccountInfoGet200ResponseUser.md) |  | [default to undefined]
+**data** | **{ [key: string]: any; }** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthAccountInfoGet200Response } from "./api";
+import { ApiAuthAccountInfoGet200Response } from './api';
 
 const instance: ApiAuthAccountInfoGet200Response = {
-  user,
-  data,
+    user,
+    data,
 };
 ```
 

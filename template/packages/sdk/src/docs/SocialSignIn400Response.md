@@ -1,18 +1,19 @@
 # SocialSignIn400Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                  |
-| ----------- | ---------- | ----------- | ---------------------- |
-| **message** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { SocialSignIn400Response } from "./api";
+import { SocialSignIn400Response } from './api';
 
 const instance: SocialSignIn400Response = {
-  message,
+    message,
 };
 ```
 

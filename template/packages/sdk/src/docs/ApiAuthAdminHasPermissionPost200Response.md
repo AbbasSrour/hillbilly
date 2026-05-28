@@ -1,20 +1,21 @@
 # ApiAuthAdminHasPermissionPost200Response
 
+
 ## Properties
 
-| Name        | Type        | Description | Notes                             |
-| ----------- | ----------- | ----------- | --------------------------------- |
-| **error**   | **string**  |             | [optional] [default to undefined] |
-| **success** | **boolean** |             | [default to undefined]            |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**error** | **string** |  | [optional] [default to undefined]
+**success** | **boolean** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthAdminHasPermissionPost200Response } from "./api";
+import { ApiAuthAdminHasPermissionPost200Response } from './api';
 
 const instance: ApiAuthAdminHasPermissionPost200Response = {
-  error,
-  success,
+    error,
+    success,
 };
 ```
 

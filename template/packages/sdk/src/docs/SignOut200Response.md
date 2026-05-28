@@ -1,18 +1,19 @@
 # SignOut200Response
 
+
 ## Properties
 
-| Name        | Type        | Description | Notes                             |
-| ----------- | ----------- | ----------- | --------------------------------- |
-| **success** | **boolean** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**success** | **boolean** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { SignOut200Response } from "./api";
+import { SignOut200Response } from './api';
 
 const instance: SignOut200Response = {
-  success,
+    success,
 };
 ```
 

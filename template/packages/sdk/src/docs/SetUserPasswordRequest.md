@@ -1,20 +1,21 @@
 # SetUserPasswordRequest
 
+
 ## Properties
 
-| Name            | Type       | Description      | Notes                  |
-| --------------- | ---------- | ---------------- | ---------------------- |
-| **newPassword** | **string** | The new password | [default to undefined] |
-| **userId**      | **string** | The user id      | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**newPassword** | **string** | The new password | [default to undefined]
+**userId** | **string** | The user id | [default to undefined]
 
 ## Example
 
 ```typescript
-import { SetUserPasswordRequest } from "./api";
+import { SetUserPasswordRequest } from './api';
 
 const instance: SetUserPasswordRequest = {
-  newPassword,
-  userId,
+    newPassword,
+    userId,
 };
 ```
 

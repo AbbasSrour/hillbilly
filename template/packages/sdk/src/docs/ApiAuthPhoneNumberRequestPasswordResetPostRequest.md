@@ -1,18 +1,19 @@
 # ApiAuthPhoneNumberRequestPasswordResetPostRequest
 
+
 ## Properties
 
-| Name            | Type       | Description | Notes                  |
-| --------------- | ---------- | ----------- | ---------------------- |
-| **phoneNumber** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**phoneNumber** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthPhoneNumberRequestPasswordResetPostRequest } from "./api";
+import { ApiAuthPhoneNumberRequestPasswordResetPostRequest } from './api';
 
 const instance: ApiAuthPhoneNumberRequestPasswordResetPostRequest = {
-  phoneNumber,
+    phoneNumber,
 };
 ```
 

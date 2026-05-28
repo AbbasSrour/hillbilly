@@ -1,18 +1,19 @@
 # ApiAuthPhoneNumberResetPasswordPost200Response
 
+
 ## Properties
 
-| Name       | Type        | Description                                      | Notes                  |
-| ---------- | ----------- | ------------------------------------------------ | ---------------------- |
-| **status** | **boolean** | Indicates if the password was reset successfully | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**status** | **boolean** | Indicates if the password was reset successfully | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthPhoneNumberResetPasswordPost200Response } from "./api";
+import { ApiAuthPhoneNumberResetPasswordPost200Response } from './api';
 
 const instance: ApiAuthPhoneNumberResetPasswordPost200Response = {
-  status,
+    status,
 };
 ```
 

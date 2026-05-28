@@ -1,44 +1,43 @@
 # DefaultApi
 
-All URIs are relative to _http://localhost_
+All URIs are relative to *http://localhost*
 
-| Method                                                                | HTTP request                               | Description |
-| --------------------------------------------------------------------- | ------------------------------------------ | ----------- |
-| [**apiAuthAccountInfoGet**](#apiauthaccountinfoget)                   | **GET** /api/auth/account-info             |             |
-| [**apiAuthCallbackIdGet**](#apiauthcallbackidget)                     | **GET** /api/auth/callback/{id}            |             |
-| [**apiAuthCallbackIdPost**](#apiauthcallbackidpost)                   | **POST** /api/auth/callback/{id}           |             |
-| [**apiAuthDeleteUserCallbackGet**](#apiauthdeleteusercallbackget)     | **GET** /api/auth/delete-user/callback     |             |
-| [**apiAuthErrorGet**](#apiautherrorget)                               | **GET** /api/auth/error                    |             |
-| [**apiAuthGetAccessTokenPost**](#apiauthgetaccesstokenpost)           | **POST** /api/auth/get-access-token        |             |
-| [**apiAuthOkGet**](#apiauthokget)                                     | **GET** /api/auth/ok                       |             |
-| [**apiAuthRefreshTokenPost**](#apiauthrefreshtokenpost)               | **POST** /api/auth/refresh-token           |             |
-| [**apiAuthRevokeOtherSessionsPost**](#apiauthrevokeothersessionspost) | **POST** /api/auth/revoke-other-sessions   |             |
-| [**apiAuthRevokeSessionPost**](#apiauthrevokesessionpost)             | **POST** /api/auth/revoke-session          |             |
-| [**apiAuthRevokeSessionsPost**](#apiauthrevokesessionspost)           | **POST** /api/auth/revoke-sessions         |             |
-| [**apiAuthUnlinkAccountPost**](#apiauthunlinkaccountpost)             | **POST** /api/auth/unlink-account          |             |
-| [**apiAuthVerifyEmailGet**](#apiauthverifyemailget)                   | **GET** /api/auth/verify-email             |             |
-| [**changeEmail**](#changeemail)                                       | **POST** /api/auth/change-email            |             |
-| [**changePassword**](#changepassword)                                 | **POST** /api/auth/change-password         |             |
-| [**deleteUser**](#deleteuser)                                         | **POST** /api/auth/delete-user             |             |
-| [**getSession**](#getsession)                                         | **GET** /api/auth/get-session              |             |
-| [**getSession1**](#getsession1)                                       | **POST** /api/auth/get-session             |             |
-| [**linkSocialAccount**](#linksocialaccount)                           | **POST** /api/auth/link-social             |             |
-| [**listUserAccounts**](#listuseraccounts)                             | **GET** /api/auth/list-accounts            |             |
-| [**listUserSessions**](#listusersessions)                             | **GET** /api/auth/list-sessions            |             |
-| [**requestPasswordReset**](#requestpasswordreset)                     | **POST** /api/auth/request-password-reset  |             |
-| [**resetPassword**](#resetpassword)                                   | **POST** /api/auth/reset-password          |             |
-| [**resetPasswordCallback**](#resetpasswordcallback)                   | **GET** /api/auth/reset-password/{token}   |             |
-| [**sendVerificationEmail**](#sendverificationemail)                   | **POST** /api/auth/send-verification-email |             |
-| [**signInEmail**](#signinemail)                                       | **POST** /api/auth/sign-in/email           |             |
-| [**signOut**](#signout)                                               | **POST** /api/auth/sign-out                |             |
-| [**signUpWithEmailAndPassword**](#signupwithemailandpassword)         | **POST** /api/auth/sign-up/email           |             |
-| [**socialSignIn**](#socialsignin)                                     | **POST** /api/auth/sign-in/social          |             |
-| [**updateSession**](#updatesession)                                   | **POST** /api/auth/update-session          |             |
-| [**updateUser**](#updateuser)                                         | **POST** /api/auth/update-user             |             |
-| [**verifyPassword**](#verifypassword)                                 | **POST** /api/auth/verify-password         |             |
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**apiAuthAccountInfoGet**](#apiauthaccountinfoget) | **GET** /api/auth/account-info | |
+|[**apiAuthCallbackIdGet**](#apiauthcallbackidget) | **GET** /api/auth/callback/{id} | |
+|[**apiAuthCallbackIdPost**](#apiauthcallbackidpost) | **POST** /api/auth/callback/{id} | |
+|[**apiAuthDeleteUserCallbackGet**](#apiauthdeleteusercallbackget) | **GET** /api/auth/delete-user/callback | |
+|[**apiAuthErrorGet**](#apiautherrorget) | **GET** /api/auth/error | |
+|[**apiAuthGetAccessTokenPost**](#apiauthgetaccesstokenpost) | **POST** /api/auth/get-access-token | |
+|[**apiAuthOkGet**](#apiauthokget) | **GET** /api/auth/ok | |
+|[**apiAuthRefreshTokenPost**](#apiauthrefreshtokenpost) | **POST** /api/auth/refresh-token | |
+|[**apiAuthRevokeOtherSessionsPost**](#apiauthrevokeothersessionspost) | **POST** /api/auth/revoke-other-sessions | |
+|[**apiAuthRevokeSessionPost**](#apiauthrevokesessionpost) | **POST** /api/auth/revoke-session | |
+|[**apiAuthRevokeSessionsPost**](#apiauthrevokesessionspost) | **POST** /api/auth/revoke-sessions | |
+|[**apiAuthUnlinkAccountPost**](#apiauthunlinkaccountpost) | **POST** /api/auth/unlink-account | |
+|[**apiAuthVerifyEmailGet**](#apiauthverifyemailget) | **GET** /api/auth/verify-email | |
+|[**changeEmail**](#changeemail) | **POST** /api/auth/change-email | |
+|[**changePassword**](#changepassword) | **POST** /api/auth/change-password | |
+|[**deleteUser**](#deleteuser) | **POST** /api/auth/delete-user | |
+|[**getSession**](#getsession) | **GET** /api/auth/get-session | |
+|[**getSession1**](#getsession1) | **POST** /api/auth/get-session | |
+|[**linkSocialAccount**](#linksocialaccount) | **POST** /api/auth/link-social | |
+|[**listUserAccounts**](#listuseraccounts) | **GET** /api/auth/list-accounts | |
+|[**listUserSessions**](#listusersessions) | **GET** /api/auth/list-sessions | |
+|[**requestPasswordReset**](#requestpasswordreset) | **POST** /api/auth/request-password-reset | |
+|[**resetPassword**](#resetpassword) | **POST** /api/auth/reset-password | |
+|[**resetPasswordCallback**](#resetpasswordcallback) | **GET** /api/auth/reset-password/{token} | |
+|[**sendVerificationEmail**](#sendverificationemail) | **POST** /api/auth/send-verification-email | |
+|[**signInEmail**](#signinemail) | **POST** /api/auth/sign-in/email | |
+|[**signOut**](#signout) | **POST** /api/auth/sign-out | |
+|[**signUpWithEmailAndPassword**](#signupwithemailandpassword) | **POST** /api/auth/sign-up/email | |
+|[**socialSignIn**](#socialsignin) | **POST** /api/auth/sign-in/social | |
+|[**updateSession**](#updatesession) | **POST** /api/auth/update-session | |
+|[**updateUser**](#updateuser) | **POST** /api/auth/update-user | |
+|[**verifyPassword**](#verifypassword) | **POST** /api/auth/verify-password | |
 
 # **apiAuthAccountInfoGet**
-
 > ApiAuthAccountInfoGet200Response apiAuthAccountInfoGet()
 
 Get the account info provided by the provider
@@ -46,7 +45,10 @@ Get the account info provided by the provider
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -55,8 +57,8 @@ const { status, data } = await apiInstance.apiAuthAccountInfoGet();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -68,45 +70,51 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthCallbackIdGet**
-
 > apiAuthCallbackIdGet()
+
 
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.apiAuthCallbackIdGet(id);
+const { status, data } = await apiInstance.apiAuthCallbackIdGet(
+    id
+);
 ```
 
 ### Parameters
 
-| Name   | Type         | Description | Notes                 |
-| ------ | ------------ | ----------- | --------------------- |
-| **id** | [**string**] |             | defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**string**] |  | defaults to undefined|
+
 
 ### Return type
 
@@ -118,30 +126,33 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthCallbackIdPost**
-
 > apiAuthCallbackIdPost()
+
 
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -149,15 +160,19 @@ const apiInstance = new DefaultApi(configuration);
 let id: string; // (default to undefined)
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.apiAuthCallbackIdPost(id, body);
+const { status, data } = await apiInstance.apiAuthCallbackIdPost(
+    id,
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type         | Description | Notes                 |
-| -------- | ------------ | ----------- | --------------------- |
-| **body** | **object**   |             |                       |
-| **id**   | [**string**] |             | defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+| **id** | [**string**] |  | defaults to undefined|
+
 
 ### Return type
 
@@ -169,24 +184,23 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthDeleteUserCallbackGet**
-
 > ApiAuthDeleteUserCallbackGet200Response apiAuthDeleteUserCallbackGet()
 
 Callback to complete user deletion with verification token
@@ -194,7 +208,10 @@ Callback to complete user deletion with verification token
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -202,15 +219,19 @@ const apiInstance = new DefaultApi(configuration);
 let token: string; // (optional) (default to undefined)
 let callbackURL: string; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.apiAuthDeleteUserCallbackGet(token, callbackURL);
+const { status, data } = await apiInstance.apiAuthDeleteUserCallbackGet(
+    token,
+    callbackURL
+);
 ```
 
 ### Parameters
 
-| Name            | Type         | Description | Notes                            |
-| --------------- | ------------ | ----------- | -------------------------------- |
-| **token**       | [**string**] |             | (optional) defaults to undefined |
-| **callbackURL** | [**string**] |             | (optional) defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **token** | [**string**] |  | (optional) defaults to undefined|
+| **callbackURL** | [**string**] |  | (optional) defaults to undefined|
+
 
 ### Return type
 
@@ -222,25 +243,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | User successfully deleted                                                                | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | User successfully deleted |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthErrorGet**
-
 > string apiAuthErrorGet()
 
 Displays an error page
@@ -248,7 +268,10 @@ Displays an error page
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -257,8 +280,8 @@ const { status, data } = await apiInstance.apiAuthErrorGet();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -270,25 +293,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: text/html, application/json
+ - **Content-Type**: Not defined
+ - **Accept**: text/html, application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthGetAccessTokenPost**
-
 > ApiAuthGetAccessTokenPost200Response apiAuthGetAccessTokenPost(apiAuthRefreshTokenPostRequest)
 
 Get a valid access token, doing a refresh if needed
@@ -296,7 +318,11 @@ Get a valid access token, doing a refresh if needed
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ApiAuthRefreshTokenPostRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ApiAuthRefreshTokenPostRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -304,15 +330,16 @@ const apiInstance = new DefaultApi(configuration);
 let apiAuthRefreshTokenPostRequest: ApiAuthRefreshTokenPostRequest; //
 
 const { status, data } = await apiInstance.apiAuthGetAccessTokenPost(
-  apiAuthRefreshTokenPostRequest,
+    apiAuthRefreshTokenPostRequest
 );
 ```
 
 ### Parameters
 
-| Name                               | Type                               | Description | Notes |
-| ---------------------------------- | ---------------------------------- | ----------- | ----- |
-| **apiAuthRefreshTokenPostRequest** | **ApiAuthRefreshTokenPostRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **apiAuthRefreshTokenPostRequest** | **ApiAuthRefreshTokenPostRequest**|  | |
+
 
 ### Return type
 
@@ -324,25 +351,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | A Valid access token                                                                     | -                |
-| **400**     | Invalid refresh token or provider configuration                                          | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | A Valid access token |  -  |
+|**400** | Invalid refresh token or provider configuration |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthOkGet**
-
 > ApiAuthOkGet200Response apiAuthOkGet()
 
 Check if the API is working
@@ -350,7 +376,10 @@ Check if the API is working
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -359,8 +388,8 @@ const { status, data } = await apiInstance.apiAuthOkGet();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -372,25 +401,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | API is working                                                                           | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | API is working |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthRefreshTokenPost**
-
 > ApiAuthRefreshTokenPost200Response apiAuthRefreshTokenPost(apiAuthRefreshTokenPostRequest)
 
 Refresh the access token using a refresh token
@@ -398,21 +426,28 @@ Refresh the access token using a refresh token
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ApiAuthRefreshTokenPostRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ApiAuthRefreshTokenPostRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let apiAuthRefreshTokenPostRequest: ApiAuthRefreshTokenPostRequest; //
 
-const { status, data } = await apiInstance.apiAuthRefreshTokenPost(apiAuthRefreshTokenPostRequest);
+const { status, data } = await apiInstance.apiAuthRefreshTokenPost(
+    apiAuthRefreshTokenPostRequest
+);
 ```
 
 ### Parameters
 
-| Name                               | Type                               | Description | Notes |
-| ---------------------------------- | ---------------------------------- | ----------- | ----- |
-| **apiAuthRefreshTokenPostRequest** | **ApiAuthRefreshTokenPostRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **apiAuthRefreshTokenPostRequest** | **ApiAuthRefreshTokenPostRequest**|  | |
+
 
 ### Return type
 
@@ -424,25 +459,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Access token refreshed successfully                                                      | -                |
-| **400**     | Invalid refresh token or provider configuration                                          | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Access token refreshed successfully |  -  |
+|**400** | Invalid refresh token or provider configuration |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthRevokeOtherSessionsPost**
-
 > ApiAuthRevokeOtherSessionsPost200Response apiAuthRevokeOtherSessionsPost()
 
 Revoke all other sessions for the user except the current one
@@ -450,21 +484,27 @@ Revoke all other sessions for the user except the current one
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.apiAuthRevokeOtherSessionsPost(body);
+const { status, data } = await apiInstance.apiAuthRevokeOtherSessionsPost(
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type       | Description | Notes |
-| -------- | ---------- | ----------- | ----- |
-| **body** | **object** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+
 
 ### Return type
 
@@ -476,25 +516,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthRevokeSessionPost**
-
 > ApiAuthRevokeSessionPost200Response apiAuthRevokeSessionPost()
 
 Revoke a single session
@@ -502,7 +541,11 @@ Revoke a single session
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ApiAuthRevokeSessionPostRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ApiAuthRevokeSessionPostRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -510,15 +553,16 @@ const apiInstance = new DefaultApi(configuration);
 let apiAuthRevokeSessionPostRequest: ApiAuthRevokeSessionPostRequest; // (optional)
 
 const { status, data } = await apiInstance.apiAuthRevokeSessionPost(
-  apiAuthRevokeSessionPostRequest,
+    apiAuthRevokeSessionPostRequest
 );
 ```
 
 ### Parameters
 
-| Name                                | Type                                | Description | Notes |
-| ----------------------------------- | ----------------------------------- | ----------- | ----- |
-| **apiAuthRevokeSessionPostRequest** | **ApiAuthRevokeSessionPostRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **apiAuthRevokeSessionPostRequest** | **ApiAuthRevokeSessionPostRequest**|  | |
+
 
 ### Return type
 
@@ -530,25 +574,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthRevokeSessionsPost**
-
 > ApiAuthRevokeSessionsPost200Response apiAuthRevokeSessionsPost()
 
 Revoke all sessions for the user
@@ -556,21 +599,27 @@ Revoke all sessions for the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.apiAuthRevokeSessionsPost(body);
+const { status, data } = await apiInstance.apiAuthRevokeSessionsPost(
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type       | Description | Notes |
-| -------- | ---------- | ----------- | ----- |
-| **body** | **object** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+
 
 ### Return type
 
@@ -582,25 +631,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthUnlinkAccountPost**
-
 > ResetPassword200Response apiAuthUnlinkAccountPost(apiAuthUnlinkAccountPostRequest)
 
 Unlink an account
@@ -608,7 +656,11 @@ Unlink an account
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ApiAuthUnlinkAccountPostRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ApiAuthUnlinkAccountPostRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -616,15 +668,16 @@ const apiInstance = new DefaultApi(configuration);
 let apiAuthUnlinkAccountPostRequest: ApiAuthUnlinkAccountPostRequest; //
 
 const { status, data } = await apiInstance.apiAuthUnlinkAccountPost(
-  apiAuthUnlinkAccountPostRequest,
+    apiAuthUnlinkAccountPostRequest
 );
 ```
 
 ### Parameters
 
-| Name                                | Type                                | Description | Notes |
-| ----------------------------------- | ----------------------------------- | ----------- | ----- |
-| **apiAuthUnlinkAccountPostRequest** | **ApiAuthUnlinkAccountPostRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **apiAuthUnlinkAccountPostRequest** | **ApiAuthUnlinkAccountPostRequest**|  | |
+
 
 ### Return type
 
@@ -636,25 +689,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthVerifyEmailGet**
-
 > ApiAuthVerifyEmailGet200Response apiAuthVerifyEmailGet()
 
 Verify the email of the user
@@ -662,7 +714,10 @@ Verify the email of the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -670,15 +725,19 @@ const apiInstance = new DefaultApi(configuration);
 let token: string; //The token to verify the email (default to undefined)
 let callbackURL: string; //The URL to redirect to after email verification (optional) (default to undefined)
 
-const { status, data } = await apiInstance.apiAuthVerifyEmailGet(token, callbackURL);
+const { status, data } = await apiInstance.apiAuthVerifyEmailGet(
+    token,
+    callbackURL
+);
 ```
 
 ### Parameters
 
-| Name            | Type         | Description                                     | Notes                            |
-| --------------- | ------------ | ----------------------------------------------- | -------------------------------- |
-| **token**       | [**string**] | The token to verify the email                   | defaults to undefined            |
-| **callbackURL** | [**string**] | The URL to redirect to after email verification | (optional) defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **token** | [**string**] | The token to verify the email | defaults to undefined|
+| **callbackURL** | [**string**] | The URL to redirect to after email verification | (optional) defaults to undefined|
+
 
 ### Return type
 
@@ -690,45 +749,52 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **changeEmail**
-
 > ChangeEmail200Response changeEmail(changeEmailRequest)
+
 
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ChangeEmailRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ChangeEmailRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let changeEmailRequest: ChangeEmailRequest; //
 
-const { status, data } = await apiInstance.changeEmail(changeEmailRequest);
+const { status, data } = await apiInstance.changeEmail(
+    changeEmailRequest
+);
 ```
 
 ### Parameters
 
-| Name                   | Type                   | Description | Notes |
-| ---------------------- | ---------------------- | ----------- | ----- |
-| **changeEmailRequest** | **ChangeEmailRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **changeEmailRequest** | **ChangeEmailRequest**|  | |
+
 
 ### Return type
 
@@ -740,25 +806,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Email change request processed successfully                                              | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Email change request processed successfully |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **changePassword**
-
 > ChangePassword200Response changePassword(changePasswordRequest)
 
 Change the password of the user
@@ -766,21 +831,28 @@ Change the password of the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ChangePasswordRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ChangePasswordRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let changePasswordRequest: ChangePasswordRequest; //
 
-const { status, data } = await apiInstance.changePassword(changePasswordRequest);
+const { status, data } = await apiInstance.changePassword(
+    changePasswordRequest
+);
 ```
 
 ### Parameters
 
-| Name                      | Type                      | Description | Notes |
-| ------------------------- | ------------------------- | ----------- | ----- |
-| **changePasswordRequest** | **ChangePasswordRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **changePasswordRequest** | **ChangePasswordRequest**|  | |
+
 
 ### Return type
 
@@ -792,25 +864,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Password successfully changed                                                            | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Password successfully changed |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **deleteUser**
-
 > DeleteUser200Response deleteUser()
 
 Delete the user
@@ -818,21 +889,28 @@ Delete the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, DeleteUserRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    DeleteUserRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let deleteUserRequest: DeleteUserRequest; // (optional)
 
-const { status, data } = await apiInstance.deleteUser(deleteUserRequest);
+const { status, data } = await apiInstance.deleteUser(
+    deleteUserRequest
+);
 ```
 
 ### Parameters
 
-| Name                  | Type                  | Description | Notes |
-| --------------------- | --------------------- | ----------- | ----- |
-| **deleteUserRequest** | **DeleteUserRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **deleteUserRequest** | **DeleteUserRequest**|  | |
+
 
 ### Return type
 
@@ -844,25 +922,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | User deletion processed successfully                                                     | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | User deletion processed successfully |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getSession**
-
 > GetSession200Response getSession()
 
 Get the current session
@@ -870,7 +947,10 @@ Get the current session
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -879,8 +959,8 @@ const { status, data } = await apiInstance.getSession();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -892,25 +972,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getSession1**
-
 > GetSession200Response getSession1()
 
 Get the current session
@@ -918,21 +997,27 @@ Get the current session
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.getSession1(body);
+const { status, data } = await apiInstance.getSession1(
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type       | Description | Notes |
-| -------- | ---------- | ----------- | ----- |
-| **body** | **object** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+
 
 ### Return type
 
@@ -944,25 +1029,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **linkSocialAccount**
-
 > LinkSocialAccount200Response linkSocialAccount(linkSocialAccountRequest)
 
 Link a social account to the user
@@ -970,21 +1054,28 @@ Link a social account to the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, LinkSocialAccountRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    LinkSocialAccountRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let linkSocialAccountRequest: LinkSocialAccountRequest; //
 
-const { status, data } = await apiInstance.linkSocialAccount(linkSocialAccountRequest);
+const { status, data } = await apiInstance.linkSocialAccount(
+    linkSocialAccountRequest
+);
 ```
 
 ### Parameters
 
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **linkSocialAccountRequest** | **LinkSocialAccountRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **linkSocialAccountRequest** | **LinkSocialAccountRequest**|  | |
+
 
 ### Return type
 
@@ -996,25 +1087,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **listUserAccounts**
-
 > Array<ListUserAccounts200ResponseInner> listUserAccounts()
 
 List all accounts linked to the user
@@ -1022,7 +1112,10 @@ List all accounts linked to the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -1031,8 +1124,8 @@ const { status, data } = await apiInstance.listUserAccounts();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -1044,25 +1137,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **listUserSessions**
-
 > Array<Session> listUserSessions()
 
 List all active sessions for the user
@@ -1070,7 +1162,10 @@ List all active sessions for the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -1079,8 +1174,8 @@ const { status, data } = await apiInstance.listUserSessions();
 ```
 
 ### Parameters
-
 This endpoint does not have any parameters.
+
 
 ### Return type
 
@@ -1092,25 +1187,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **requestPasswordReset**
-
 > RequestPasswordReset200Response requestPasswordReset(requestPasswordResetRequest)
 
 Send a password reset email to the user
@@ -1118,21 +1212,28 @@ Send a password reset email to the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, RequestPasswordResetRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    RequestPasswordResetRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let requestPasswordResetRequest: RequestPasswordResetRequest; //
 
-const { status, data } = await apiInstance.requestPasswordReset(requestPasswordResetRequest);
+const { status, data } = await apiInstance.requestPasswordReset(
+    requestPasswordResetRequest
+);
 ```
 
 ### Parameters
 
-| Name                            | Type                            | Description | Notes |
-| ------------------------------- | ------------------------------- | ----------- | ----- |
-| **requestPasswordResetRequest** | **RequestPasswordResetRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **requestPasswordResetRequest** | **RequestPasswordResetRequest**|  | |
+
 
 ### Return type
 
@@ -1144,25 +1245,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **resetPassword**
-
 > ResetPassword200Response resetPassword(resetPasswordRequest)
 
 Reset the password for a user
@@ -1170,21 +1270,28 @@ Reset the password for a user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, ResetPasswordRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    ResetPasswordRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let resetPasswordRequest: ResetPasswordRequest; //
 
-const { status, data } = await apiInstance.resetPassword(resetPasswordRequest);
+const { status, data } = await apiInstance.resetPassword(
+    resetPasswordRequest
+);
 ```
 
 ### Parameters
 
-| Name                     | Type                     | Description | Notes |
-| ------------------------ | ------------------------ | ----------- | ----- |
-| **resetPasswordRequest** | **ResetPasswordRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **resetPasswordRequest** | **ResetPasswordRequest**|  | |
+
 
 ### Return type
 
@@ -1196,25 +1303,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **resetPasswordCallback**
-
 > ResetPasswordCallback200Response resetPasswordCallback()
 
 Redirects the user to the callback URL with the token
@@ -1222,7 +1328,10 @@ Redirects the user to the callback URL with the token
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -1230,15 +1339,19 @@ const apiInstance = new DefaultApi(configuration);
 let token: string; //The token to reset the password (default to undefined)
 let callbackURL: string; //The URL to redirect the user to reset their password (default to undefined)
 
-const { status, data } = await apiInstance.resetPasswordCallback(token, callbackURL);
+const { status, data } = await apiInstance.resetPasswordCallback(
+    token,
+    callbackURL
+);
 ```
 
 ### Parameters
 
-| Name            | Type         | Description                                          | Notes                 |
-| --------------- | ------------ | ---------------------------------------------------- | --------------------- |
-| **token**       | [**string**] | The token to reset the password                      | defaults to undefined |
-| **callbackURL** | [**string**] | The URL to redirect the user to reset their password | defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **token** | [**string**] | The token to reset the password | defaults to undefined|
+| **callbackURL** | [**string**] | The URL to redirect the user to reset their password | defaults to undefined|
+
 
 ### Return type
 
@@ -1250,25 +1363,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **sendVerificationEmail**
-
 > SendVerificationEmail200Response sendVerificationEmail()
 
 Send a verification email to the user
@@ -1276,21 +1388,28 @@ Send a verification email to the user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, SendVerificationEmailRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    SendVerificationEmailRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let sendVerificationEmailRequest: SendVerificationEmailRequest; // (optional)
 
-const { status, data } = await apiInstance.sendVerificationEmail(sendVerificationEmailRequest);
+const { status, data } = await apiInstance.sendVerificationEmail(
+    sendVerificationEmailRequest
+);
 ```
 
 ### Parameters
 
-| Name                             | Type                             | Description | Notes |
-| -------------------------------- | -------------------------------- | ----------- | ----- |
-| **sendVerificationEmailRequest** | **SendVerificationEmailRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **sendVerificationEmailRequest** | **SendVerificationEmailRequest**|  | |
+
 
 ### Return type
 
@@ -1302,25 +1421,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request                                                                              | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **signInEmail**
-
 > SignInEmail200Response signInEmail(signInEmailRequest)
 
 Sign in with email and password
@@ -1328,21 +1446,28 @@ Sign in with email and password
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, SignInEmailRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    SignInEmailRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let signInEmailRequest: SignInEmailRequest; //
 
-const { status, data } = await apiInstance.signInEmail(signInEmailRequest);
+const { status, data } = await apiInstance.signInEmail(
+    signInEmailRequest
+);
 ```
 
 ### Parameters
 
-| Name                   | Type                   | Description | Notes |
-| ---------------------- | ---------------------- | ----------- | ----- |
-| **signInEmailRequest** | **SignInEmailRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **signInEmailRequest** | **SignInEmailRequest**|  | |
+
 
 ### Return type
 
@@ -1354,25 +1479,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success - Returns either session details or redirect URL                                 | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success - Returns either session details or redirect URL |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **signOut**
-
 > SignOut200Response signOut()
 
 Sign out the current user
@@ -1380,21 +1504,27 @@ Sign out the current user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.signOut(body);
+const { status, data } = await apiInstance.signOut(
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type       | Description | Notes |
-| -------- | ---------- | ----------- | ----- |
-| **body** | **object** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+
 
 ### Return type
 
@@ -1406,25 +1536,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **signUpWithEmailAndPassword**
-
 > SignUpWithEmailAndPassword200Response signUpWithEmailAndPassword()
 
 Sign up a user using email and password
@@ -1432,7 +1561,11 @@ Sign up a user using email and password
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, SignUpWithEmailAndPasswordRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    SignUpWithEmailAndPasswordRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
@@ -1440,15 +1573,16 @@ const apiInstance = new DefaultApi(configuration);
 let signUpWithEmailAndPasswordRequest: SignUpWithEmailAndPasswordRequest; // (optional)
 
 const { status, data } = await apiInstance.signUpWithEmailAndPassword(
-  signUpWithEmailAndPasswordRequest,
+    signUpWithEmailAndPasswordRequest
 );
 ```
 
 ### Parameters
 
-| Name                                  | Type                                  | Description | Notes |
-| ------------------------------------- | ------------------------------------- | ----------- | ----- |
-| **signUpWithEmailAndPasswordRequest** | **SignUpWithEmailAndPasswordRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **signUpWithEmailAndPasswordRequest** | **SignUpWithEmailAndPasswordRequest**|  | |
+
 
 ### Return type
 
@@ -1460,26 +1594,25 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Successfully created user                                                                | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **422**     | Unprocessable Entity. User already exists or failed to create user.                      | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Successfully created user |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**422** | Unprocessable Entity. User already exists or failed to create user. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **socialSignIn**
-
 > SocialSignIn200Response socialSignIn(socialSignInRequest)
 
 Sign in with a social provider
@@ -1487,21 +1620,28 @@ Sign in with a social provider
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, SocialSignInRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    SocialSignInRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let socialSignInRequest: SocialSignInRequest; //
 
-const { status, data } = await apiInstance.socialSignIn(socialSignInRequest);
+const { status, data } = await apiInstance.socialSignIn(
+    socialSignInRequest
+);
 ```
 
 ### Parameters
 
-| Name                    | Type                    | Description | Notes |
-| ----------------------- | ----------------------- | ----------- | ----- |
-| **socialSignInRequest** | **SocialSignInRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **socialSignInRequest** | **SocialSignInRequest**|  | |
+
 
 ### Return type
 
@@ -1513,25 +1653,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success - Returns session details (idToken branch) or an authorize URL (redirect branch) | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success - Returns session details (idToken branch) or an authorize URL (redirect branch) |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateSession**
-
 > UpdateSession200Response updateSession()
 
 Update the current session
@@ -1539,21 +1678,27 @@ Update the current session
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration } from "./api";
+import {
+    DefaultApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let body: object; // (optional)
 
-const { status, data } = await apiInstance.updateSession(body);
+const { status, data } = await apiInstance.updateSession(
+    body
+);
 ```
 
 ### Parameters
 
-| Name     | Type       | Description | Notes |
-| -------- | ---------- | ----------- | ----- |
-| **body** | **object** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **body** | **object**|  | |
+
 
 ### Return type
 
@@ -1565,25 +1710,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateUser**
-
 > UpdateUser200Response updateUser()
 
 Update the current user
@@ -1591,21 +1735,28 @@ Update the current user
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, UpdateUserRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    UpdateUserRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let updateUserRequest: UpdateUserRequest; // (optional)
 
-const { status, data } = await apiInstance.updateUser(updateUserRequest);
+const { status, data } = await apiInstance.updateUser(
+    updateUserRequest
+);
 ```
 
 ### Parameters
 
-| Name                  | Type                  | Description | Notes |
-| --------------------- | --------------------- | ----------- | ----- |
-| **updateUserRequest** | **UpdateUserRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **updateUserRequest** | **UpdateUserRequest**|  | |
+
 
 ### Return type
 
@@ -1617,25 +1768,24 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **verifyPassword**
-
 > ResetPassword200Response verifyPassword(verifyPasswordRequest)
 
 Verify the current user\'s password
@@ -1643,21 +1793,28 @@ Verify the current user\'s password
 ### Example
 
 ```typescript
-import { DefaultApi, Configuration, VerifyPasswordRequest } from "./api";
+import {
+    DefaultApi,
+    Configuration,
+    VerifyPasswordRequest
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new DefaultApi(configuration);
 
 let verifyPasswordRequest: VerifyPasswordRequest; //
 
-const { status, data } = await apiInstance.verifyPassword(verifyPasswordRequest);
+const { status, data } = await apiInstance.verifyPassword(
+    verifyPasswordRequest
+);
 ```
 
 ### Parameters
 
-| Name                      | Type                      | Description | Notes |
-| ------------------------- | ------------------------- | ----------- | ----- |
-| **verifyPasswordRequest** | **VerifyPasswordRequest** |             |       |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **verifyPasswordRequest** | **VerifyPasswordRequest**|  | |
+
 
 ### Return type
 
@@ -1669,19 +1826,20 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success                                                                                  | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Success |  -  |
+|**400** | Bad Request. Usually due to missing parameters, or invalid parameters. |  -  |
+|**401** | Unauthorized. Due to missing or invalid authentication. |  -  |
+|**403** | Forbidden. You do not have permission to access this resource or to perform this action. |  -  |
+|**404** | Not Found. The requested resource was not found. |  -  |
+|**429** | Too Many Requests. You have exceeded the rate limit. Try again later. |  -  |
+|**500** | Internal Server Error. This is a problem with the server that you cannot fix. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+

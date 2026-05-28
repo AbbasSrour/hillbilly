@@ -1,18 +1,19 @@
 # ApiAuthAdminHasPermissionPostRequest
 
+
 ## Properties
 
-| Name            | Type       | Description             | Notes                  |
-| --------------- | ---------- | ----------------------- | ---------------------- |
-| **permissions** | **object** | The permission to check | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**permissions** | **object** | The permission to check | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiAuthAdminHasPermissionPostRequest } from "./api";
+import { ApiAuthAdminHasPermissionPostRequest } from './api';
 
 const instance: ApiAuthAdminHasPermissionPostRequest = {
-  permissions,
+    permissions,
 };
 ```
 

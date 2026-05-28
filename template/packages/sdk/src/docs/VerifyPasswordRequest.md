@@ -1,18 +1,19 @@
 # VerifyPasswordRequest
 
+
 ## Properties
 
-| Name         | Type       | Description            | Notes                  |
-| ------------ | ---------- | ---------------------- | ---------------------- |
-| **password** | **string** | The password to verify | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**password** | **string** | The password to verify | [default to undefined]
 
 ## Example
 
 ```typescript
-import { VerifyPasswordRequest } from "./api";
+import { VerifyPasswordRequest } from './api';
 
 const instance: VerifyPasswordRequest = {
-  password,
+    password,
 };
 ```
 
