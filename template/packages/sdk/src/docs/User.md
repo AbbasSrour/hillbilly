@@ -17,7 +17,6 @@
 | **banExpires**          | **string**  |             | [optional] [readonly] [default to undefined] |
 | **phoneNumber**         | **string**  |             | [optional] [default to undefined]            |
 | **phoneNumberVerified** | **boolean** |             | [optional] [readonly] [default to undefined] |
-| **branches**            | **string**  |             | [optional] [readonly] [default to undefined] |
 
 ## Example
 
@@ -38,7 +37,6 @@ const instance: User = {
   banExpires,
   phoneNumber,
   phoneNumberVerified,
-  branches,
 };
 ```
 

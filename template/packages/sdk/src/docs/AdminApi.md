@@ -4,13 +4,14 @@ All URIs are relative to _http://localhost_
 
 | Method                                                                      | HTTP request                                  | Description |
 | --------------------------------------------------------------------------- | --------------------------------------------- | ----------- |
+| [**adminListUserSessions**](#adminlistusersessions)                         | **POST** /api/auth/admin/list-user-sessions   |             |
+| [**adminUpdateUser**](#adminupdateuser)                                     | **POST** /api/auth/admin/update-user          |             |
 | [**apiAuthAdminHasPermissionPost**](#apiauthadminhaspermissionpost)         | **POST** /api/auth/admin/has-permission       |             |
 | [**apiAuthAdminStopImpersonatingPost**](#apiauthadminstopimpersonatingpost) | **POST** /api/auth/admin/stop-impersonating   |             |
 | [**banUser**](#banuser)                                                     | **POST** /api/auth/admin/ban-user             |             |
 | [**createUser**](#createuser)                                               | **POST** /api/auth/admin/create-user          |             |
 | [**getUser**](#getuser)                                                     | **GET** /api/auth/admin/get-user              |             |
 | [**impersonateUser**](#impersonateuser)                                     | **POST** /api/auth/admin/impersonate-user     |             |
-| [**listUserSessions1**](#listusersessions1)                                 | **POST** /api/auth/admin/list-user-sessions   |             |
 | [**listUsers**](#listusers)                                                 | **GET** /api/auth/admin/list-users            |             |
 | [**removeUser**](#removeuser)                                               | **POST** /api/auth/admin/remove-user          |             |
 | [**revokeUserSession**](#revokeusersession)                                 | **POST** /api/auth/admin/revoke-user-session  |             |
@@ -18,7 +19,110 @@ All URIs are relative to _http://localhost_
 | [**setUserPassword**](#setuserpassword)                                     | **POST** /api/auth/admin/set-user-password    |             |
 | [**setUserRole**](#setuserrole)                                             | **POST** /api/auth/admin/set-role             |             |
 | [**unbanUser**](#unbanuser)                                                 | **POST** /api/auth/admin/unban-user           |             |
-| [**updateUser1**](#updateuser1)                                             | **POST** /api/auth/admin/update-user          |             |
+
+# **adminListUserSessions**
+
+> AdminListUserSessions200Response adminListUserSessions(adminListUserSessionsRequest)
+
+List user sessions
+
+### Example
+
+```typescript
+import { AdminApi, Configuration, AdminListUserSessionsRequest } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new AdminApi(configuration);
+
+let adminListUserSessionsRequest: AdminListUserSessionsRequest; //
+
+const { status, data } = await apiInstance.adminListUserSessions(adminListUserSessionsRequest);
+```
+
+### Parameters
+
+| Name                             | Type                             | Description | Notes |
+| -------------------------------- | -------------------------------- | ----------- | ----- |
+| **adminListUserSessionsRequest** | **AdminListUserSessionsRequest** |             |       |
+
+### Return type
+
+**AdminListUserSessions200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| **200**     | List of user sessions                                                                    | -                |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **adminUpdateUser**
+
+> UpdateUser200Response adminUpdateUser(adminUpdateUserRequest)
+
+Update a user\'s details
+
+### Example
+
+```typescript
+import { AdminApi, Configuration, AdminUpdateUserRequest } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new AdminApi(configuration);
+
+let adminUpdateUserRequest: AdminUpdateUserRequest; //
+
+const { status, data } = await apiInstance.adminUpdateUser(adminUpdateUserRequest);
+```
+
+### Parameters
+
+| Name                       | Type                       | Description | Notes |
+| -------------------------- | -------------------------- | ----------- | ----- |
+| **adminUpdateUserRequest** | **AdminUpdateUserRequest** |             |       |
+
+### Return type
+
+**UpdateUser200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| **200**     | User updated                                                                             | -                |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiAuthAdminHasPermissionPost**
 
@@ -277,28 +381,28 @@ No authorization required
 
 # **impersonateUser**
 
-> ImpersonateUser200Response impersonateUser(listUserSessions1Request)
+> ImpersonateUser200Response impersonateUser(adminListUserSessionsRequest)
 
 Impersonate a user
 
 ### Example
 
 ```typescript
-import { AdminApi, Configuration, ListUserSessions1Request } from "./api";
+import { AdminApi, Configuration, AdminListUserSessionsRequest } from "./api";
 
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let listUserSessions1Request: ListUserSessions1Request; //
+let adminListUserSessionsRequest: AdminListUserSessionsRequest; //
 
-const { status, data } = await apiInstance.impersonateUser(listUserSessions1Request);
+const { status, data } = await apiInstance.impersonateUser(adminListUserSessionsRequest);
 ```
 
 ### Parameters
 
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **listUserSessions1Request** | **ListUserSessions1Request** |             |       |
+| Name                             | Type                             | Description | Notes |
+| -------------------------------- | -------------------------------- | ----------- | ----- |
+| **adminListUserSessionsRequest** | **AdminListUserSessionsRequest** |             |       |
 
 ### Return type
 
@@ -318,58 +422,6 @@ No authorization required
 | Status code | Description                                                                              | Response headers |
 | ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
 | **200**     | Impersonation session created                                                            | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **listUserSessions1**
-
-> ListUserSessions1200Response listUserSessions1(listUserSessions1Request)
-
-List user sessions
-
-### Example
-
-```typescript
-import { AdminApi, Configuration, ListUserSessions1Request } from "./api";
-
-const configuration = new Configuration();
-const apiInstance = new AdminApi(configuration);
-
-let listUserSessions1Request: ListUserSessions1Request; //
-
-const { status, data } = await apiInstance.listUserSessions1(listUserSessions1Request);
-```
-
-### Parameters
-
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **listUserSessions1Request** | **ListUserSessions1Request** |             |       |
-
-### Return type
-
-**ListUserSessions1200Response**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | List of user sessions                                                                    | -                |
 | **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
 | **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
 | **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
@@ -462,28 +514,28 @@ No authorization required
 
 # **removeUser**
 
-> SignOut200Response removeUser(listUserSessions1Request)
+> SignOut200Response removeUser(adminListUserSessionsRequest)
 
 Delete a user and all their sessions and accounts. Cannot be undone.
 
 ### Example
 
 ```typescript
-import { AdminApi, Configuration, ListUserSessions1Request } from "./api";
+import { AdminApi, Configuration, AdminListUserSessionsRequest } from "./api";
 
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let listUserSessions1Request: ListUserSessions1Request; //
+let adminListUserSessionsRequest: AdminListUserSessionsRequest; //
 
-const { status, data } = await apiInstance.removeUser(listUserSessions1Request);
+const { status, data } = await apiInstance.removeUser(adminListUserSessionsRequest);
 ```
 
 ### Parameters
 
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **listUserSessions1Request** | **ListUserSessions1Request** |             |       |
+| Name                             | Type                             | Description | Notes |
+| -------------------------------- | -------------------------------- | ----------- | ----- |
+| **adminListUserSessionsRequest** | **AdminListUserSessionsRequest** |             |       |
 
 ### Return type
 
@@ -566,28 +618,28 @@ No authorization required
 
 # **revokeUserSessions**
 
-> SignOut200Response revokeUserSessions(listUserSessions1Request)
+> SignOut200Response revokeUserSessions(adminListUserSessionsRequest)
 
 Revoke all user sessions
 
 ### Example
 
 ```typescript
-import { AdminApi, Configuration, ListUserSessions1Request } from "./api";
+import { AdminApi, Configuration, AdminListUserSessionsRequest } from "./api";
 
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let listUserSessions1Request: ListUserSessions1Request; //
+let adminListUserSessionsRequest: AdminListUserSessionsRequest; //
 
-const { status, data } = await apiInstance.revokeUserSessions(listUserSessions1Request);
+const { status, data } = await apiInstance.revokeUserSessions(adminListUserSessionsRequest);
 ```
 
 ### Parameters
 
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **listUserSessions1Request** | **ListUserSessions1Request** |             |       |
+| Name                             | Type                             | Description | Notes |
+| -------------------------------- | -------------------------------- | ----------- | ----- |
+| **adminListUserSessionsRequest** | **AdminListUserSessionsRequest** |             |       |
 
 ### Return type
 
@@ -722,28 +774,28 @@ No authorization required
 
 # **unbanUser**
 
-> UpdateUser200Response unbanUser(listUserSessions1Request)
+> UpdateUser200Response unbanUser(adminListUserSessionsRequest)
 
 Unban a user
 
 ### Example
 
 ```typescript
-import { AdminApi, Configuration, ListUserSessions1Request } from "./api";
+import { AdminApi, Configuration, AdminListUserSessionsRequest } from "./api";
 
 const configuration = new Configuration();
 const apiInstance = new AdminApi(configuration);
 
-let listUserSessions1Request: ListUserSessions1Request; //
+let adminListUserSessionsRequest: AdminListUserSessionsRequest; //
 
-const { status, data } = await apiInstance.unbanUser(listUserSessions1Request);
+const { status, data } = await apiInstance.unbanUser(adminListUserSessionsRequest);
 ```
 
 ### Parameters
 
-| Name                         | Type                         | Description | Notes |
-| ---------------------------- | ---------------------------- | ----------- | ----- |
-| **listUserSessions1Request** | **ListUserSessions1Request** |             |       |
+| Name                             | Type                             | Description | Notes |
+| -------------------------------- | -------------------------------- | ----------- | ----- |
+| **adminListUserSessionsRequest** | **AdminListUserSessionsRequest** |             |       |
 
 ### Return type
 
@@ -763,58 +815,6 @@ No authorization required
 | Status code | Description                                                                              | Response headers |
 | ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
 | **200**     | User unbanned                                                                            | -                |
-| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
-| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
-| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
-| **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
-| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **updateUser1**
-
-> UpdateUser200Response updateUser1(updateUser1Request)
-
-Update a user\'s details
-
-### Example
-
-```typescript
-import { AdminApi, Configuration, UpdateUser1Request } from "./api";
-
-const configuration = new Configuration();
-const apiInstance = new AdminApi(configuration);
-
-let updateUser1Request: UpdateUser1Request; //
-
-const { status, data } = await apiInstance.updateUser1(updateUser1Request);
-```
-
-### Parameters
-
-| Name                   | Type                   | Description | Notes |
-| ---------------------- | ---------------------- | ----------- | ----- |
-| **updateUser1Request** | **UpdateUser1Request** |             |       |
-
-### Return type
-
-**UpdateUser200Response**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description                                                                              | Response headers |
-| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | User updated                                                                             | -                |
 | **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
 | **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
 | **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |

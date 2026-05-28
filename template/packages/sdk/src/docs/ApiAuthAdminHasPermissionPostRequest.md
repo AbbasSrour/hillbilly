@@ -2,10 +2,9 @@
 
 ## Properties
 
-| Name            | Type       | Description             | Notes                             |
-| --------------- | ---------- | ----------------------- | --------------------------------- |
-| **permission**  | **object** | The permission to check | [optional] [default to undefined] |
-| **permissions** | **object** | The permission to check | [default to undefined]            |
+| Name            | Type       | Description             | Notes                  |
+| --------------- | ---------- | ----------------------- | ---------------------- |
+| **permissions** | **object** | The permission to check | [default to undefined] |
 
 ## Example
 
@@ -13,7 +12,6 @@
 import { ApiAuthAdminHasPermissionPostRequest } from "./api";
 
 const instance: ApiAuthAdminHasPermissionPostRequest = {
-  permission,
   permissions,
 };
 ```
