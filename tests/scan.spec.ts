@@ -483,10 +483,10 @@ describe("applyStagedHunks edge cases", () => {
   });
 
   it("adds trailing newline when hunk adds it to a file without one", () => {
-    const template = '{\n  "extends": "@ticklet/tsconfig/base.json"\n}';
+    const template = '{\n  "extends": "@hillbilly/tsconfig/base.json"\n}';
     const hunks = [
       {
-        text: '@@ -1,3 +1,3 @@\n {\n   "extends": "@ticklet/tsconfig/base.json"\n-}\n+}',
+        text: '@@ -1,3 +1,3 @@\n {\n   "extends": "@hillbilly/tsconfig/base.json"\n-}\n+}',
         oldStart: 0,
         oldLines: 3,
         newStart: 0,
@@ -496,7 +496,7 @@ describe("applyStagedHunks edge cases", () => {
 
     const result = applyStagedHunks(template, hunks, new Set([0]));
 
-    expect(result).toBe('{\n  "extends": "@ticklet/tsconfig/base.json"\n}\n');
+    expect(result).toBe('{\n  "extends": "@hillbilly/tsconfig/base.json"\n}\n');
   });
 
   it("removes trailing newline when new side has no-newline marker", () => {

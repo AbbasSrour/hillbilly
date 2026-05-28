@@ -24,8 +24,6 @@ export interface TemplateResolution {
 
 export const PROJECT_CONFIG_NAME = "hillbilly.yml";
 
-const KNOWN_HILLBILLY_ROOT_KEYS = new Set(["templateRepo", "templateSubdir", "tui", "sync"]);
-
 export function projectConfigPath(projectRoot: string): string {
   return resolve(projectRoot, PROJECT_CONFIG_NAME);
 }
@@ -165,14 +163,8 @@ export async function writeTemplateConfig(
 export async function readCopierAnswers(projectRoot: string): Promise<Record<string, unknown>> {
   const merged = await readMergedFile(projectRoot);
 
-  if (merged) {
-    const answers: Record<string, unknown> = {};
-    for (const key of Object.keys(merged)) {
-      if (!KNOWN_HILLBILLY_ROOT_KEYS.has(key)) {
-        answers[key] = merged[key];
-      }
-    }
-    if (Object.keys(answers).length > 0) return answers;
+  if (merged?.copier && typeof merged.copier === "object" && !Array.isArray(merged.copier)) {
+    return merged.copier as Record<string, unknown>;
   }
 
   const legacyPath = resolve(projectRoot, ".copier-answers.yml");
@@ -203,17 +195,6 @@ export async function mergeCopierAnswersIntoProject(
   answers: Record<string, unknown>,
 ): Promise<void> {
   const merged = (await readMergedFile(projectRoot)) ?? {};
-
-  for (const key of Object.keys(merged)) {
-    if (KNOWN_HILLBILLY_ROOT_KEYS.has(key)) continue;
-    delete merged[key];
-  }
-
-  for (const key of Object.keys(answers)) {
-    if (!KNOWN_HILLBILLY_ROOT_KEYS.has(key)) {
-      merged[key] = answers[key];
-    }
-  }
-
+  merged.copier = answers;
   await writeMergedFile(projectRoot, merged);
 }

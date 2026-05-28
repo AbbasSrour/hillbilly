@@ -1,236 +1,258 @@
-# Hillbilly CLI — `hillbilly sync`
+# Hillbilly Sync CLI
 
-## Goal
+The `hillbilly` binary is a Copier-template sync tool. It scaffolds projects (via Copier),
+pushes local boilerplate changes back to the template, and pulls upstream template updates.
 
-An interactive terminal UI (like lazygit) to push template-owned changes from a generated project back into the Hillbilly `template/` directory, and to pull template updates via Copier.
+This document is the canonical reference for the current architecture and the in-flight
+**Sync v2 — Bidirectional TUI** work.
 
-## Architecture
+---
+
+## Current architecture
+
+### Source layout
 
 ```
 src/
-├── index.ts        # CLI entry (commander: sync push, sync pull)
-├── scan.ts         # Marker scanner + diff engine
-├── tui.tsx         # OpenTUI React TUI
-└── push.ts         # Copy staged files back to template
+├── config.ts     Config + merged-file I/O + template resolution
+├── exclude.ts    Shared file walker and exclusion rules
+├── helpers.ts    Path expansion, fish completions
+├── index.ts      Commander entry, all CLI commands
+├── manifest.ts   Sync manifest (the `sync.files` section of hillbilly.yml)
+├── push.ts       Apply staged hunks to template files
+├── scan.ts       Diff project against template, build SyncFile[] + hunks
+├── theme.ts      33 OpenCode themes for the TUI
+└── tui.tsx       OpenTUI/React interactive sync UI
+tests/
+├── config.spec.ts
+├── index.spec.ts
+├── manifest.spec.ts
+├── push.spec.ts
+├── scan.spec.ts
+└── tui.spec.ts
+scripts/
+└── build.ts      Bun.build entry with $bunfs worker embedding
 ```
 
-- **Runtime**: Bun only (OpenTUI requires `bun:ffi`)
-- **TUI**: `@opentui/core` + `@opentui/react`
-- **Deps**: `commander`, `diff`, `fast-glob`, `yaml`
+All sync state lives in a single file: `hillbilly.yml` at the project root.
+That file is a merged YAML document containing three logical sections:
 
-## Marker system
+| Section          | Owner     | Example keys                                  |
+| ---------------- | --------- | --------------------------------------------- |
+| Copier answers   | Copier    | `project_name`, `_src_path`, `_commit`        |
+| Hillbilly config | hillbilly | `templateRepo`, `templateSubdir`, `tui`       |
+| Sync manifest    | hillbilly | `sync.version`, `sync.files[].path`, `.state` |
 
-Template-owned files have this as their **first line**:
+`KNOWN_HILLBILLY_ROOT_KEYS = {"templateRepo", "templateSubdir", "tui", "sync"}` distinguishes
+hillbilly-owned keys from Copier answers in the merged file.
+
+### Schema — `HillbillyConfig`
 
 ```ts
-/* @hillbilly-sync */
+interface HillbillyConfig {
+  templateRepo?: string;
+  templateSubdir?: string;
+  tui?: {
+    theme?: string;
+    diffView?: "unified" | "split";
+    diffLineColors?: boolean;
+    diffSigns?: boolean;
+    showLineNumbers?: boolean;
+    diffWrap?: boolean;
+    lastDirection?: "push" | "pull"; // sync v2
+  };
+}
 ```
 
-## Stage 1 — Scanner (`scan.ts`)
+### Command surface
 
-**Deliverable**: Pure function module that, given a project root, returns a list of synced files with diffs.
+| Command                                      | Behaviour                                               |
+| -------------------------------------------- | ------------------------------------------------------- |
+| `hillbilly sync`                             | TUI bidirectional (push/pull, remembers last direction) |
+| `hillbilly sync push [--yes]`                | CLI-only: scan + summary + confirm + push               |
+| `hillbilly sync pull [--vcs-ref] [--recopy]` | Wraps `copier update` / `copier recopy`                 |
+| `hillbilly sync mark <files...>`             | Track project files in the sync manifest                |
+| `hillbilly sync unmark <files...>`           | Untrack (keep tombstones)                               |
+| `hillbilly sync list`                        | List entries in the manifest                            |
+| `hillbilly config set-template`              | Persist `templateRepo` and `templateSubdir`             |
+| `hillbilly doctor`                           | Template resolution, copier check, orphan tempdir sweep |
+| `hillbilly upgrade`                          | Copy the latest `hillbilly` binary from the template    |
+| `hillbilly completion <shell>`               | Print shell completions (fish only today)               |
 
-### What it does:
+### Module graph
 
-1. Find template root by reading `.copier-answers.yml` → `_src_path`
-2. Walk generated project files looking for `/* @hillbilly-sync */` first-line marker
-3. For each marked file, read the corresponding file in `template/apps/backend/src/...`
-4. Generate unified diff
-5. Return `SyncFile[]` with: `{ projectPath, templatePath, status: 'modified' | 'added' | 'deleted', diff }`
-
-### Test:
-
-```bash
-bun run src/test-scan.ts   # runs against test-nest, prints scan results
+```
+index.ts ─┬─► scan.ts ──► exclude.ts
+          ├─► push.ts
+          ├─► pull.ts (sync v2)
+          ├─► config.ts ──► merged-file helpers
+          ├─► manifest.ts ──► merged-file helpers
+          └─► tui.tsx ──► theme.ts
+                       ├─► scan.ts / push.ts / pull.ts (sync v2)
+                       └─► config.ts (read/write tui prefs)
 ```
 
-### Verification:
+### TUI keybindings
 
-- [ ] Correctly finds `.copier-answers.yml` and extracts `_src_path`
-- [ ] Correctly identifies `/* @hillbilly-sync */` files
-- [ ] Correctly maps project paths to template paths
-- [ ] Produces valid unified diffs for modified files
-- [ ] Reports `added` for files in project but not template
-- [ ] Reports `deleted` for files in template but not project
+| Key                   | Action                                      |
+| --------------------- | ------------------------------------------- |
+| `j` / `k`             | Navigate files / hunks                      |
+| `gg` / `G`            | Jump to first / last                        |
+| `Space`               | Stage current file or hunk                  |
+| `a`                   | Stage all hunks                             |
+| `Tab`                 | Switch panel (files ↔ diff)                 |
+| `Enter`               | Apply staged hunks (push or pull)           |
+| `r`                   | Refresh scan                                |
+| `p`                   | Toggle direction (push ↔ pull) — sync v2    |
+| `m`                   | Mark files                                  |
+| `u`                   | Unmark / untrack selected                   |
+| `d` (twice)           | Delete / prune stale file                   |
+| `/`                   | Filter by path                              |
+| `f`                   | Filter by status                            |
+| `t`                   | Theme picker                                |
+| `s`                   | Toggle unified / split diff                 |
+| `b` / `z` / `l` / `w` | Toggle colors / signs / line numbers / wrap |
+| `?`                   | Help overlay                                |
+| `q` / `Esc`           | Quit / close picker                         |
+
+### Build
+
+`scripts/build.ts` uses `Bun.build` with two entrypoints (CLI + parser worker) and a
+`$bunfs/root/...` define so OpenTUI's tree-sitter client locates the worker inside the
+compiled binary. The output is `dist/hillbilly`; the build then copies it into
+`template/bin/hillbilly` so generated projects ship with the latest binary.
 
 ---
 
-## Stage 2 — CLI entry (`index.ts`)
+## Sync v2 — Bidirectional TUI
 
-**Deliverable**: Commander CLI that registers `hillbilly sync push` and `hillbilly sync pull`.
+### Goal
 
-### What it does:
+Replace the push-only TUI with a single bidirectional UI that handles both pushing local
+changes back to the template and pulling template changes into the project. The pull side
+delegates the actual merge to Copier (which has a real 3-way merge, handles Jinja, runs
+migrations) and lets the user pick which resulting hunks to keep.
 
-- `hillbilly sync push`: runs scanner, passes results to TUI
-- `hillbilly sync pull`: runs `copier update` (deferred to Stage 6)
+### Architecture decision: Option D
 
-### Test:
+For pull mode we ship out to Copier rather than reimplement merge logic:
 
-```bash
-bun run src/index.ts sync push --help
-bun run src/index.ts sync pull --help
+1. Copy the project into a tempdir under `os.tmpdir()/hillbilly-pull-<random>`.
+2. Run `copier update --defaults --conflict inline --quiet <tempdir>` there.
+3. Diff the project against the tempdir using the same hunk machinery as push.
+4. Present the diff in the TUI; user picks hunks; Enter copies them back.
+5. Clean up the tempdir on exit (best-effort + `hillbilly doctor` sweep).
+
+This keeps Copier as the source of truth for merge correctness — Jinja, migrations,
+`_commit` baseline, conflict markers — while still giving the user fine-grained control
+over what lands.
+
+### State machine
+
+```
+            ┌──────────────────┐    p (with checks)    ┌──────────────────┐
+   start ──►│   push (default) │ ────────────────────► │  pull (prepared) │
+            └────────┬─────────┘                       └────────┬─────────┘
+                     │              p (rescan)                  │
+                     │ ◄────────────────────────────────────────┘
+                     │ Enter ► pushChanges()                    │
+                     ▼                                          ▼
+                  success                                  Enter ► pullChanges()
 ```
 
-### Verification:
+Switching to pull triggers, in order:
 
-- [ ] `sync push` subcommand registered with options
-- [ ] `sync pull` subcommand registered
-- [ ] `--help` prints usage
+1. Read `_commit` from `hillbilly.yml` Copier answers. If missing → banner, stay in push.
+2. Probe `copier --version`. If missing → banner, stay in push.
+3. Check `<templateRoot>/copier.yml` (or `.yaml`) for `_migrations`. If present → warning modal; user confirms.
+4. Copy project → tempdir (filtered via `EXCLUDE_DIRS`).
+5. Spawn `copier update --defaults --conflict inline --quiet <tempdir>`.
+6. Re-scan: diff project vs tempdir; tag files with `<<<<<<<` conflict markers.
+7. Persist `tui.lastDirection = "pull"`.
 
----
+Switching back to push:
 
-## Stage 3 — TUI shell (`tui.tsx`)
+1. Cleanup tempdir.
+2. Regular `scan()` against `templateRoot`.
+3. Persist `tui.lastDirection = "push"`.
 
-**Deliverable**: OpenTUI React app that renders a file list from scan results. No diff yet — just the file panel with keyboard navigation (j/k, q to quit).
+### Pull pipeline (`src/pull.ts`)
 
-### What it does:
+```ts
+export interface PullPrep {
+  tempdir: string;
+  copierStderr: string;
+}
+export interface PullResult {
+  written: string[];
+  deleted: string[];
+  created: string[];
+  failed: { path: string; error: string }[];
+}
 
-- Left panel: scrollable file list with status indicators (M, A, D)
-- Keyboard: j/k navigate, q quit
-- Colored status: green (added), yellow (modified), red (deleted)
-- Blank right panel placeholder
-
-### Test:
-
-```bash
-bun run src/index.ts sync push --project /path/to/test-nest
+export function detectMigrations(templateRoot: string): Promise<boolean>;
+export function preparePullTempdir(projectRoot: string): Promise<PullPrep>;
+export function pullChanges(
+  files: SyncFile[],
+  staged: Map<string, Set<number>>,
+  projectRoot: string,
+  tempdir: string,
+): Promise<PullResult>;
+export function cleanupTempdir(tempdir: string): Promise<void>;
+export function sweepOrphanTempdirs(maxAgeMs?: number): Promise<string[]>;
 ```
 
-### Verification:
+### `hillbilly doctor`
 
-- [ ] TUI launches and renders file list
-- [ ] j/k navigate file list correctly
-- [ ] Scrollable when list exceeds viewport
-- [ ] q quits and restores terminal
-- [ ] Status indicators colored correctly
+Replaces `config doctor`. Reports:
 
----
+- Project root and template resolution source (`cli` / `project-config` / `copier`)
+- `copier --version` presence
+- Orphan tempdir sweep (paths removed)
+- Working-tree cleanliness when project is a git repo (best-effort warning)
 
-## Stage 4 — Diff preview
+### CLI restructure
 
-**Deliverable**: Right panel shows unified diff for the selected file using `<diff>` renderable.
+- `hillbilly sync` (bare): launches TUI; hydrates `direction` from `tui.lastDirection`.
+- `hillbilly sync push`: CLI-only. Scans, prints summary, prompts `[y/N]`, then pushes
+  (or `--yes` to skip). Non-zero exit on any failure. Auto-bails on non-TTY without `--yes`.
+- `hillbilly sync pull`: unchanged. Still wraps `copier update` / `copier recopy`.
 
-### What it does:
+### Testing strategy
 
-- Split view: left = file list, right = diff
-- Selecting a file in the list renders its diff in the right panel
-- Syntax highlighting via `<diff>` renderable
-- Tab to switch focus between panels
+| Suite                  | Coverage                                                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| `tests/pull.spec.ts`   | NEW. `detectMigrations`, `preparePullTempdir`, `pullChanges`, `cleanupTempdir`, `sweepOrphanTempdirs` |
+| `tests/scan.spec.ts`   | Extends with `scanPullDiff` cases                                                                     |
+| `tests/index.spec.ts`  | Bare `sync` launches TUI, `sync push` confirm flow, `sync push --yes`, `hillbilly doctor`             |
+| `tests/tui.spec.ts`    | Direction toggle, `lastDirection` hydration, conflict-marker indicator, migration-warning state       |
+| `tests/config.spec.ts` | Round-trip `lastDirection`, invalid value coercion                                                    |
 
-### Test:
-
-```bash
-bun run src/index.ts sync push --project /path/to/test-nest
-```
-
-### Verification:
-
-- [ ] Selecting a file renders its diff in the right panel
-- [ ] Diff is syntax-highlighted
-- [ ] Tab switches focus between panels
-- [ ] Scrollable diff for large files
+Baseline at start of sync v2: 218 passing / 20 failing / 1 skipped (stale tests will be
+repaired as the touched modules land).
 
 ---
 
-## Stage 5 — Staging & push
+## Decisions (sync v2)
 
-**Deliverable**: Space to stage/unstage files, Enter to push staged changes back to template.
-
-### What it does:
-
-- Space: toggle file as staged (checkbox/indicator)
-- Enter: copy staged files from project → template
-- Status indicator for staged files (e.g., green checkmark)
-- Footer bar showing shortcut hints
-
-### Test:
-
-```bash
-# Modify a marked file in test-nest, then:
-bun run src/index.ts sync push --project /path/to/test-nest
-# Stage the file with space, press Enter
-# Verify file was written to template
-```
-
-### Verification:
-
-- [ ] Space toggles staged status
-- [ ] Enter writes staged files to correct template paths
-- [ ] Non-staged files are not written
-- [ ] Success/error feedback after push
+| Decision                     | Choice                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| Pull architecture            | Option D — Copier in tempdir, hillbilly diff/apply on top                       |
+| Selection granularity        | Hunk-level (same UI as push)                                                    |
+| Migrations                   | Warn before pull-mode entry                                                     |
+| Default direction            | Remember last via `tui.lastDirection`                                           |
+| Tempdir location             | `os.tmpdir()/hillbilly-pull-<random>`                                           |
+| `sync push` CLI confirmation | Interactive `[y/N]` unless `--yes`; auto-bail on non-TTY                        |
+| Pull TUI entry               | Bare `sync` only — no `--pull` flag, `sync pull` keeps copier-wrapper semantics |
+| Orphan tempdir cleanup       | Best-effort on exit + `hillbilly doctor` sweep                                  |
+| `config doctor` removal      | Replaced by `hillbilly doctor` outright                                         |
 
 ---
 
-## Stage 6 — Pull command
+## Out of scope
 
-**Deliverable**: `sync pull` runs `copier update` in the project directory.
-
-### What it does:
-
-- Shells out to `copier update`
-- Passes through stdout/stderr
-- Returns exit code
-
-### Test:
-
-```bash
-cd /path/to/test-nest && bun run /path/to/src/index.ts sync pull
-```
-
-### Verification:
-
-- [ ] `copier update` runs successfully
-- [ ] Output is displayed
-- [ ] Exit code reflects copier result
-
----
-
-## Stage 7 — Marker annotation
-
-**Deliverable**: All template-owned files in `template/apps/backend/src/` have `/* @hillbilly-sync */` as first line.
-
-### What it does:
-
-- Script adds marker to boilerplate directories: abstract/, constant/, decorator/, exception/, filter/, guard/, interceptor/, interface/, middleware/, package/, pipe/, provider/, types/, utils/, lib/, i18n/
-- Also: main.ts, app.module.ts
-- NOT: module/auth/, module/user/ (project-owned)
-
-### Verification:
-
-- [ ] All boilerplate files have marker
-- [ ] Module files do NOT have marker
-- [ ] `bun run scan` against test-nest finds correct files
-
----
-
-## Stage 8 — End-to-end test
-
-**Deliverable**: Full workflow verified against test-nest project.
-
-### Test workflow:
-
-1. Regenerate test-nest from template
-2. Modify a marked file in test-nest (e.g., add comment to `generator.provider.ts`)
-3. Run `hillbilly sync push`, stage file, push
-4. Verify change appears in template
-5. Revert template change, run `hillbilly sync pull` in test-nest
-6. Verify change was pulled back
-
-### Verification:
-
-- [ ] Push works end-to-end
-- [ ] Pull works end-to-end
-- [ ] No files lost or corrupted
-- [ ] Terminal restores cleanly
-
----
-
-## Build output
-
-Final deliverable: a standalone Bun-compiled binary:
-
-```bash
-bun build --compile src/index.ts --outfile dist/hillbilly
-```
-
-Placed in `template/bin/hillbilly` for Copier to distribute to generated projects.
+- Atomic config writes (pre-existing concern; not regressed)
+- Temporal debouncing of config writes (pre-existing; chained-promise serialization stays)
+- 3-way merge UI inside hillbilly (Copier's inline markers are the contract)
+- Re-rendering Jinja inside hillbilly for pull (subprocess copier always)
+- The BetterAuth login hashing bug in the template (separate concern)

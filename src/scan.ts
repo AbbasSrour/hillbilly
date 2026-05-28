@@ -71,7 +71,6 @@ function renderTemplateForComparison(
   templateContent: string,
   answers: Record<string, unknown>,
 ): string {
-  if (!templatePath.endsWith(".jinja")) return templateContent;
   return stripRawBlocks(renderSimpleCopierVariables(templateContent, answers));
 }
 
