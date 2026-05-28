@@ -140,7 +140,7 @@ describe("scan", () => {
   it("parses comma hunk headers and applies no-newline metadata safely", async () => {
     const { project, template } = await makeTempProject();
     await write(join(template, ".vite-hooks/pre-commit"), "npx lint-staged");
-    await write(join(project, ".vite-hooks/pre-commit"), "vp lint-staged");
+    await write(join(project, ".vite-hooks/pre-commit"), "vp staged");
 
     const result = await scan(project, { template });
     const file = result.files.find((entry) => entry.projectPath === ".vite-hooks/pre-commit");
@@ -151,7 +151,7 @@ describe("scan", () => {
 
     const templateContent = await readFile(join(template, ".vite-hooks/pre-commit"), "utf-8");
     const pushed = applyStagedHunks(templateContent, file?.hunks ?? [], new Set([0]));
-    expect(pushed).toBe("vp lint-staged");
+    expect(pushed).toBe("vp staged");
   });
 
   it("applies only selected hunks without leaking unselected changes", async () => {

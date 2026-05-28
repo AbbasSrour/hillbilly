@@ -142,6 +142,11 @@ sync
     if (existsSync(hillbillyPath)) {
       const answers = await readCopierAnswers(projectRoot);
       if (Object.keys(answers).length > 0) {
+        // Copier needs _src_path to locate the template for recopy/update
+        if (!answers._src_path) {
+          const resolution = await resolveTemplateRoot(projectRoot);
+          answers._src_path = resolution.templateRoot;
+        }
         await writeFile(
           resolve(projectRoot, ".copier-answers.yml"),
           stringifyYaml(answers),
