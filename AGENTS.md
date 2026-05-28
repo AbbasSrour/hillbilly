@@ -55,7 +55,7 @@ All packages are template-owned — none are published to npm. `template/` is NO
 
 ## Template is separate from root
 
-Root configs (`vite.config.ts`, `.lintstagedrc.json`, `.release-it.json`, etc.) are hillbilly's own dev tooling. The `template/` directory is a Copier source with its own minimal configs — root and template drift intentionally. Copier uses `[[ ]]` delimiters in template files (not `{{ }}`) because of GitHub Actions `${{ }}` conflicts.
+Root configs (`vite.config.ts`, `.release-it.json`, etc.) are hillbilly's own dev tooling. The `template/` directory is a Copier source with its own minimal configs — root and template drift intentionally. Copier uses `[[ ]]` delimiters in template files (not `{{ }}`) because of GitHub Actions `${{ }}` conflicts.
 
 ## RBAC package (@hillbilly/rbac)
 
@@ -76,7 +76,7 @@ Root configs (`vite.config.ts`, `.lintstagedrc.json`, `.release-it.json`, etc.) 
 ## Commit & release
 
 - **Commits**: Conventional Commits enforced by commitlint. Use `bun commit` for the commitizen prompt.
-- **Hooks**: `.vite-hooks/` runs lint-staged on pre-commit and commitlint on commit-msg. Uses `npx` (Vite+ sets PATH).
+- **Hooks**: `.vite-hooks/` runs `vp staged` on pre-commit and commitlint on commit-msg. Uses `npx` (Vite+ sets PATH).
 - **Release**: `release-it` with conventional-changelog. Requires clean working dir, clean `main` branch, and runs `vp check && vp run test` before init. Root release does NOT publish to npm.
 
 ## Knip (dead code detection)

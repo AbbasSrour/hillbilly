@@ -10,7 +10,6 @@ export default {
     "commitizen",
     "cz-conventional-changelog",
     "knip",
-    "lint-staged",
     "@release-it/conventional-changelog",
     "release-it",
     "vite-plus",
