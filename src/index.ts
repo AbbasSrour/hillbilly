@@ -142,10 +142,16 @@ sync
     if (existsSync(hillbillyPath)) {
       const answers = await readCopierAnswers(projectRoot);
       if (Object.keys(answers).length > 0) {
-        // Copier needs _src_path to locate the template for recopy/update
+        // Copier needs _src_path to locate the template for recopy/update.
+        // _src_path must point to the repo root (containing copier.yaml), NOT the
+        // template/ subdirectory — Copier uses _subdirectory internally.
         if (!answers._src_path) {
           const resolution = await resolveTemplateRoot(projectRoot);
-          answers._src_path = resolution.templateRoot;
+          const templateRoot = resolution.templateRoot;
+          // If templateRoot ends with /template, strip it to get the repo root
+          answers._src_path = templateRoot.endsWith("/template")
+            ? templateRoot.slice(0, -"/template".length)
+            : templateRoot;
         }
         await writeFile(
           resolve(projectRoot, ".copier-answers.yml"),

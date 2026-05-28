@@ -17,6 +17,107 @@ function reverseRender(content: string, projectName: string): string {
 }
 
 /**
+ * Apply reverse-rendering and auto raw-block wrapping for .jinja files.
+ */
+function prepareTemplateContent(
+  content: string,
+  templatePath: string,
+  projectName: string,
+): string {
+  let result = reverseRender(content, projectName);
+  if (templatePath.endsWith(".jinja")) {
+    result = wrapJinjaRawBlocks(result);
+  }
+  return result;
+}
+
+/**
+ * Wraps bare {{ ... }} and ${{ ... }} expressions in .jinja files with {% raw %} blocks
+ * so Copier's Jinja2 engine doesn't try to parse them as template variables.
+ *
+ * Handles nested braces (e.g. value={{ foo: { bar: 1 } }}) and skips
+ * expressions that already appear inside {% raw %} ... {% endraw %} blocks.
+ */
+export function wrapJinjaRawBlocks(content: string): string {
+  const RAW_START = "[% raw %]";
+  const RAW_END = "[% endraw %]";
+
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let inRawBlock = false;
+
+  for (const line of lines) {
+    // Track raw block state
+    if (line.includes(RAW_START)) inRawBlock = true;
+    if (line.includes(RAW_END)) {
+      inRawBlock = false;
+      result.push(line);
+      continue;
+    }
+
+    if (inRawBlock) {
+      result.push(line);
+      continue;
+    }
+
+    // Find bare {{ or ${{ on this line
+    let processed = line;
+    let idx = 0;
+    let output = "";
+
+    while (idx < processed.length) {
+      // Look for ${{ or {{ (prefer ${{ if both match at same position)
+      const openIdx = processed.indexOf("{{", idx);
+      if (openIdx === -1) {
+        output += processed.slice(idx);
+        break;
+      }
+
+      // Check if this {{ is already inside a raw tag
+      const beforeOpen = processed.slice(0, openIdx);
+      if (beforeOpen.includes(RAW_START) && !beforeOpen.includes(RAW_END)) {
+        output += processed.slice(idx);
+        break;
+      }
+
+      // Determine if this is ${{ or {{
+      const isDollarBrace = openIdx > 0 && processed[openIdx - 1] === "$";
+      const exprStart = isDollarBrace ? openIdx - 1 : openIdx;
+
+      // Emit everything up to the expression start
+      output += processed.slice(idx, exprStart);
+
+      // Find the matching }} by tracking brace depth
+      let depth = 1;
+      let closeIdx = openIdx + 2;
+      while (closeIdx < processed.length && depth > 0) {
+        if (processed[closeIdx] === "{") {
+          depth++;
+        } else if (processed[closeIdx] === "}") {
+          depth--;
+        }
+        closeIdx++;
+      }
+
+      if (depth === 0) {
+        // Found matching }} — wrap in raw block
+        const expr = processed.slice(exprStart, closeIdx);
+        output += `${RAW_START}${expr}${RAW_END}`;
+        idx = closeIdx;
+      } else {
+        // No closing }} on this line — emit as-is
+        output += processed.slice(exprStart, openIdx + 2);
+        idx = openIdx + 2;
+      }
+    }
+
+    result.push(output);
+  }
+
+  return result.join("\n");
+}
+
+/**
  * Push staged changes back to the hillbilly template.
  *
  * @param files - the scan result files
@@ -58,7 +159,7 @@ export async function pushChanges(
         }
         await writeFile(
           file.templatePath,
-          reverseRender(file.projectContent, projectName ?? ""),
+          prepareTemplateContent(file.projectContent, file.templatePath, projectName ?? ""),
           "utf-8",
         );
         result.written.push(file.templatePath);
@@ -72,7 +173,7 @@ export async function pushChanges(
         }
         await writeFile(
           file.templatePath,
-          reverseRender(file.projectContent, projectName ?? ""),
+          prepareTemplateContent(file.projectContent, file.templatePath, projectName ?? ""),
           "utf-8",
         );
         result.written.push(file.templatePath);
@@ -86,12 +187,16 @@ export async function pushChanges(
           const templateContent = await readFile(file.templatePath, "utf-8");
 
           newContent = applyStagedHunks(templateContent, file.hunks, indicesToApply);
-          newContent = reverseRender(newContent, projectName ?? "");
+          newContent = prepareTemplateContent(newContent, file.templatePath, projectName ?? "");
         } else {
           if (file.projectContent === undefined) {
             throw new Error("projectContent is missing for modified file with no hunks");
           }
-          newContent = reverseRender(file.projectContent, projectName ?? "");
+          newContent = prepareTemplateContent(
+            file.projectContent,
+            file.templatePath,
+            projectName ?? "",
+          );
         }
 
         await writeFile(file.templatePath, newContent, "utf-8");
