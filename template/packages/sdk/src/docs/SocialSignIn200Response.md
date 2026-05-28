@@ -1,13 +1,13 @@
 # SocialSignIn200Response
 
-Session response when idToken is provided
+Returns session details when idToken is provided, or an authorize URL otherwise
 
 ## Properties
 
 | Name         | Type            | Description | Notes                             |
 | ------------ | --------------- | ----------- | --------------------------------- |
-| **token**    | **string**      |             | [default to undefined]            |
-| **user**     | [**User**](.md) |             | [default to undefined]            |
+| **token**    | **string**      |             | [optional] [default to undefined] |
+| **user**     | [**User**](.md) |             | [optional] [default to undefined] |
 | **url**      | **string**      |             | [optional] [default to undefined] |
 | **redirect** | **boolean**     |             | [default to undefined]            |
 

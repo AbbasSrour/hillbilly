@@ -20,9 +20,9 @@
     }
   ],
   "paths": {
-    "/api/health": {
+    "/api/pulse": {
       "get": {
-        "operationId": "HealthCheckerController_check",
+        "operationId": "PulseController_check",
         "parameters": [],
         "responses": {
           "200": {
@@ -45,7 +45,9 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -60,7 +62,9 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -79,7 +83,9 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -113,7 +119,9 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -133,7 +141,9 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -156,7 +166,9 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": ["status"],
+                        "required": [
+                          "status"
+                        ],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -171,7 +183,9 @@
             }
           }
         },
-        "tags": ["Health"]
+        "tags": [
+          "Pulse"
+        ]
       }
     },
     "/api/v1/users": {
@@ -267,7 +281,10 @@
                       "$ref": "#/components/schemas/PageMetaDto"
                     }
                   },
-                  "required": ["data", "meta"]
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
                 }
               }
             }
@@ -292,7 +309,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "post": {
         "operationId": "UserController_createUser_v1",
@@ -338,7 +357,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/v1/users/admin": {
@@ -346,9 +367,6 @@
         "operationId": "UserController_admin_v1",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
-          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -369,7 +387,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/v1/users/me": {
@@ -407,7 +427,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "patch": {
         "operationId": "UserController_updateCurrentUser_v1",
@@ -453,7 +475,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/v1/users/{id}": {
@@ -462,8 +486,8 @@
         "parameters": [
           {
             "name": "id",
-            "required": true,
             "in": "path",
+            "required": true,
             "description": "User id",
             "allowEmptyValue": false,
             "allowReserved": false,
@@ -505,15 +529,17 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "patch": {
         "operationId": "UserController_updateUser_v1",
         "parameters": [
           {
             "name": "id",
-            "required": true,
             "in": "path",
+            "required": true,
             "description": "User id",
             "allowEmptyValue": false,
             "allowReserved": false,
@@ -565,15 +591,17 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       },
       "delete": {
         "operationId": "UserController_deleteUser_v1",
         "parameters": [
           {
             "name": "id",
-            "required": true,
             "in": "path",
+            "required": true,
             "description": "User id",
             "allowEmptyValue": false,
             "allowReserved": false,
@@ -608,7 +636,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/v1/users/{id}/block": {
@@ -617,8 +647,8 @@
         "parameters": [
           {
             "name": "id",
-            "required": true,
             "in": "path",
+            "required": true,
             "description": "User id",
             "allowEmptyValue": false,
             "allowReserved": false,
@@ -653,7 +683,9 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/v1/users/{id}/unblock": {
@@ -662,8 +694,8 @@
         "parameters": [
           {
             "name": "id",
-            "required": true,
             "in": "path",
+            "required": true,
             "description": "User id",
             "allowEmptyValue": false,
             "allowReserved": false,
@@ -698,741 +730,16 @@
             "bearer": []
           }
         ],
-        "tags": ["Users"]
-      }
-    },
-    "/api/v1/organizations/me": {
-      "get": {
-        "operationId": "OrganizationController_getMyOrganization_v1",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Get current member organization. (Member only)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrganizationDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      },
-      "patch": {
-        "operationId": "OrganizationController_updateMyOrganization_v1",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMyOrganizationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update current member organization. (Member only, requires organization.update)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrganizationDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      }
-    },
-    "/api/v1/organizations": {
-      "get": {
-        "operationId": "OrganizationController_getOrganizations_v1",
-        "parameters": [
-          {
-            "name": "order",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Order"
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Sort field",
-            "schema": {
-              "$ref": "#/components/schemas/OrganizationSortField"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "take",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "maximum": 50,
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "q",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "in": "query",
-            "description": "Filter by organization name",
-            "schema": {
-              "example": "Acme",
-              "type": "string"
-            }
-          },
-          {
-            "name": "banned",
-            "required": false,
-            "in": "query",
-            "description": "Filter by banned status",
-            "schema": {
-              "example": false,
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "\n    Get list of organizations. (Admin only, requires organization.view).\n    Search ('q') matches name, email, phone, region, city, address.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/OrganizationDto"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/PageMetaDto"
-                    }
-                  },
-                  "required": ["data", "meta"]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      },
-      "post": {
-        "operationId": "OrganizationController_createOrganization_v1",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrganizationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Creates organization. (Admin only, requires organization.create)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrganizationDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      }
-    },
-    "/api/v1/organizations/{id}": {
-      "get": {
-        "operationId": "OrganizationController_getOrganization_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Organization id",
-            "allowEmptyValue": false,
-            "allowReserved": false,
-            "schema": {
-              "format": "uuid",
-              "example": "123e4567-e89b-12d3-a456-426655440000",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get organization. (Admin only, requires organization.view)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrganizationDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotFoundException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      },
-      "patch": {
-        "operationId": "OrganizationController_updateOrganization_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Organization id",
-            "allowEmptyValue": false,
-            "allowReserved": false,
-            "schema": {
-              "format": "uuid",
-              "example": "123e4567-e89b-12d3-a456-426655440000",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrganizationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update organization. (Admin only, requires organization.update)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrganizationDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotFoundException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      },
-      "delete": {
-        "operationId": "OrganizationController_deleteOrganization_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Organization id",
-            "allowEmptyValue": false,
-            "allowReserved": false,
-            "schema": {
-              "format": "uuid",
-              "example": "123e4567-e89b-12d3-a456-426655440000",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Delete organization. (Admin only, requires organization.delete)"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    },
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDenied2Exception"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotFoundException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      }
-    },
-    "/api/v1/organizations/{id}/ban": {
-      "patch": {
-        "operationId": "OrganizationController_banOrganization_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Organization id",
-            "allowEmptyValue": false,
-            "allowReserved": false,
-            "schema": {
-              "format": "uuid",
-              "example": "123e4567-e89b-12d3-a456-426655440000",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrganizationBanDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "\n    Ban organization. (Admin only, requires organization.ban).\n    If the organization is already banned, this endpoint will throw an error.\n    Banning an organization will also ban all its members.\n    "
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationAlreadyBannedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotFoundException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
-      }
-    },
-    "/api/v1/organizations/{id}/unban": {
-      "patch": {
-        "operationId": "OrganizationController_unbanOrganization_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Organization id",
-            "allowEmptyValue": false,
-            "allowReserved": false,
-            "schema": {
-              "format": "uuid",
-              "example": "123e4567-e89b-12d3-a456-426655440000",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "\n    Unban organization. (Admin only, requires organization.unban).\n    If the organization is not banned, this endpoint will throw an error.\n    Unbanning an organization will also unban all its members.\n    "
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotBannedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UnauthorizedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationScopeAccessDeniedException"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/OrganizationNotFoundException"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Organization"]
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/api/auth/sign-in/social": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Sign in with a social provider",
         "operationId": "socialSignIn",
         "security": [
@@ -1449,78 +756,156 @@
                 "type": "object",
                 "properties": {
                   "callbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "Callback URL to redirect to after the user has signed in"
                   },
                   "newUserCallbackURL": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "errorCallbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "Callback URL to redirect to if an error happens"
                   },
                   "provider": {
                     "type": "string"
                   },
                   "disableRedirect": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
                   },
                   "idToken": {
-                    "type": ["object", "null"],
+                    "type": [
+                      "object",
+                      "null"
+                    ],
                     "properties": {
                       "token": {
                         "type": "string",
                         "description": "ID token from the provider"
                       },
                       "nonce": {
-                        "type": ["string", "null"],
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "description": "Nonce used to generate the token"
                       },
                       "accessToken": {
-                        "type": ["string", "null"],
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "description": "Access token from the provider"
                       },
                       "refreshToken": {
-                        "type": ["string", "null"],
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "description": "Refresh token from the provider"
                       },
                       "expiresAt": {
-                        "type": ["number", "null"],
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "description": "Expiry date of the token"
+                      },
+                      "user": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "firstName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "lastName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            }
+                          },
+                          "email": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "description": "The user object from the provider. Only available for some providers like Apple."
                       }
                     },
-                    "required": ["token"]
+                    "required": [
+                      "token"
+                    ]
                   },
                   "scopes": {
-                    "type": ["array", "null"],
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "description": "Array of scopes to request from the provider. This will override the default scopes passed."
                   },
                   "requestSignUp": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "Explicitly request sign-up. Useful when disableImplicitSignUp is true for this provider"
                   },
                   "loginHint": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The login hint to use for the authorization code request"
                   },
                   "additionalData": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
-                "required": ["provider"]
+                "required": [
+                  "provider"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success - Returns either session details or redirect URL",
+            "description": "Success - Returns session details (idToken branch) or an authorize URL (redirect branch)",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Session response when idToken is provided",
+                  "description": "Returns session details when idToken is provided, or an authorize URL otherwise",
                   "properties": {
                     "token": {
                       "type": "string"
@@ -1533,11 +918,12 @@
                       "type": "string"
                     },
                     "redirect": {
-                      "type": "boolean",
-                      "enum": [false]
+                      "type": "boolean"
                     }
                   },
-                  "required": ["redirect", "token", "user"]
+                  "required": [
+                    "redirect"
+                  ]
                 }
               }
             }
@@ -1552,7 +938,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1568,7 +956,257 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Unauthorized. Due to missing or invalid authentication."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden. You do not have permission to access this resource or to perform this action."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found. The requested resource was not found."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Internal Server Error. This is a problem with the server that you cannot fix."
+          }
+        }
+      }
+    },
+    "/api/auth/callback/{id}": {
+      "get": {
+        "tags": [
+          "Default"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Unauthorized. Due to missing or invalid authentication."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden. You do not have permission to access this resource or to perform this action."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found. The requested resource was not found."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Internal Server Error. This is a problem with the server that you cannot fix."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Default"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1639,7 +1277,9 @@
     },
     "/api/auth/get-session": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Get the current session",
         "operationId": "getSession",
         "security": [
@@ -1654,8 +1294,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "nullable": true,
+                  "type": [
+                    "object",
+                    "null"
+                  ],
                   "properties": {
                     "session": {
                       "$ref": "#/components/schemas/Session"
@@ -1664,7 +1306,10 @@
                       "$ref": "#/components/schemas/User"
                     }
                   },
-                  "required": ["session", "user"]
+                  "required": [
+                    "session",
+                    "user"
+                  ]
                 }
               }
             }
@@ -1679,7 +1324,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1695,7 +1342,155 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Unauthorized. Due to missing or invalid authentication."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden. You do not have permission to access this resource or to perform this action."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found. The requested resource was not found."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Internal Server Error. This is a problem with the server that you cannot fix."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Default"
+        ],
+        "description": "Get the current session",
+        "operationId": "getSession1",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "session": {
+                      "$ref": "#/components/schemas/Session"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "session",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1766,7 +1561,9 @@
     },
     "/api/auth/sign-out": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Sign out the current user",
         "operationId": "signOut",
         "security": [
@@ -1811,7 +1608,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1827,7 +1626,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -1898,7 +1699,9 @@
     },
     "/api/auth/sign-up/email": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Sign up a user using email and password",
         "operationId": "signUpWithEmailAndPassword",
         "security": [
@@ -1938,7 +1741,11 @@
                     "description": "If this is false, the session will not be remembered. Default is `true`."
                   }
                 },
-                "required": ["name", "email", "password"]
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ]
               }
             }
           }
@@ -1993,10 +1800,19 @@
                           "description": "When the user was last updated"
                         }
                       },
-                      "required": ["id", "email", "name", "emailVerified", "createdAt", "updatedAt"]
+                      "required": [
+                        "id",
+                        "email",
+                        "name",
+                        "emailVerified",
+                        "createdAt",
+                        "updatedAt"
+                      ]
                     }
                   },
-                  "required": ["user"]
+                  "required": [
+                    "user"
+                  ]
                 }
               }
             }
@@ -2011,7 +1827,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2027,7 +1845,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2113,7 +1933,9 @@
     },
     "/api/auth/sign-in/email": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Sign in with email and password",
         "operationId": "signInEmail",
         "security": [
@@ -2138,16 +1960,25 @@
                     "description": "Password of the user"
                   },
                   "callbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "Callback URL to use as a redirect for email verification"
                   },
                   "rememberMe": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "If this is false, the session will not be remembered. Default is `true`.",
                     "default": true
                   }
                 },
-                "required": ["email", "password"]
+                "required": [
+                  "email",
+                  "password"
+                ]
               }
             }
           }
@@ -2163,7 +1994,9 @@
                   "properties": {
                     "redirect": {
                       "type": "boolean",
-                      "enum": [false]
+                      "enum": [
+                        false
+                      ]
                     },
                     "token": {
                       "type": "string",
@@ -2178,7 +2011,11 @@
                       "$ref": "#/components/schemas/User"
                     }
                   },
-                  "required": ["redirect", "token", "user"]
+                  "required": [
+                    "redirect",
+                    "token",
+                    "user"
+                  ]
                 }
               }
             }
@@ -2193,7 +2030,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2209,7 +2048,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2280,7 +2121,9 @@
     },
     "/api/auth/reset-password": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Reset the password for a user",
         "operationId": "resetPassword",
         "security": [
@@ -2301,11 +2144,16 @@
                     "description": "The new password to set"
                   },
                   "token": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The token to reset the password"
                   }
                 },
-                "required": ["newPassword"]
+                "required": [
+                  "newPassword"
+                ]
               }
             }
           }
@@ -2336,7 +2184,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2352,7 +2202,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2423,7 +2275,9 @@
     },
     "/api/auth/verify-password": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Verify the current user's password",
         "operationId": "verifyPassword",
         "security": [
@@ -2444,7 +2298,9 @@
                     "description": "The password to verify"
                   }
                 },
-                "required": ["password"]
+                "required": [
+                  "password"
+                ]
               }
             }
           }
@@ -2475,7 +2331,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2491,7 +2349,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2562,7 +2422,9 @@
     },
     "/api/auth/verify-email": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Verify the email of the user",
         "security": [
           {
@@ -2606,7 +2468,10 @@
                       "description": "Indicates if the email was verified successfully"
                     }
                   },
-                  "required": ["user", "status"]
+                  "required": [
+                    "user",
+                    "status"
+                  ]
                 }
               }
             }
@@ -2621,7 +2486,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2637,7 +2504,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2708,7 +2577,9 @@
     },
     "/api/auth/send-verification-email": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Send a verification email to the user",
         "operationId": "sendVerificationEmail",
         "security": [
@@ -2735,7 +2606,9 @@
                     "nullable": true
                   }
                 },
-                "required": ["email"]
+                "required": [
+                  "email"
+                ]
               }
             }
           }
@@ -2785,7 +2658,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2856,7 +2731,9 @@
     },
     "/api/auth/change-email": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "operationId": "changeEmail",
         "security": [
           {
@@ -2876,11 +2753,16 @@
                     "description": "The new email address to set must be a valid email address"
                   },
                   "callbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The URL to redirect to after email verification"
                   }
                 },
-                "required": ["newEmail"]
+                "required": [
+                  "newEmail"
+                ]
               }
             }
           }
@@ -2903,12 +2785,17 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": ["Email updated", "Verification email sent"],
+                      "enum": [
+                        "Email updated",
+                        "Verification email sent"
+                      ],
                       "description": "Status message of the email change process",
                       "nullable": true
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -2923,7 +2810,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2939,7 +2828,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -2974,21 +2865,6 @@
               }
             },
             "description": "Not Found. The requested resource was not found."
-          },
-          "422": {
-            "description": "Unprocessable Entity. Email already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
           },
           "429": {
             "content": {
@@ -3025,7 +2901,9 @@
     },
     "/api/auth/change-password": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Change the password of the user",
         "operationId": "changePassword",
         "security": [
@@ -3050,11 +2928,17 @@
                     "description": "The current password is required"
                   },
                   "revokeOtherSessions": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "Must be a boolean value"
                   }
                 },
-                "required": ["newPassword", "currentPassword"]
+                "required": [
+                  "newPassword",
+                  "currentPassword"
+                ]
               }
             }
           }
@@ -3109,10 +2993,19 @@
                           "description": "When the user was last updated"
                         }
                       },
-                      "required": ["id", "email", "name", "emailVerified", "createdAt", "updatedAt"]
+                      "required": [
+                        "id",
+                        "email",
+                        "name",
+                        "emailVerified",
+                        "createdAt",
+                        "updatedAt"
+                      ]
                     }
                   },
-                  "required": ["user"]
+                  "required": [
+                    "user"
+                  ]
                 }
               }
             }
@@ -3127,7 +3020,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3143,7 +3038,148 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Unauthorized. Due to missing or invalid authentication."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden. You do not have permission to access this resource or to perform this action."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found. The requested resource was not found."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Internal Server Error. This is a problem with the server that you cannot fix."
+          }
+        }
+      }
+    },
+    "/api/auth/update-session": {
+      "post": {
+        "tags": [
+          "Default"
+        ],
+        "description": "Update the current session",
+        "operationId": "updateSession",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "session": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Session"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3214,7 +3250,9 @@
     },
     "/api/auth/update-user": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Update the current user",
         "operationId": "updateUser",
         "security": [
@@ -3270,7 +3308,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3286,7 +3326,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3357,7 +3399,9 @@
     },
     "/api/auth/delete-user": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Delete the user",
         "operationId": "deleteUser",
         "security": [
@@ -3403,11 +3447,17 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": ["User deleted", "Verification email sent"],
+                      "enum": [
+                        "User deleted",
+                        "Verification email sent"
+                      ],
                       "description": "Status message of the deletion process"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -3422,7 +3472,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3438,7 +3490,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3509,7 +3563,9 @@
     },
     "/api/auth/request-password-reset": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Send a password reset email to the user",
         "operationId": "requestPasswordReset",
         "security": [
@@ -3530,11 +3586,16 @@
                     "description": "The email address of the user to send a password reset email to"
                   },
                   "redirectTo": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The URL to redirect the user to reset their password. If the token isn't valid or expired, it'll be redirected with a query parameter `?error=INVALID_TOKEN`. If the token is valid, it'll be redirected with a query parameter `?token=VALID_TOKEN"
                   }
                 },
-                "required": ["email"]
+                "required": [
+                  "email"
+                ]
               }
             }
           }
@@ -3568,7 +3629,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3584,7 +3647,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3655,7 +3720,9 @@
     },
     "/api/auth/reset-password/{token}": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Redirects the user to the callback URL with the token",
         "operationId": "resetPasswordCallback",
         "security": [
@@ -3709,7 +3776,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3725,7 +3794,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3796,7 +3867,9 @@
     },
     "/api/auth/list-sessions": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "List all active sessions for the user",
         "operationId": "listUserSessions",
         "security": [
@@ -3829,7 +3902,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3845,7 +3920,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3916,7 +3993,9 @@
     },
     "/api/auth/revoke-session": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Revoke a single session",
         "security": [
           {
@@ -3935,7 +4014,9 @@
                     "description": "The token to revoke"
                   }
                 },
-                "required": ["token"]
+                "required": [
+                  "token"
+                ]
               }
             }
           }
@@ -3953,7 +4034,9 @@
                       "description": "Indicates if the session was revoked successfully"
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -3968,7 +4051,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -3984,7 +4069,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4055,7 +4142,9 @@
     },
     "/api/auth/revoke-sessions": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Revoke all sessions for the user",
         "security": [
           {
@@ -4086,7 +4175,9 @@
                       "description": "Indicates if all sessions were revoked successfully"
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -4101,7 +4192,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4117,7 +4210,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4188,7 +4283,9 @@
     },
     "/api/auth/revoke-other-sessions": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Revoke all other sessions for the user except the current one",
         "security": [
           {
@@ -4219,7 +4316,9 @@
                       "description": "Indicates if all other sessions were revoked successfully"
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -4234,7 +4333,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4250,7 +4351,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4321,7 +4424,9 @@
     },
     "/api/auth/link-social": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Link a social account to the user",
         "operationId": "linkSocialAccount",
         "security": [
@@ -4338,53 +4443,90 @@
                 "type": "object",
                 "properties": {
                   "callbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The URL to redirect to after the user has signed in"
                   },
                   "provider": {
                     "type": "string"
                   },
                   "idToken": {
-                    "type": ["object", "null"],
+                    "type": [
+                      "object",
+                      "null"
+                    ],
                     "properties": {
                       "token": {
                         "type": "string"
                       },
                       "nonce": {
-                        "type": ["string", "null"]
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       },
                       "accessToken": {
-                        "type": ["string", "null"]
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       },
                       "refreshToken": {
-                        "type": ["string", "null"]
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       },
                       "scopes": {
-                        "type": ["array", "null"]
+                        "type": [
+                          "array",
+                          "null"
+                        ]
                       }
                     },
-                    "required": ["token"]
+                    "required": [
+                      "token"
+                    ]
                   },
                   "requestSignUp": {
-                    "type": ["boolean", "null"]
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "scopes": {
-                    "type": ["array", "null"],
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "description": "Additional scopes to request from the provider"
                   },
                   "errorCallbackURL": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The URL to redirect to if there is an error during the link process"
                   },
                   "disableRedirect": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
                   },
                   "additionalData": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
-                "required": ["provider"]
+                "required": [
+                  "provider"
+                ]
               }
             }
           }
@@ -4409,7 +4551,9 @@
                       "type": "boolean"
                     }
                   },
-                  "required": ["redirect"]
+                  "required": [
+                    "redirect"
+                  ]
                 }
               }
             }
@@ -4424,7 +4568,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4440,7 +4586,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4511,7 +4659,9 @@
     },
     "/api/auth/list-accounts": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "List all accounts linked to the user",
         "operationId": "listUserAccounts",
         "security": [
@@ -4581,7 +4731,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4597,7 +4749,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4668,7 +4822,9 @@
     },
     "/api/auth/delete-user/callback": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Callback to complete user deletion with verification token",
         "security": [
           {
@@ -4688,7 +4844,10 @@
             "name": "callbackURL",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The URL to redirect to after deletion"
             }
           }
@@ -4707,11 +4866,16 @@
                     },
                     "message": {
                       "type": "string",
-                      "enum": ["User deleted"],
+                      "enum": [
+                        "User deleted"
+                      ],
                       "description": "Confirmation message"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -4726,7 +4890,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4742,7 +4908,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4813,7 +4981,9 @@
     },
     "/api/auth/unlink-account": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Unlink an account",
         "security": [
           {
@@ -4832,10 +5002,15 @@
                     "type": "string"
                   },
                   "accountId": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
-                "required": ["providerId"]
+                "required": [
+                  "providerId"
+                ]
               }
             }
           }
@@ -4866,7 +5041,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4882,7 +5059,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -4953,7 +5132,9 @@
     },
     "/api/auth/refresh-token": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Refresh the access token using a refresh token",
         "security": [
           {
@@ -4973,15 +5154,23 @@
                     "description": "The provider ID for the OAuth provider"
                   },
                   "accountId": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The account ID associated with the refresh token"
                   },
                   "userId": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The user ID associated with the account"
                   }
                 },
-                "required": ["providerId"]
+                "required": [
+                  "providerId"
+                ]
               }
             }
           }
@@ -5032,7 +5221,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5103,7 +5294,9 @@
     },
     "/api/auth/get-access-token": {
       "post": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Get a valid access token, doing a refresh if needed",
         "security": [
           {
@@ -5123,15 +5316,23 @@
                     "description": "The provider ID for the OAuth provider"
                   },
                   "accountId": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The account ID associated with the refresh token"
                   },
                   "userId": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The user ID associated with the account"
                   }
                 },
-                "required": ["providerId"]
+                "required": [
+                  "providerId"
+                ]
               }
             }
           }
@@ -5175,7 +5376,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5246,7 +5449,9 @@
     },
     "/api/auth/account-info": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Get the account info provided by the provider",
         "security": [
           {
@@ -5281,7 +5486,10 @@
                           "type": "boolean"
                         }
                       },
-                      "required": ["id", "emailVerified"]
+                      "required": [
+                        "id",
+                        "emailVerified"
+                      ]
                     },
                     "data": {
                       "type": "object",
@@ -5289,7 +5497,10 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": ["user", "data"],
+                  "required": [
+                    "user",
+                    "data"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -5305,7 +5516,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5321,7 +5534,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5392,7 +5607,9 @@
     },
     "/api/auth/ok": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Check if the API is working",
         "security": [
           {
@@ -5413,7 +5630,9 @@
                       "description": "Indicates if the API is working"
                     }
                   },
-                  "required": ["ok"]
+                  "required": [
+                    "ok"
+                  ]
                 }
               }
             }
@@ -5428,7 +5647,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5444,7 +5665,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5515,7 +5738,9 @@
     },
     "/api/auth/error": {
       "get": {
-        "tags": ["Default"],
+        "tags": [
+          "Default"
+        ],
         "description": "Displays an error page",
         "security": [
           {
@@ -5545,7 +5770,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5561,7 +5788,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5632,7 +5861,9 @@
     },
     "/api/auth/admin/set-role": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Set the role of a user",
         "operationId": "setUserRole",
         "security": [
@@ -5657,7 +5888,10 @@
                     "description": "The role to set, this can be a string or an array of strings. Eg: `admin` or `[admin, user]`"
                   }
                 },
-                "required": ["userId", "role"]
+                "required": [
+                  "userId",
+                  "role"
+                ]
               }
             }
           }
@@ -5688,7 +5922,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5704,7 +5940,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5775,7 +6013,9 @@
     },
     "/api/auth/admin/get-user": {
       "get": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Get an existing user",
         "operationId": "getUser",
         "security": [
@@ -5819,7 +6059,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5835,7 +6077,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5906,7 +6150,9 @@
     },
     "/api/auth/admin/create-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Create a new user",
         "operationId": "createUser",
         "security": [
@@ -5927,20 +6173,32 @@
                     "description": "The email of the user"
                   },
                   "password": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "name": {
                     "type": "string",
                     "description": "The name of the user"
                   },
                   "role": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "data": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
-                "required": ["email", "name"]
+                "required": [
+                  "email",
+                  "name"
+                ]
               }
             }
           }
@@ -5971,7 +6229,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -5987,7 +6247,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6058,9 +6320,11 @@
     },
     "/api/auth/admin/update-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Update a user's details",
-        "operationId": "updateUser1",
+        "operationId": "adminUpdateUser",
         "security": [
           {
             "bearerAuth": []
@@ -6083,7 +6347,10 @@
                     "description": "The user data to update"
                   }
                 },
-                "required": ["userId", "data"]
+                "required": [
+                  "userId",
+                  "data"
+                ]
               }
             }
           }
@@ -6114,7 +6381,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6130,7 +6399,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6201,7 +6472,9 @@
     },
     "/api/auth/admin/list-users": {
       "get": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "List users",
         "operationId": "listUsers",
         "security": [
@@ -6214,14 +6487,20 @@
             "name": "searchValue",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "searchField",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The field to search in, defaults to email. Can be `email` or `name`. Eg: \"name\""
             }
           },
@@ -6229,7 +6508,10 @@
             "name": "searchOperator",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The operator to use for the search. Can be `contains`, `starts_with` or `ends_with`. Eg: \"contains\""
             }
           },
@@ -6237,21 +6519,30 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The field to sort by"
             }
           },
@@ -6259,7 +6550,10 @@
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The direction to sort by"
             }
           },
@@ -6267,7 +6561,10 @@
             "name": "filterField",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The field to filter by"
             }
           },
@@ -6275,14 +6572,20 @@
             "name": "filterValue",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "filterOperator",
             "in": "query",
             "schema": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "The operator to use for the filter"
             }
           }
@@ -6311,7 +6614,10 @@
                       "type": "number"
                     }
                   },
-                  "required": ["users", "total"]
+                  "required": [
+                    "users",
+                    "total"
+                  ]
                 }
               }
             }
@@ -6326,7 +6632,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6342,7 +6650,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6413,9 +6723,11 @@
     },
     "/api/auth/admin/list-user-sessions": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "List user sessions",
-        "operationId": "listUserSessions1",
+        "operationId": "adminListUserSessions",
         "security": [
           {
             "bearerAuth": []
@@ -6434,7 +6746,9 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -6468,7 +6782,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6484,7 +6800,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6555,7 +6873,9 @@
     },
     "/api/auth/admin/unban-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Unban a user",
         "operationId": "unbanUser",
         "security": [
@@ -6576,7 +6896,9 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -6607,7 +6929,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6623,7 +6947,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6694,7 +7020,9 @@
     },
     "/api/auth/admin/ban-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Ban a user",
         "operationId": "banUser",
         "security": [
@@ -6715,15 +7043,23 @@
                     "description": "The user id"
                   },
                   "banReason": {
-                    "type": ["string", "null"],
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "The reason for the ban"
                   },
                   "banExpiresIn": {
-                    "type": ["number", "null"],
+                    "type": [
+                      "number",
+                      "null"
+                    ],
                     "description": "The number of seconds until the ban expires"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -6754,7 +7090,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6770,7 +7108,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6841,7 +7181,9 @@
     },
     "/api/auth/admin/impersonate-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Impersonate a user",
         "operationId": "impersonateUser",
         "security": [
@@ -6862,7 +7204,9 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -6896,7 +7240,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6912,7 +7258,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -6983,7 +7331,9 @@
     },
     "/api/auth/admin/stop-impersonating": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -7001,7 +7351,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7017,7 +7369,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7088,7 +7442,9 @@
     },
     "/api/auth/admin/revoke-user-session": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Revoke a user session",
         "operationId": "revokeUserSession",
         "security": [
@@ -7109,7 +7465,9 @@
                     "description": "The session token"
                   }
                 },
-                "required": ["sessionToken"]
+                "required": [
+                  "sessionToken"
+                ]
               }
             }
           }
@@ -7140,7 +7498,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7156,7 +7516,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7227,7 +7589,9 @@
     },
     "/api/auth/admin/revoke-user-sessions": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Revoke all user sessions",
         "operationId": "revokeUserSessions",
         "security": [
@@ -7248,7 +7612,9 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -7279,7 +7645,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7295,7 +7663,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7366,7 +7736,9 @@
     },
     "/api/auth/admin/remove-user": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Delete a user and all their sessions and accounts. Cannot be undone.",
         "operationId": "removeUser",
         "security": [
@@ -7387,7 +7759,9 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["userId"]
+                "required": [
+                  "userId"
+                ]
               }
             }
           }
@@ -7418,7 +7792,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7434,7 +7810,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7505,7 +7883,9 @@
     },
     "/api/auth/admin/set-user-password": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Set a user's password",
         "operationId": "setUserPassword",
         "security": [
@@ -7530,7 +7910,10 @@
                     "description": "The user id"
                   }
                 },
-                "required": ["newPassword", "userId"]
+                "required": [
+                  "newPassword",
+                  "userId"
+                ]
               }
             }
           }
@@ -7561,7 +7944,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7577,7 +7962,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7648,7 +8035,9 @@
     },
     "/api/auth/admin/has-permission": {
       "post": {
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "description": "Check if the user has permission",
         "security": [
           {
@@ -7662,17 +8051,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "permission": {
-                    "type": "object",
-                    "description": "The permission to check",
-                    "deprecated": true
-                  },
                   "permissions": {
                     "type": "object",
                     "description": "The permission to check"
                   }
                 },
-                "required": ["permissions"]
+                "required": [
+                  "permissions"
+                ]
               }
             }
           }
@@ -7692,7 +8078,9 @@
                       "type": "boolean"
                     }
                   },
-                  "required": ["success"]
+                  "required": [
+                    "success"
+                  ]
                 }
               }
             }
@@ -7707,7 +8095,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7723,7 +8113,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7794,7 +8186,9 @@
     },
     "/api/auth/rbac/sync": {
       "post": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -7812,7 +8206,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7828,7 +8224,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7899,7 +8297,9 @@
     },
     "/api/auth/rbac/roles": {
       "get": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -7910,28 +8310,40 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           }
         ],
@@ -7946,7 +8358,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -7962,7 +8376,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8031,7 +8447,9 @@
         }
       },
       "post": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8049,13 +8467,21 @@
                     "type": "string"
                   },
                   "description": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "permissionIds": {
-                    "type": ["array", "null"]
+                    "type": [
+                      "array",
+                      "null"
+                    ]
                   }
                 },
-                "required": ["name"]
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -8071,7 +8497,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8087,7 +8515,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8158,7 +8588,9 @@
     },
     "/api/auth/rbac/role": {
       "get": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8184,7 +8616,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8200,7 +8634,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8269,7 +8705,9 @@
         }
       },
       "put": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8284,19 +8722,30 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "description": {
-                    "type": ["string", "null"]
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "permissionIds": {
-                    "type": ["array", "null"]
+                    "type": [
+                      "array",
+                      "null"
+                    ]
                   },
                   "roleId": {
                     "type": "string"
                   }
                 },
-                "required": ["roleId"]
+                "required": [
+                  "roleId"
+                ]
               }
             }
           }
@@ -8312,7 +8761,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8328,7 +8779,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8397,7 +8850,9 @@
         }
       },
       "delete": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8415,7 +8870,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8431,7 +8888,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8502,7 +8961,9 @@
     },
     "/api/auth/rbac/permissions": {
       "get": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8513,28 +8974,40 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "sortBy",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           {
             "name": "sortDirection",
             "in": "query",
             "schema": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             }
           }
         ],
@@ -8564,13 +9037,7 @@
                               "user.create",
                               "user.update",
                               "user.delete",
-                              "user.block",
-                              "organization.view",
-                              "organization.create",
-                              "organization.update",
-                              "organization.delete",
-                              "organization.ban",
-                              "organization.unban"
+                              "user.block"
                             ]
                           },
                           "description": {
@@ -8578,7 +9045,11 @@
                             "nullable": true
                           }
                         },
-                        "required": ["id", "name", "code"],
+                        "required": [
+                          "id",
+                          "name",
+                          "code"
+                        ],
                         "additionalProperties": true
                       }
                     },
@@ -8586,7 +9057,10 @@
                       "type": "number"
                     }
                   },
-                  "required": ["permissions", "total"]
+                  "required": [
+                    "permissions",
+                    "total"
+                  ]
                 }
               }
             }
@@ -8601,7 +9075,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8617,7 +9093,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8688,7 +9166,9 @@
     },
     "/api/auth/rbac/role-permissions": {
       "get": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8729,13 +9209,7 @@
                               "user.create",
                               "user.update",
                               "user.delete",
-                              "user.block",
-                              "organization.view",
-                              "organization.create",
-                              "organization.update",
-                              "organization.delete",
-                              "organization.ban",
-                              "organization.unban"
+                              "user.block"
                             ]
                           },
                           "description": {
@@ -8743,7 +9217,11 @@
                             "nullable": true
                           }
                         },
-                        "required": ["id", "name", "code"],
+                        "required": [
+                          "id",
+                          "name",
+                          "code"
+                        ],
                         "additionalProperties": true
                       }
                     },
@@ -8751,7 +9229,10 @@
                       "type": "number"
                     }
                   },
-                  "required": ["permissions", "total"]
+                  "required": [
+                    "permissions",
+                    "total"
+                  ]
                 }
               }
             }
@@ -8766,7 +9247,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8782,7 +9265,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8853,7 +9338,9 @@
     },
     "/api/auth/rbac/role-permissions/assign": {
       "post": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8874,7 +9361,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["roleId", "permissionId"]
+                "required": [
+                  "roleId",
+                  "permissionId"
+                ]
               }
             }
           }
@@ -8890,7 +9380,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8906,7 +9398,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -8977,7 +9471,9 @@
     },
     "/api/auth/rbac/role-permissions/remove": {
       "post": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -8998,7 +9494,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["roleId", "permissionId"]
+                "required": [
+                  "roleId",
+                  "permissionId"
+                ]
               }
             }
           }
@@ -9014,7 +9513,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9030,7 +9531,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9101,7 +9604,9 @@
     },
     "/api/auth/rbac/check-permission": {
       "post": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -9123,13 +9628,7 @@
                           "user.create",
                           "user.update",
                           "user.delete",
-                          "user.block",
-                          "organization.view",
-                          "organization.create",
-                          "organization.update",
-                          "organization.delete",
-                          "organization.ban",
-                          "organization.unban"
+                          "user.block"
                         ]
                       },
                       {
@@ -9141,20 +9640,16 @@
                             "user.create",
                             "user.update",
                             "user.delete",
-                            "user.block",
-                            "organization.view",
-                            "organization.create",
-                            "organization.update",
-                            "organization.delete",
-                            "organization.ban",
-                            "organization.unban"
+                            "user.block"
                           ]
                         }
                       }
                     ]
                   }
                 },
-                "required": ["permission"]
+                "required": [
+                  "permission"
+                ]
               }
             }
           }
@@ -9179,13 +9674,7 @@
                           "user.create",
                           "user.update",
                           "user.delete",
-                          "user.block",
-                          "organization.view",
-                          "organization.create",
-                          "organization.update",
-                          "organization.delete",
-                          "organization.ban",
-                          "organization.unban"
+                          "user.block"
                         ]
                       }
                     },
@@ -9198,18 +9687,16 @@
                           "user.create",
                           "user.update",
                           "user.delete",
-                          "user.block",
-                          "organization.view",
-                          "organization.create",
-                          "organization.update",
-                          "organization.delete",
-                          "organization.ban",
-                          "organization.unban"
+                          "user.block"
                         ]
                       }
                     }
                   },
-                  "required": ["hasPermission", "checked", "userPermissions"]
+                  "required": [
+                    "hasPermission",
+                    "checked",
+                    "userPermissions"
+                  ]
                 }
               }
             }
@@ -9224,7 +9711,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9240,7 +9729,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9311,7 +9802,9 @@
     },
     "/api/auth/rbac/user-permissions": {
       "get": {
-        "tags": ["Rbac"],
+        "tags": [
+          "Rbac"
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -9338,7 +9831,10 @@
                               "type": "string"
                             }
                           },
-                          "required": ["id", "name"]
+                          "required": [
+                            "id",
+                            "name"
+                          ]
                         },
                         {
                           "type": "null"
@@ -9363,13 +9859,7 @@
                               "user.create",
                               "user.update",
                               "user.delete",
-                              "user.block",
-                              "organization.view",
-                              "organization.create",
-                              "organization.update",
-                              "organization.delete",
-                              "organization.ban",
-                              "organization.unban"
+                              "user.block"
                             ]
                           },
                           "description": {
@@ -9377,12 +9867,19 @@
                             "nullable": true
                           }
                         },
-                        "required": ["id", "name", "code"],
+                        "required": [
+                          "id",
+                          "name",
+                          "code"
+                        ],
                         "additionalProperties": true
                       }
                     }
                   },
-                  "required": ["role", "permissions"]
+                  "required": [
+                    "role",
+                    "permissions"
+                  ]
                 }
               }
             }
@@ -9397,7 +9894,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9413,7 +9912,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9484,7 +9985,9 @@
     },
     "/api/auth/sign-in/phone-number": {
       "post": {
-        "tags": ["Phone-number"],
+        "tags": [
+          "Phone-number"
+        ],
         "description": "Use this endpoint to sign in with phone number",
         "security": [
           {
@@ -9508,11 +10011,17 @@
                     "description": "Password to use for sign in."
                   },
                   "rememberMe": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
                     "description": "Remember the session. Eg: true"
                   }
                 },
-                "required": ["phoneNumber", "password"]
+                "required": [
+                  "phoneNumber",
+                  "password"
+                ]
               }
             }
           }
@@ -9549,7 +10058,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9620,7 +10131,9 @@
     },
     "/api/auth/phone-number/send-otp": {
       "post": {
-        "tags": ["Phone-number"],
+        "tags": [
+          "Phone-number"
+        ],
         "description": "Use this endpoint to send OTP to phone number",
         "security": [
           {
@@ -9640,7 +10153,9 @@
                     "description": "Phone number to send OTP. Eg: \"+1234567890\""
                   }
                 },
-                "required": ["phoneNumber"]
+                "required": [
+                  "phoneNumber"
+                ]
               }
             }
           }
@@ -9671,7 +10186,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9687,7 +10204,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9758,7 +10277,9 @@
     },
     "/api/auth/phone-number/verify": {
       "post": {
-        "tags": ["Phone-number"],
+        "tags": [
+          "Phone-number"
+        ],
         "description": "Use this endpoint to verify phone number",
         "security": [
           {
@@ -9766,35 +10287,6 @@
           }
         ],
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phoneNumber": {
-                    "type": "string",
-                    "description": "Phone number to verify. Eg: \"+1234567890\""
-                  },
-                  "code": {
-                    "type": "string",
-                    "description": "OTP code. Eg: \"123456\""
-                  },
-                  "disableSession": {
-                    "type": ["boolean", "null"],
-                    "description": "Disable session creation after verification. Eg: false"
-                  },
-                  "updatePhoneNumber": {
-                    "type": ["boolean", "null"],
-                    "description": "Check if there is a session and update the phone number. Eg: true"
-                  }
-                },
-                "required": ["phoneNumber", "code"]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Phone number verified successfully",
@@ -9806,7 +10298,9 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the verification was successful",
-                      "enum": [true]
+                      "enum": [
+                        true
+                      ]
                     },
                     "token": {
                       "type": "string",
@@ -9872,7 +10366,9 @@
                       "description": "User object with phone number details, null if no user is created or found"
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -9890,7 +10386,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -9961,7 +10459,9 @@
     },
     "/api/auth/phone-number/request-password-reset": {
       "post": {
-        "tags": ["Phone-number"],
+        "tags": [
+          "Phone-number"
+        ],
         "description": "Request OTP for password reset via phone number",
         "security": [
           {
@@ -9980,7 +10480,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["phoneNumber"]
+                "required": [
+                  "phoneNumber"
+                ]
               }
             }
           }
@@ -9996,10 +10498,14 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the OTP was sent successfully",
-                      "enum": [true]
+                      "enum": [
+                        true
+                      ]
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -10014,7 +10520,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -10030,7 +10538,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -10101,7 +10611,9 @@
     },
     "/api/auth/phone-number/reset-password": {
       "post": {
-        "tags": ["Phone-number"],
+        "tags": [
+          "Phone-number"
+        ],
         "description": "Reset password using phone number OTP",
         "security": [
           {
@@ -10129,7 +10641,11 @@
                     "description": "The new password. Eg: \"new-and-secure-password\""
                   }
                 },
-                "required": ["otp", "phoneNumber", "newPassword"]
+                "required": [
+                  "otp",
+                  "phoneNumber",
+                  "newPassword"
+                ]
               }
             }
           }
@@ -10145,10 +10661,14 @@
                     "status": {
                       "type": "boolean",
                       "description": "Indicates if the password was reset successfully",
-                      "enum": [true]
+                      "enum": [
+                        true
+                      ]
                     }
                   },
-                  "required": ["status"]
+                  "required": [
+                    "status"
+                  ]
                 }
               }
             }
@@ -10163,7 +10683,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -10179,7 +10701,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             },
@@ -10273,7 +10797,14 @@
             "type": "boolean"
           }
         },
-        "required": ["page", "take", "itemCount", "pageCount", "hasPreviousPage", "hasNextPage"]
+        "required": [
+          "page",
+          "take",
+          "itemCount",
+          "pageCount",
+          "hasPreviousPage",
+          "hasNextPage"
+        ]
       },
       "PageDto": {
         "type": "object",
@@ -10288,39 +10819,25 @@
             "$ref": "#/components/schemas/PageMetaDto"
           }
         },
-        "required": ["data", "meta"]
+        "required": [
+          "data",
+          "meta"
+        ]
       },
       "LanguageCode": {
         "type": "string",
-        "enum": ["en_US", "ar_LB"]
+        "enum": [
+          "en_US",
+          "ar_LB"
+        ]
       },
       "Theme": {
         "type": "string",
-        "enum": ["light", "dark", "system"]
-      },
-      "AbstractTranslationDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "translations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AbstractTranslationDto"
-            }
-          }
-        },
-        "required": ["id", "createdAt", "updatedAt"]
+        "enum": [
+          "light",
+          "dark",
+          "system"
+        ]
       },
       "UserSettingsDto": {
         "type": "object",
@@ -10353,15 +10870,16 @@
           },
           "timezone": {
             "type": "string"
-          },
-          "translations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AbstractTranslationDto"
-            }
           }
         },
-        "required": ["id", "createdAt", "updatedAt", "locale", "theme", "timezone"]
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "locale",
+          "theme",
+          "timezone"
+        ]
       },
       "UserDto": {
         "type": "object",
@@ -10381,7 +10899,7 @@
           "email": {
             "type": "string"
           },
-          "phone": {
+          "phoneNumber": {
             "type": "string"
           },
           "role": {
@@ -10392,15 +10910,16 @@
           },
           "settings": {
             "$ref": "#/components/schemas/UserSettingsDto"
-          },
-          "translations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AbstractTranslationDto"
-            }
           }
         },
-        "required": ["id", "createdAt", "updatedAt", "role", "isBlocked", "settings"]
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "role",
+          "isBlocked",
+          "settings"
+        ]
       },
       "ErrorDto": {
         "type": "object",
@@ -10415,33 +10934,55 @@
             "type": "string"
           }
         },
-        "required": ["statusCode", "message", "error"]
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
       },
       "UnauthorizedException": {
         "type": "object",
         "properties": {
           "statusCode": {
             "type": "number",
-            "enum": [401]
+            "enum": [
+              401
+            ]
           },
           "message": {
             "type": "string",
-            "enum": ["error.auth.unauthorized"]
+            "enum": [
+              "error.auth.unauthorized"
+            ]
           },
           "error": {
             "type": "string",
-            "enum": ["Unauthorized"]
+            "enum": [
+              "Unauthorized"
+            ]
           }
         },
-        "required": ["statusCode", "message", "error"]
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
       },
       "Order": {
         "type": "string",
-        "enum": ["ASC", "DESC"]
+        "enum": [
+          "ASC",
+          "DESC"
+        ]
       },
       "UserSort": {
         "type": "string",
-        "enum": ["id", "name", "createdAt", "updatedAt"]
+        "enum": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "CreateProfileDto": {
         "type": "object",
@@ -10478,7 +11019,10 @@
             "nullable": true
           }
         },
-        "required": ["firstName", "lastName"]
+        "required": [
+          "firstName",
+          "lastName"
+        ]
       },
       "CreateUserDto": {
         "type": "object",
@@ -10486,7 +11030,7 @@
           "email": {
             "type": "string"
           },
-          "phone": {
+          "phoneNumber": {
             "type": "string"
           },
           "password": {
@@ -10501,7 +11045,10 @@
             "$ref": "#/components/schemas/CreateProfileDto"
           }
         },
-        "required": ["role", "profile"]
+        "required": [
+          "role",
+          "profile"
+        ]
       },
       "UpdateProfileDto": {
         "type": "object",
@@ -10567,7 +11114,7 @@
           "email": {
             "type": "string"
           },
-          "phone": {
+          "phoneNumber": {
             "type": "string"
           },
           "profile": {
@@ -10584,7 +11131,7 @@
           "email": {
             "type": "string"
           },
-          "phone": {
+          "phoneNumber": {
             "type": "string"
           },
           "role": {
@@ -10595,332 +11142,6 @@
             "$ref": "#/components/schemas/UpdateProfileDto"
           }
         }
-      },
-      "OrganizationScopeAccessDeniedException": {
-        "type": "object",
-        "properties": {
-          "statusCode": {
-            "type": "number",
-            "enum": [403]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["error.organization.scopeAccessDenied"]
-          },
-          "error": {
-            "type": "string",
-            "enum": ["Forbidden"]
-          }
-        },
-        "required": ["statusCode", "message", "error"]
-      },
-      "OrganizationDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the organization",
-            "example": "Acme Corp"
-          },
-          "image": {
-            "type": "string",
-            "description": "URL or path to organization logo/image",
-            "example": "https://example.com/logo.png"
-          },
-          "email": {
-            "type": "string",
-            "description": "Contact email for the organization",
-            "example": "contact@acme.com"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Contact phone number",
-            "example": "+1234567890"
-          },
-          "region": {
-            "type": "string",
-            "description": "Region/State of the organization",
-            "example": "California"
-          },
-          "city": {
-            "type": "string",
-            "description": "City of the organization",
-            "example": "San Francisco"
-          },
-          "address": {
-            "type": "string",
-            "description": "Full address of the organization",
-            "example": "123 Tech Street, Suite 100"
-          },
-          "banned": {
-            "type": "boolean",
-            "description": "Whether the organization is banned",
-            "example": false
-          },
-          "banReason": {
-            "type": "string",
-            "description": "Reason for the ban (if banned)",
-            "example": "Terms of service violation"
-          },
-          "banExpires": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Expiration date of the ban (if banned)",
-            "example": "2024-12-31T23:59:59Z"
-          },
-          "requiresApproval": {
-            "type": "boolean",
-            "description": "Whether orders require manual approval. If false, orders are auto-accepted.",
-            "example": true
-          },
-          "translations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AbstractTranslationDto"
-            }
-          }
-        },
-        "required": ["id", "createdAt", "updatedAt", "name", "banned", "requiresApproval"]
-      },
-      "UpdateMyOrganizationDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the organization",
-            "example": "Acme Corp"
-          },
-          "image": {
-            "type": "string",
-            "description": "URL or path to organization logo/image",
-            "example": "https://example.com/logo.png"
-          },
-          "email": {
-            "type": "string",
-            "description": "Contact email for the organization",
-            "example": "contact@acme.com"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Contact phone number",
-            "example": "+1234567890"
-          },
-          "region": {
-            "type": "string",
-            "description": "Region/State of the organization",
-            "example": "California"
-          },
-          "city": {
-            "type": "string",
-            "description": "City of the organization",
-            "example": "San Francisco"
-          },
-          "address": {
-            "type": "string",
-            "description": "Full address of the organization",
-            "example": "123 Tech Street, Suite 100"
-          }
-        }
-      },
-      "OrganizationSortField": {
-        "type": "string",
-        "enum": ["id", "name", "createdAt", "updatedAt"]
-      },
-      "CreateOrganizationDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the organization",
-            "example": "Acme Corp"
-          },
-          "image": {
-            "type": "string",
-            "description": "URL or path to organization logo/image",
-            "example": "https://example.com/logo.png"
-          },
-          "email": {
-            "type": "string",
-            "description": "Contact email for the organization",
-            "example": "contact@acme.com"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Contact phone number",
-            "example": "+1234567890"
-          },
-          "region": {
-            "type": "string",
-            "description": "Region/State of the organization",
-            "example": "California"
-          },
-          "city": {
-            "type": "string",
-            "description": "City of the organization",
-            "example": "San Francisco"
-          },
-          "address": {
-            "type": "string",
-            "description": "Full address of the organization",
-            "example": "123 Tech Street, Suite 100"
-          },
-          "requiresApproval": {
-            "type": "boolean",
-            "description": "Whether orders require manual approval. If false, orders are auto-accepted. Defaults to true.",
-            "example": true
-          }
-        },
-        "required": ["name"]
-      },
-      "OrganizationNotFoundException": {
-        "type": "object",
-        "properties": {
-          "statusCode": {
-            "type": "number",
-            "enum": [404]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["error.organization.notFound"]
-          },
-          "error": {
-            "type": "string",
-            "enum": ["Not Found"]
-          }
-        },
-        "required": ["statusCode", "message", "error"]
-      },
-      "UpdateOrganizationDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the organization",
-            "example": "Acme Corp"
-          },
-          "image": {
-            "type": "string",
-            "description": "URL or path to organization logo/image",
-            "example": "https://example.com/logo.png"
-          },
-          "email": {
-            "type": "string",
-            "description": "Contact email for the organization",
-            "example": "contact@acme.com"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Contact phone number",
-            "example": "+1234567890"
-          },
-          "region": {
-            "type": "string",
-            "description": "Region/State of the organization",
-            "example": "California"
-          },
-          "city": {
-            "type": "string",
-            "description": "City of the organization",
-            "example": "San Francisco"
-          },
-          "address": {
-            "type": "string",
-            "description": "Full address of the organization",
-            "example": "123 Tech Street, Suite 100"
-          },
-          "requiresApproval": {
-            "type": "boolean",
-            "description": "Whether orders require manual approval. If false, orders are auto-accepted.",
-            "example": true
-          }
-        }
-      },
-      "OrganizationAlreadyBannedException": {
-        "type": "object",
-        "properties": {
-          "statusCode": {
-            "type": "number",
-            "enum": [400]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["error.organization.alreadyBanned"]
-          },
-          "error": {
-            "type": "string",
-            "enum": ["Bad Request"]
-          }
-        },
-        "required": ["statusCode", "message", "error"]
-      },
-      "OrganizationBanDto": {
-        "type": "object",
-        "properties": {
-          "banned": {
-            "type": "boolean",
-            "description": "Whether the organization is banned",
-            "example": true
-          },
-          "banReason": {
-            "type": "string",
-            "description": "Reason for the ban (if banned)",
-            "example": "Terms of service violation"
-          },
-          "banExpires": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Expiration date of the ban (if banned)",
-            "example": "2024-12-31T23:59:59Z"
-          }
-        }
-      },
-      "OrganizationNotBannedException": {
-        "type": "object",
-        "properties": {
-          "statusCode": {
-            "type": "number",
-            "enum": [400]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["error.organization.notBanned"]
-          },
-          "error": {
-            "type": "string",
-            "enum": ["Bad Request"]
-          }
-        },
-        "required": ["statusCode", "message", "error"]
-      },
-      "OrganizationScopeAccessDenied2Exception": {
-        "type": "object",
-        "properties": {
-          "statusCode": {
-            "type": "number",
-            "enum": [403]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["error.organization.scopeAccessDenied2"]
-          },
-          "error": {
-            "type": "string",
-            "enum": ["Forbidden"]
-          }
-        },
-        "required": ["statusCode", "message", "error"]
       },
       "User": {
         "type": "object",
@@ -10976,13 +11197,14 @@
           "phoneNumberVerified": {
             "type": "boolean",
             "readOnly": true
-          },
-          "branches": {
-            "type": "string",
-            "readOnly": true
           }
         },
-        "required": ["name", "email", "createdAt", "updatedAt"]
+        "required": [
+          "name",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "Session": {
         "type": "object",
@@ -11019,7 +11241,13 @@
             "type": "string"
           }
         },
-        "required": ["expiresAt", "token", "createdAt", "updatedAt", "userId"]
+        "required": [
+          "expiresAt",
+          "token",
+          "createdAt",
+          "updatedAt",
+          "userId"
+        ]
       },
       "Account": {
         "type": "object",
@@ -11069,7 +11297,13 @@
             "format": "date-time"
           }
         },
-        "required": ["accountId", "providerId", "userId", "createdAt", "updatedAt"]
+        "required": [
+          "accountId",
+          "providerId",
+          "userId",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "Verification": {
         "type": "object",
@@ -11098,7 +11332,13 @@
             "default": "Generated at runtime"
           }
         },
-        "required": ["identifier", "value", "expiresAt", "createdAt", "updatedAt"]
+        "required": [
+          "identifier",
+          "value",
+          "expiresAt",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "Role": {
         "type": "object",
@@ -11113,7 +11353,9 @@
             "type": "string"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "Permission": {
         "type": "object",
@@ -11131,7 +11373,10 @@
             "type": "string"
           }
         },
-        "required": ["name", "code"]
+        "required": [
+          "name",
+          "code"
+        ]
       },
       "RolePermission": {
         "type": "object",
@@ -11146,7 +11391,10 @@
             "type": "string"
           }
         },
-        "required": ["roleId", "permissionId"]
+        "required": [
+          "roleId",
+          "permissionId"
+        ]
       }
     },
     "securitySchemes": {

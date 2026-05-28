@@ -178,30 +178,24 @@ No authorization required
 
 # **apiAuthPhoneNumberVerifyPost**
 
-> ApiAuthPhoneNumberVerifyPost200Response apiAuthPhoneNumberVerifyPost(apiAuthPhoneNumberVerifyPostRequest)
+> ApiAuthPhoneNumberVerifyPost200Response apiAuthPhoneNumberVerifyPost()
 
 Use this endpoint to verify phone number
 
 ### Example
 
 ```typescript
-import { PhoneNumberApi, Configuration, ApiAuthPhoneNumberVerifyPostRequest } from "./api";
+import { PhoneNumberApi, Configuration } from "./api";
 
 const configuration = new Configuration();
 const apiInstance = new PhoneNumberApi(configuration);
 
-let apiAuthPhoneNumberVerifyPostRequest: ApiAuthPhoneNumberVerifyPostRequest; //
-
-const { status, data } = await apiInstance.apiAuthPhoneNumberVerifyPost(
-  apiAuthPhoneNumberVerifyPostRequest,
-);
+const { status, data } = await apiInstance.apiAuthPhoneNumberVerifyPost();
 ```
 
 ### Parameters
 
-| Name                                    | Type                                    | Description | Notes |
-| --------------------------------------- | --------------------------------------- | ----------- | ----- |
-| **apiAuthPhoneNumberVerifyPostRequest** | **ApiAuthPhoneNumberVerifyPostRequest** |             |       |
+This endpoint does not have any parameters.
 
 ### Return type
 
@@ -213,7 +207,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 ### HTTP response details

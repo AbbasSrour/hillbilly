@@ -2,15 +2,14 @@
 
 ## Properties
 
-| Name             | Type                                                                 | Description | Notes                             |
-| ---------------- | -------------------------------------------------------------------- | ----------- | --------------------------------- |
-| **id**           | **string**                                                           |             | [default to undefined]            |
-| **createdAt**    | **string**                                                           |             | [default to undefined]            |
-| **updatedAt**    | **string**                                                           |             | [default to undefined]            |
-| **locale**       | [**LanguageCode**](LanguageCode.md)                                  |             | [default to undefined]            |
-| **theme**        | [**Theme**](Theme.md)                                                |             | [default to undefined]            |
-| **timezone**     | **string**                                                           |             | [default to undefined]            |
-| **translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |             | [optional] [default to undefined] |
+| Name          | Type                                | Description | Notes                  |
+| ------------- | ----------------------------------- | ----------- | ---------------------- |
+| **id**        | **string**                          |             | [default to undefined] |
+| **createdAt** | **string**                          |             | [default to undefined] |
+| **updatedAt** | **string**                          |             | [default to undefined] |
+| **locale**    | [**LanguageCode**](LanguageCode.md) |             | [default to undefined] |
+| **theme**     | [**Theme**](Theme.md)               |             | [default to undefined] |
+| **timezone**  | **string**                          |             | [default to undefined] |
 
 ## Example
 
@@ -24,7 +23,6 @@ const instance: UserSettingsDto = {
   locale,
   theme,
   timezone,
-  translations,
 };
 ```
 

@@ -2,17 +2,16 @@
 
 ## Properties
 
-| Name             | Type                                                                 | Description | Notes                             |
-| ---------------- | -------------------------------------------------------------------- | ----------- | --------------------------------- |
-| **id**           | **string**                                                           |             | [default to undefined]            |
-| **createdAt**    | **string**                                                           |             | [default to undefined]            |
-| **updatedAt**    | **string**                                                           |             | [default to undefined]            |
-| **email**        | **string**                                                           |             | [optional] [default to undefined] |
-| **phone**        | **string**                                                           |             | [optional] [default to undefined] |
-| **role**         | **string**                                                           |             | [default to undefined]            |
-| **isBlocked**    | **boolean**                                                          |             | [default to undefined]            |
-| **settings**     | [**UserSettingsDto**](UserSettingsDto.md)                            |             | [default to undefined]            |
-| **translations** | [**Array&lt;AbstractTranslationDto&gt;**](AbstractTranslationDto.md) |             | [optional] [default to undefined] |
+| Name            | Type                                      | Description | Notes                             |
+| --------------- | ----------------------------------------- | ----------- | --------------------------------- |
+| **id**          | **string**                                |             | [default to undefined]            |
+| **createdAt**   | **string**                                |             | [default to undefined]            |
+| **updatedAt**   | **string**                                |             | [default to undefined]            |
+| **email**       | **string**                                |             | [optional] [default to undefined] |
+| **phoneNumber** | **string**                                |             | [optional] [default to undefined] |
+| **role**        | **string**                                |             | [default to undefined]            |
+| **isBlocked**   | **boolean**                               |             | [default to undefined]            |
+| **settings**    | [**UserSettingsDto**](UserSettingsDto.md) |             | [default to undefined]            |
 
 ## Example
 
@@ -24,11 +23,10 @@ const instance: UserDto = {
   createdAt,
   updatedAt,
   email,
-  phone,
+  phoneNumber,
   role,
   isBlocked,
   settings,
-  translations,
 };
 ```
 

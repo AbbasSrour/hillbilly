@@ -5,6 +5,8 @@ All URIs are relative to _http://localhost_
 | Method                                                                | HTTP request                               | Description |
 | --------------------------------------------------------------------- | ------------------------------------------ | ----------- |
 | [**apiAuthAccountInfoGet**](#apiauthaccountinfoget)                   | **GET** /api/auth/account-info             |             |
+| [**apiAuthCallbackIdGet**](#apiauthcallbackidget)                     | **GET** /api/auth/callback/{id}            |             |
+| [**apiAuthCallbackIdPost**](#apiauthcallbackidpost)                   | **POST** /api/auth/callback/{id}           |             |
 | [**apiAuthDeleteUserCallbackGet**](#apiauthdeleteusercallbackget)     | **GET** /api/auth/delete-user/callback     |             |
 | [**apiAuthErrorGet**](#apiautherrorget)                               | **GET** /api/auth/error                    |             |
 | [**apiAuthGetAccessTokenPost**](#apiauthgetaccesstokenpost)           | **POST** /api/auth/get-access-token        |             |
@@ -19,6 +21,7 @@ All URIs are relative to _http://localhost_
 | [**changePassword**](#changepassword)                                 | **POST** /api/auth/change-password         |             |
 | [**deleteUser**](#deleteuser)                                         | **POST** /api/auth/delete-user             |             |
 | [**getSession**](#getsession)                                         | **GET** /api/auth/get-session              |             |
+| [**getSession1**](#getsession1)                                       | **POST** /api/auth/get-session             |             |
 | [**linkSocialAccount**](#linksocialaccount)                           | **POST** /api/auth/link-social             |             |
 | [**listUserAccounts**](#listuseraccounts)                             | **GET** /api/auth/list-accounts            |             |
 | [**listUserSessions**](#listusersessions)                             | **GET** /api/auth/list-sessions            |             |
@@ -30,6 +33,7 @@ All URIs are relative to _http://localhost_
 | [**signOut**](#signout)                                               | **POST** /api/auth/sign-out                |             |
 | [**signUpWithEmailAndPassword**](#signupwithemailandpassword)         | **POST** /api/auth/sign-up/email           |             |
 | [**socialSignIn**](#socialsignin)                                     | **POST** /api/auth/sign-in/social          |             |
+| [**updateSession**](#updatesession)                                   | **POST** /api/auth/update-session          |             |
 | [**updateUser**](#updateuser)                                         | **POST** /api/auth/update-user             |             |
 | [**verifyPassword**](#verifypassword)                                 | **POST** /api/auth/verify-password         |             |
 
@@ -72,6 +76,106 @@ No authorization required
 | Status code | Description                                                                              | Response headers |
 | ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
 | **200**     | Success                                                                                  | -                |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiAuthCallbackIdGet**
+
+> apiAuthCallbackIdGet()
+
+### Example
+
+```typescript
+import { DefaultApi, Configuration } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new DefaultApi(configuration);
+
+let id: string; // (default to undefined)
+
+const { status, data } = await apiInstance.apiAuthCallbackIdGet(id);
+```
+
+### Parameters
+
+| Name   | Type         | Description | Notes                 |
+| ------ | ------------ | ----------- | --------------------- |
+| **id** | [**string**] |             | defaults to undefined |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiAuthCallbackIdPost**
+
+> apiAuthCallbackIdPost()
+
+### Example
+
+```typescript
+import { DefaultApi, Configuration } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new DefaultApi(configuration);
+
+let id: string; // (default to undefined)
+let body: object; // (optional)
+
+const { status, data } = await apiInstance.apiAuthCallbackIdPost(id, body);
+```
+
+### Parameters
+
+| Name     | Type         | Description | Notes                 |
+| -------- | ------------ | ----------- | --------------------- |
+| **body** | **object**   |             |                       |
+| **id**   | [**string**] |             | defaults to undefined |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
 | **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
 | **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
 | **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
@@ -648,7 +752,6 @@ No authorization required
 | **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
 | **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
 | **404**     | Not Found. The requested resource was not found.                                         | -                |
-| **422**     | Unprocessable Entity. Email already exists                                               | -                |
 | **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
 | **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
 
@@ -790,6 +893,58 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| **200**     | Success                                                                                  | -                |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getSession1**
+
+> GetSession200Response getSession1()
+
+Get the current session
+
+### Example
+
+```typescript
+import { DefaultApi, Configuration } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new DefaultApi(configuration);
+
+let body: object; // (optional)
+
+const { status, data } = await apiInstance.getSession1(body);
+```
+
+### Parameters
+
+| Name     | Type       | Description | Notes |
+| -------- | ---------- | ----------- | ----- |
+| **body** | **object** |             |       |
+
+### Return type
+
+**GetSession200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 ### HTTP response details
@@ -1365,7 +1520,59 @@ No authorization required
 
 | Status code | Description                                                                              | Response headers |
 | ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| **200**     | Success - Returns either session details or redirect URL                                 | -                |
+| **200**     | Success - Returns session details (idToken branch) or an authorize URL (redirect branch) | -                |
+| **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
+| **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
+| **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
+| **404**     | Not Found. The requested resource was not found.                                         | -                |
+| **429**     | Too Many Requests. You have exceeded the rate limit. Try again later.                    | -                |
+| **500**     | Internal Server Error. This is a problem with the server that you cannot fix.            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateSession**
+
+> UpdateSession200Response updateSession()
+
+Update the current session
+
+### Example
+
+```typescript
+import { DefaultApi, Configuration } from "./api";
+
+const configuration = new Configuration();
+const apiInstance = new DefaultApi(configuration);
+
+let body: object; // (optional)
+
+const { status, data } = await apiInstance.updateSession(body);
+```
+
+### Parameters
+
+| Name     | Type       | Description | Notes |
+| -------- | ---------- | ----------- | ----- |
+| **body** | **object** |             |       |
+
+### Return type
+
+**UpdateSession200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                                              | Response headers |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| **200**     | Success                                                                                  | -                |
 | **400**     | Bad Request. Usually due to missing parameters, or invalid parameters.                   | -                |
 | **401**     | Unauthorized. Due to missing or invalid authentication.                                  | -                |
 | **403**     | Forbidden. You do not have permission to access this resource or to perform this action. | -                |
