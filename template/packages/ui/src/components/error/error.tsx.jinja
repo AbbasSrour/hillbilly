@@ -115,7 +115,7 @@ export function ErrorComponent({
         <p
           className="text-muted-foreground text-center"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-          dangerouslySetInnerHTML={{ __html: displayDescription }}
+          dangerouslySetInnerHTML=[% raw %]{{ __html: displayDescription }}[% endraw %]
         />
         {!minimal && (
           <div className="mt-6 flex gap-4">

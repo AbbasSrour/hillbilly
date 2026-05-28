@@ -1210,9 +1210,9 @@ const FileUploadItemProgress = React.forwardRef<HTMLDivElement, FileUploadItemPr
               'absolute inset-0 bg-primary/50 transition-[clip-path] duration-300 ease-linear',
               className,
             )}
-            style={{
+            style=[% raw %]{{
               clipPath: `inset(${topInset}% 0% 0% 0%)`,
-            }}
+            }}[% endraw %]
           />
         );
       }
@@ -1236,9 +1236,9 @@ const FileUploadItemProgress = React.forwardRef<HTMLDivElement, FileUploadItemPr
           >
             <div
               className="h-full w-full flex-1 bg-primary transition-transform duration-300 ease-linear"
-              style={{
+              style=[% raw %]{{
                 transform: `translateX(-${100 - itemContext.fileState.progress}%)`,
-              }}
+              }}[% endraw %]
             />
           </ItemProgressPrimitive>
         );

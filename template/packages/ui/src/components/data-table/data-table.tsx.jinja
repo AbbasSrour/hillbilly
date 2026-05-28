@@ -182,7 +182,7 @@ export function DataTable<TData extends RowData>({
                 {/* Add padding to the top to preserve the scroll position */}
                 {virtualizer && virtualRows.length > 0 && (
                   <tr
-                    style={{ height: `${virtualRows?.[0]?.start}px` }}
+                    style=[% raw %]{{ height: `${virtualRows?.[0]?.start}px` }}[% endraw %]
                     className="virtual-spacer"
                   />
                 )}
@@ -224,9 +224,9 @@ export function DataTable<TData extends RowData>({
                 {virtualizer && virtualRows.length > 0 && (
                   <tr
                     className="virtual-spacer"
-                    style={{
+                    style=[% raw %]{{
                       height: `${virtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end || 0)}px`,
-                    }}
+                    }}[% endraw %]
                   />
                 )}
               </>

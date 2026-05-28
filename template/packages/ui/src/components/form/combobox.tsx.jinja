@@ -97,7 +97,7 @@ export function Combobox({
           {...contentProps}
           className={cn('p-0', contentProps?.className)}
           align="start"
-          style={{ width: triggerWidth ? `${triggerWidth}px` : undefined }}
+          style=[% raw %]{{ width: triggerWidth ? `${triggerWidth}px` : undefined }}[% endraw %]
         >
           <OptionsList
             options={options}

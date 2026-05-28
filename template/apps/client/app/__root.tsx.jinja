@@ -102,11 +102,11 @@ function RootDocument({ children }: { children: ReactNode }) {
             <ProgressProvider
               color="hsl(var(--primary))"
               height="3px"
-              options={{
+              options=[% raw %]{{
                 minimum: 0.08,
                 trickleSpeed: 200,
                 showSpinner: true,
-              }}
+              }}[% endraw %]
             >
               <AppTopLoader />
               <Toaster />
@@ -115,9 +115,9 @@ function RootDocument({ children }: { children: ReactNode }) {
           </ProjectProvider>
         </ThemeProvider>
         <TanStackDevtools
-          config={{
+          config=[% raw %]{{
             position: 'bottom-right',
-          }}
+          }}[% endraw %]
           plugins={[
             {
               name: 'Tanstack Router',

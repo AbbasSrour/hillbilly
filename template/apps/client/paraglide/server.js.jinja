@@ -1,5 +1,5 @@
 /* eslint-disable */
-
+[% raw %]
 import * as runtime from "./runtime.js";
 
 /**
@@ -223,3 +223,4 @@ void createMockAsyncLocalStorage;
  * @type {Record<string, Record<import("./runtime.js").Locale, string>>}
  */
 const compiledBundles = {};
+[% endraw %]

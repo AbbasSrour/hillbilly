@@ -34,7 +34,7 @@ const FormField = <
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
   return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
+    <FormFieldContext.Provider value=[% raw %]{{ name: props.name }}[% endraw %]>
       <Controller {...props} />
     </FormFieldContext.Provider>
   );
@@ -73,7 +73,7 @@ function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId();
 
   return (
-    <FormItemContext.Provider value={{ id }}>
+    <FormItemContext.Provider value=[% raw %]{{ id }}[% endraw %]>
       <div data-slot="form-item" className={cn('grid gap-2', className)} {...props} />
     </FormItemContext.Provider>
   );

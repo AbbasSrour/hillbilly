@@ -32,36 +32,36 @@ jobs:
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SECRET }}'
+          credentials_json: '[% raw %]${{ secrets.GCP_SECRET }}[% endraw %]'
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker
-        run: gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+        run: gcloud auth configure-docker "[% raw %]${{ env.REGION }}[% endraw %]-docker.pkg.dev" --quiet
 
       - name: Short Commit Hash
         run: echo "SHORT_COMMIT=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Resource Name
-        run: echo "RESOURCE_NAME=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ matrix.service }}/${{ matrix.service }}:${{ env.SHORT_COMMIT }}" >> $GITHUB_ENV
+        run: echo "RESOURCE_NAME=[% raw %]${{ env.REGION }}[% endraw %]-docker.pkg.dev/[% raw %]${{ env.PROJECT_ID }}[% endraw %]/[% raw %]${{ matrix.service }}[% endraw %]/[% raw %]${{ matrix.service }}[% endraw %]:[% raw %]${{ env.SHORT_COMMIT }}[% endraw %]" >> $GITHUB_ENV
 
       - name: Build and Push Container
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
-          build-args: ${{ matrix.build_arg }}
+          file: [% raw %]${{ matrix.dockerfile }}[% endraw %]
+          build-args: [% raw %]${{ matrix.build_arg }}[% endraw %]
           push: true
-          tags: ${{ env.RESOURCE_NAME }}
+          tags: [% raw %]${{ env.RESOURCE_NAME }}[% endraw %]
 
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ matrix.service }}
-          region: ${{ env.REGION }}
-          image: ${{ env.RESOURCE_NAME }}
+          service: [% raw %]${{ matrix.service }}[% endraw %]
+          region: [% raw %]${{ env.REGION }}[% endraw %]
+          image: [% raw %]${{ env.RESOURCE_NAME }}[% endraw %]
 
       - name: Show Output
-        run: echo ${{ steps.deploy.outputs.url }}
+        run: echo [% raw %]${{ steps.deploy.outputs.url }}[% endraw %]

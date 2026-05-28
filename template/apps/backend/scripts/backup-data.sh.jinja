@@ -1,5 +1,5 @@
 #!/bin/bash
-
+[% raw %]
 # This script creates a backup of the PostgreSQL database from a Docker container.
 
 set -euo pipefail
@@ -131,7 +131,8 @@ if /usr/bin/docker exec -i \
         echo "Error: Backup file was created but is empty." >&2
         rm -f "${BACKUP_FILE}"
         exit 1
-    fi
+fi
+[% endraw %]
 else
     echo "✗ Backup failed." >&2
     # Remove incomplete backup file if it exists

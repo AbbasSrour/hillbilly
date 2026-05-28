@@ -101,7 +101,7 @@ function Carousel({
 
   return (
     <CarouselContext.Provider
-      value={{
+      value=[% raw %]{{
         carouselRef,
         api: api,
         opts,
@@ -110,7 +110,7 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
-      }}
+      }}[% endraw %]
     >
       <div
         onKeyDownCapture={handleKeyDown}

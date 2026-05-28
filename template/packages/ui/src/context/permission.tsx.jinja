@@ -36,10 +36,10 @@ export const PermissionProvider = ({
 
   return (
     <PermissionContext.Provider
-      value={{
+      value=[% raw %]{{
         permissions,
         hasPermission: hasPermission || defaultHasPermission,
-      }}
+      }}[% endraw %]
     >
       {children}
     </PermissionContext.Provider>

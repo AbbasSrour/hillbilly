@@ -45,7 +45,7 @@ function ChartContainer({
   const chartId = `chart-${id || uniqueId.replace(/:/g, '')}`;
 
   return (
-    <ChartContext.Provider value={{ config }}>
+    <ChartContext.Provider value=[% raw %]{{ config }}[% endraw %]>
       <div
         data-slot="chart"
         data-chart={chartId}
@@ -72,7 +72,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   return (
     <style
       // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-      dangerouslySetInnerHTML={{
+      dangerouslySetInnerHTML=[% raw %]{{
         __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
@@ -87,7 +87,7 @@ ${colorConfig
 `,
           )
           .join('\n'),
-      }}
+      }}[% endraw %]
     />
   );
 };
@@ -271,9 +271,9 @@ function ChartLegendContent({
             ) : (
               <div
                 className="h-2 w-2 shrink-0 rounded-[2px]"
-                style={{
+                style=[% raw %]{{
                   backgroundColor: item.color,
-                }}
+                }}[% endraw %]
               />
             )}
             {itemConfig?.label}

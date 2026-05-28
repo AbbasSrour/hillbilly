@@ -51,7 +51,7 @@ function EditUserPage() {
   return (
     <Main>
       <PageHeader title={`Edit ${user.name}`} description="Update the user details." withSeparator>
-        <Link to="/admin/users" search={{ search: '', page: 1, pageSize: 10, role: undefined }}>
+        <Link to="/admin/users" search=[% raw %]{{ search: '', page: 1, pageSize: 10, role: undefined }}[% endraw %]>
           <Button variant="ghost">Back to Users</Button>
         </Link>
       </PageHeader>

@@ -28,11 +28,11 @@ function Calendar({
         className,
       )}
       captionLayout={captionLayout}
-      formatters={{
+      formatters=[% raw %]{{
         formatMonthDropdown: (date) => date.toLocaleString('default', { month: 'short' }),
         ...formatters,
-      }}
-      classNames={{
+      }}[% endraw %]
+      classNames=[% raw %]{{
         root: cn('w-fit', defaultClassNames.root),
         months: cn('relative flex flex-col gap-4 md:flex-row', defaultClassNames.months),
         month: cn('flex w-full flex-col gap-4', defaultClassNames.month),
@@ -100,8 +100,8 @@ function Calendar({
         disabled: cn('text-muted-foreground opacity-50', defaultClassNames.disabled),
         hidden: cn('invisible', defaultClassNames.hidden),
         ...classNames,
-      }}
-      components={{
+      }}[% endraw %]
+      components=[% raw %]{{
         Root: ({ className, rootRef, ...props }) => {
           return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
         },
@@ -127,7 +127,7 @@ function Calendar({
           );
         },
         ...components,
-      }}
+      }}[% endraw %]
       {...props}
     />
   );
