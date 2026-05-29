@@ -353,6 +353,11 @@ export async function scan(
  * Apply a set of staged hunks to a template file, returning the new content.
  * Only the hunks whose index is in `stagedHunkIndices` are applied.
  */
+/** True if the line is a raw/endraw Jinja tag. */
+function isRawTagLine(line: string): boolean {
+  return /^\[%-?\s*(raw|endraw)\s*-?%\]$/.test(line.trim());
+}
+
 export function applyStagedHunks(
   templateContent: string,
   hunks: DiffHunk[],

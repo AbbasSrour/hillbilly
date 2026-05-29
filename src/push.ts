@@ -17,16 +17,48 @@ function reverseRender(content: string, projectName: string): string {
 }
 
 /**
+ * Detect if a template's only Jinja constructs are [% raw %] and [% endraw %].
+ * This is common for shell scripts and other files where the entire body is
+ * wrapped in raw blocks to prevent Jinja from parsing `{{` or `[[` syntax.
+ */
+function isEntirelyRawWrapped(templateContent: string): boolean {
+  // Must have both raw and endraw tags
+  if (!templateContent.includes("[% raw %]") || !templateContent.includes("[% endraw %]")) {
+    return false;
+  }
+
+  // Must NOT have Copier variables [[ ... ]] outside raw blocks
+  const rawBlockRe = /\[%-?\s*raw\s*-?%\][\s\S]*?\[%-?\s*endraw\s*-?%\]/g;
+  const withoutRawBlocks = templateContent.replace(rawBlockRe, "");
+
+  // After removing raw blocks, there should be no [[ ... ]] variables
+  return !/\[\[\s*.+?\s*\]\]/.test(withoutRawBlocks);
+}
+
+/**
  * Apply reverse-rendering and auto raw-block wrapping for .jinja files.
  */
 function prepareTemplateContent(
   content: string,
   templatePath: string,
   projectName: string,
+  originalTemplateContent?: string,
 ): string {
   let result = reverseRender(content, projectName);
   if (templatePath.endsWith(".jinja")) {
-    result = wrapJinjaRawBlocks(result);
+    if (originalTemplateContent && isEntirelyRawWrapped(originalTemplateContent)) {
+      // File is entirely wrapped in raw blocks — reconstruct the wrapper.
+      // Extract any prefix that appeared before [% raw %] (e.g. shebang)
+      const rawStartIdx = originalTemplateContent.indexOf("[% raw %]");
+      const prefix = rawStartIdx > 0 ? originalTemplateContent.slice(0, rawStartIdx).trimEnd() : "";
+      // Only prepend prefix if project content doesn't already start with it
+      if (prefix && !result.startsWith(prefix)) {
+        result = `${prefix}\n${result}`;
+      }
+      result = `[%- raw %]\n${result}\n[%- endraw %]`;
+    } else {
+      result = wrapJinjaRawBlocks(result);
+    }
   }
   return result;
 }
@@ -179,15 +211,29 @@ export async function pushChanges(
         result.written.push(file.templatePath);
       } else if (file.status === "modified") {
         let newContent: string;
+        const originalTemplateContent = await readFile(file.templatePath, "utf-8");
 
         if (file.hunks && file.hunks.length > 0) {
           const indicesToApply: Set<number> =
             stagedIndices.size === 0 ? new Set(file.hunks.map((_, i) => i)) : stagedIndices;
 
-          const templateContent = await readFile(file.templatePath, "utf-8");
-
-          newContent = applyStagedHunks(templateContent, file.hunks, indicesToApply);
-          newContent = prepareTemplateContent(newContent, file.templatePath, projectName ?? "");
+          // For entirely raw-wrapped files, skip hunk patching and reconstruct from project content
+          if (isEntirelyRawWrapped(originalTemplateContent) && file.projectContent !== undefined) {
+            newContent = prepareTemplateContent(
+              file.projectContent,
+              file.templatePath,
+              projectName ?? "",
+              originalTemplateContent,
+            );
+          } else {
+            newContent = applyStagedHunks(originalTemplateContent, file.hunks, indicesToApply);
+            newContent = prepareTemplateContent(
+              newContent,
+              file.templatePath,
+              projectName ?? "",
+              originalTemplateContent,
+            );
+          }
         } else {
           if (file.projectContent === undefined) {
             throw new Error("projectContent is missing for modified file with no hunks");
@@ -196,6 +242,7 @@ export async function pushChanges(
             file.projectContent,
             file.templatePath,
             projectName ?? "",
+            originalTemplateContent,
           );
         }
 
